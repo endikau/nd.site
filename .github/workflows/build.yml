@@ -20,8 +20,8 @@ jobs:
       # Install Quarto CLI
       - name: Install Quarto
         uses: quarto-dev/quarto-actions/setup@v2
-        with:
-          version: "latest"   # or pin: "1.5.57" etc.
+        # with:
+        #   version: "latest"
 
       # Install Hugo (extended) if you need it
       - name: Install Hugo
