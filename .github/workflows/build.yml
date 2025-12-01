@@ -25,7 +25,8 @@ jobs:
             libprotobuf-dev \
             protobuf-compiler \
             libglpk-dev \
-            libmagick++-dev
+            libmagick++-dev \
+            libpoppler-cpp-dev
 
       # - name: Set up Node.js
       #   uses: actions/setup-node@v4
