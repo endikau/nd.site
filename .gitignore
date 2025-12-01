@@ -1,7 +1,5 @@
 /.quarto/
 **/.ipynb_checkpoints/
-condaenv/
-renv/
 .Rproj.user
 .Renviron
 hugo/resources/_gen/
