@@ -1,0 +1,43 @@
+name: Build Quarto + Hugo site
+
+on:
+  push:
+    branches:
+      - dev
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      # Install Quarto CLI
+      - name: Install Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          version: "latest"   # or pin: "1.5.57" etc.
+
+      # Install Hugo (extended) if you need it
+      - name: Install Hugo
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: "latest"
+          extended: true
+
+      # Build the site with Quarto
+      - name: Render site
+        run: |
+          quarto render
+
+      # # Optional: upload rendered site as artifact (useful for inspection or deploy step)
+      # - name: Upload site artifact
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: site-output
+      #     path: _site   # change if your output folder is different
