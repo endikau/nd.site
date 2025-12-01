@@ -16,12 +16,21 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+      
+      # Install R
+      - name: Install R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+          r-version: renv
+
+      - uses: r-lib/actions/setup-renv@v2
 
       # Install Quarto CLI
       - name: Install Quarto
         uses: quarto-dev/quarto-actions/setup@v2
-        # with:
-        #   version: "latest"
+        with:
+          version: "latest"
 
       # Install Hugo (extended) if you need it
       - name: Install Hugo
