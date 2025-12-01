@@ -20,10 +20,11 @@ jobs:
       - name: Install system dependencies
         run: |
           sudo apt-get update
-          # for R V8
-          sudo apt-get install -y libnode-dev
-          # for R cld3
-          sudo apt-get install -y libprotobuf-dev protobuf-compiler
+          sudo apt-get install -y \
+            libnode-dev \
+            libprotobuf-dev \
+            protobuf-compiler \
+            libglpk-dev
 
       # - name: Set up Node.js
       #   uses: actions/setup-node@v4
