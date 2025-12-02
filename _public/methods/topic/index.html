@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="de-DE" dir="ltr">
+<head>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Themenmodellierung | EnDiKaU</title>
+
+
+
+
+
+
+
+    
+    
+          
+            
+                <link rel="stylesheet" href="/css/nd_site.min.377ba30e2554bc807253c252011fed12fc1022177007ad5d516e5b929a06afc5.css" integrity="sha256-N3ujDiVUvIByU8JSAR/tEvwQIhdwB61dUW5bkpoGr8U=" crossorigin="anonymous">
+            
+        
+    
+
+
+<link href="/assets/fonts/fonts.css" rel="stylesheet">
+
+
+<script src="/js/navbar_height.min.js"></script>
+
+
+<script src="/js/toc_height.min.js"></script>
+
+<script src="/assets/vendor/jquery/js/jquery.min.js"></script>
+
+<script src="/assets/vendor/twemoji/js/twemoji.min.js"></script>
+<script>
+    function twemojiParse( element ) {
+        twemoji.parse( element, { base: '/assets/vendor/twemoji/', folder: 'svg', ext: '.svg' } ); 
+    }
+    twemojiParse( document )
+    window.onload = function() { twemojiParse( document ) }
+</script>
+<style> img.emoji { cursor: pointer; height: 1em; width: 1em; margin: 0 .05em 0 .1em; vertical-align: -0.1em; } </style>
+
+<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<script src="/assets/vendor/fontawesome/js/all.min.js"></script>
+
+<script src="/assets/vendor/wordcloud2/js/wordcloud2.js"></script>
+
+<script src="/assets/vendor/headroom/js/headroom.js"></script>
+<script type="module">
+    document.addEventListener("DOMContentLoaded", function () {
+
+        var pageNavbar = document.querySelector("#page-navbar-container");
+        var tocContainer = document.querySelector("#page-toc-container");
+
+        var headroomNavbar = new Headroom( pageNavbar, {
+            offset: 10, 
+            tolerance: 10,
+            onPin : function() {
+                if(tocContainer){ document.querySelector("#page-toc-container").style.top = "94pt" }
+            },
+            onUnpin : function() {
+                if(tocContainer){ document.querySelector("#page-toc-container").style.top = "24pt" }
+            },
+        });
+        headroomNavbar.init();
+    });
+</script>
+<style>
+    #page-toc-container {
+        will-change: top;
+        transition: top 200ms linear;
+    }
+    .headroom {
+        will-change: transform;
+        transition: transform 200ms linear;
+    }
+    .headroom--pinned {
+        transform: translateY(0%);
+    }
+    .headroom--unpinned {
+        transform: translateY(-100%);
+    }
+</style>
+
+<script src="/assets/vendor/iframe-resizer/js/iframe-resizer.parent.js"></script>
+
+<script src="/assets/vendor/d3/js/d3.min.js"></script>
+<script src="/assets/vendor/d3-cloud/js/d3.layout.cloud.js"></script>
+<script src="/assets/js/renderWordCloud.js"></script>
+
+<script src="/assets/vendor/masonry/js/masonry.pkgd.js"></script>
+
+
+
+
+<script src="/assets/vendor/glide/js/glide.js"></script>
+<link href="/assets/vendor/glide/css/glide.core.css" rel="stylesheet">
+<link href="/assets/vendor/glide/css/glide.theme.css" rel="stylesheet">
+
+
+<script>
+    var _paq = window._paq = window._paq || [];
+     
+    _paq.push(['trackPageView']);
+    _paq.push(['enableLinkTracking']);
+    (function() {
+        var u="https://webstatistik.uni-giessen.de/";
+        _paq.push(['setTrackerUrl', u+'matomo.php']);
+        _paq.push(['setSiteId', '7']);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+        g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+    })();
+</script>
+
+
+<style>
+    #chart {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 400px;
+    }
+</style> 
+
+</head>
+<body style="background: #e9ebe5 !important;">
+  <header class="headroom fixed-top">
+    <div id="page-navbar-container">
+    <nav class="navbar navbar-expand-md py-0 align-middle" id="page-navbar">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">EnDiKaU</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link px-3" href="/basics/" role="button">
+                            
+                            
+                            <i class="fa-solid fa-water"></i> 
+                            
+                            
+                            Grundlagen
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle px-3" href="/methods/" id="navbarDropdownMethoden" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            
+                            
+                            <i class="fa-solid fa-calculator"></i> 
+                            
+                            
+                            Methoden
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMethoden">
+                            
+                            <li>
+                                <a class="dropdown-item" href="/methods/sentiment/">Sentimentanalyse</a>
+                            </li>
+                            
+                            <li>
+                                <a class="dropdown-item" href="/methods/topic/">Themenmodellierung</a>
+                            </li>
+                            
+                            <li>
+                                <a class="dropdown-item" href="/methods/ner/">Entitätsanalyse</a>
+                            </li>
+                            
+                        </ul>
+                    </li>
+                    
+                    
+                    
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle px-3" href="/case_studies/" id="navbarDropdownFallstudien" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            
+                            
+                            <i class="fa-solid fa-earth-americas"></i> 
+                            
+                            
+                            Fallstudien
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownFallstudien">
+                            
+                            <li>
+                                <a class="dropdown-item" href="/case_studies/customer_reviews/">Kundenbewertungen</a>
+                            </li>
+                            
+                            <li>
+                                <a class="dropdown-item" href="/case_studies/support_tickets/">Support-Tickets</a>
+                            </li>
+                            
+                            <li>
+                                <a class="dropdown-item" href="/case_studies/network_analysis">Netzwerkanalyse</a>
+                            </li>
+                            
+                        </ul>
+                    </li>
+                    
+                    
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div id="page-navbar-spacer"></div>
+</div>
+  </header>
+  <main>
+    
+
+<div class="container-fluid" style="background: #e9ebe5 !important;">
+  <div class="container-xxl py-4 grid">
+    <div class="g-col-1 g-col-xl-3 text-end" style="font-size: 3.75rem;">
+      📰
+    </div>
+    <div class="g-col-11 g-col-xl-6">
+      <h1>Themenmodellierung</h1>
+      <span class="lead">
+        
+          Automatische Identifikation und Strukturierung von Themen in Texten
+        
+      </span>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid" style="background: var(--bs-body-bg)" tabindex="0" data-bs-spy="scroll" data-bs-target="#page-toc" data-bs-smooth-scroll="true">
+  <div class="container-xxl py-4 grid">
+    <div class="g-col-12 g-col-xl-3 order-xl-2 ms-xl-2">
+      
+        
+<div id="page-toc-container" class="nd-toc z-3">
+    <nav id="page-toc" aria-label="Inhaltsverzeichnis">
+        <strong class="h6 my-2">Inhaltsverzeichnis</strong>
+        <hr class="d-block my-2">
+        <nav id="TableOfContents">
+  <ul>
+    <li><a href="#was-ist-themenmodellierung">Was ist Themenmodellierung?</a></li>
+    <li><a href="#anwendungen">Anwendungen</a></li>
+    <li><a href="#ansätze-zur-themenmodellierung">Ansätze zur Themenmodellierung</a>
+      <ul>
+        <li><a href="#klassische-probabilistische-modelle">Klassische probabilistische Modelle</a>
+          <ul>
+            <li><a href="#vor--und-nachteile">Vor- und Nachteile</a></li>
+          </ul>
+        </li>
+        <li><a href="#kontextuelle-themenmodellierung">Kontextuelle Themenmodellierung</a>
+          <ul>
+            <li><a href="#vor--und-nachteile-1">Vor- und Nachteile</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#exemplarische-anwendung-mit-bertopic">Exemplarische Anwendung mit BERTopic</a>
+      <ul>
+        <li><a href="#ausprobieren">Ausprobieren</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+    </nav>
+</div>
+
+      
+    </div>
+    <div class="g-col-12 g-col-xl-6 g-start-xl-4 order-xl-1 nd-article">
+      <h2 id="was-ist-themenmodellierung">
+  Was ist Themenmodellierung?
+  <a class="anchor-link" href="#was-ist-themenmodellierung" aria-label="Link to Was ist Themenmodellierung?">
+    <i class="fa-solid fa-link fa-2xs"></i>
+  </a>
+</h2><!-- <div  class='grid'   >
+    <div  class='g-col-12 g-col-md-4 g-start-md-5'   >
+    <p>&ndash;&gt;</p>
+<!-- ```{r} -->
+<!-- knitr::include_graphics(here::here("content/methods/topic/img/book.svg")) -->
+<!-- ``` -->
+<!--
+</div>
+</div> -->
+<p>Themenmodellierung ist eine Methode des maschinellen Lernens, mit der aus großen Textsammlungen automatisch thematische Strukturen extrahiert werden können. Dabei werden Texte so analysiert, dass latente Themen sichtbar gemacht werden, ohne dass eine vorherige Kategorisierung notwendig ist. Diese Methode ist besonders nützlich, um große Mengen unstrukturierter Daten besser zu verstehen und effizient zu organisieren.</p>
+<h2 id="anwendungen">
+  Anwendungen
+  <a class="anchor-link" href="#anwendungen" aria-label="Link to Anwendungen">
+    <i class="fa-solid fa-link fa-2xs"></i>
+  </a>
+</h2><ul class="fa-ul nd-fa-ul" style="text-align: justify;"> <li><span class="fa-li nd-fa-li"><i class='fa-solid fa-star ' ></i></span> <strong>Kundenfeedback analysieren:</strong> Unternehmen können Kundenrezensionen, Support-Tickets oder Social-Media-Kommentare automatisch auswerten und häufige Themen identifizieren. So lassen sich Verbesserungspotenziale oder neue Kundenbedürfnisse schneller erkennen. </li>
+<li><span class="fa-li nd-fa-li"><i class='fa-solid fa-square-poll-vertical ' ></i></span> <strong>Marktforschung und Wettbewerbsanalyse:</strong> Durch die Analyse von Nachrichtenartikeln, Blogs und Forenbeiträgen können Unternehmen Branchentrends frühzeitig erkennen und ihre Strategien entsprechend anpassen. </li>
+<li><span class="fa-li nd-fa-li"><i class='fa-solid fa-envelope ' ></i></span> <strong>Automatische Kategorisierung von Support-Anfragen:</strong> Unternehmen mit vielen Kundenanfragen können durch Themenmodellierung häufige Probleme identifizieren und diese automatisiert an die zuständigen Abteilungen weiterleiten. Dies verbessert die Reaktionszeit und steigert die Effizienz im Kundenservice. </li>
+ </ul>
+<h2 id="ansätze-zur-themenmodellierung">
+  Ansätze zur Themenmodellierung
+  <a class="anchor-link" href="#ans%c3%a4tze-zur-themenmodellierung" aria-label="Link to Ansätze zur Themenmodellierung">
+    <i class="fa-solid fa-link fa-2xs"></i>
+  </a>
+</h2><p>Es gibt verschiedene Ansätze zur Themenmodellierung, die je nach Anwendungsfall unterschiedliche Vor- und Nachteile bieten. Klassische Modelle basieren häufig auf Wahrscheinlichkeitsverteilungen, während moderne Methoden neuronale Netze nutzen, um semantische Zusammenhänge besser zu erfassen.</p>
+<h3 id="klassische-probabilistische-modelle">
+  Klassische probabilistische Modelle
+  <a class="anchor-link" href="#klassische-probabilistische-modelle" aria-label="Link to Klassische probabilistische Modelle">
+    <i class="fa-solid fa-link fa-2xs"></i>
+  </a>
+</h3><p>Probabilistische Modelle verwenden statistische Verfahren, um Dokumente als Mischung verschiedener Themen zu modellieren. Diese Modelle haben sich insbesondere in der automatischen Textklassifikation bewährt.</p>
+<p  class='pb-0'   >
+    Latent Dirichlet Allocation (LDA) ist eines der bekanntesten probabilistischen Modelle für die Themenmodellierung. Es geht davon aus, dass jedes Dokument eine Mischung aus verschiedenen Themen ist und jedes Wort mit einer bestimmten Wahrscheinlichkeit zu einem dieser Themen gehört. Dies bedeutet, dass Dokumente nicht auf ein einziges Thema beschränkt ist, sondern vielmehr aus unterschiedlichen thematischen Anteilen bestehen können. So könnte etwa ein Dokument zu 10% dem Thema &ldquo;Digitalisierung&rdquo; und zu 90% dem Thema &ldquo;Kundenservice&rdquo; zugeordnet sein, während ein anderes Dokument dieselben Themen in einem Verhältnis von 65% zu 35% behandelt. LDA wird häufig zur automatischen Dokumentenkategorisierung und -zusammenfassung eingesetzt.
+</p>
+<div  class='grid my-4'   >
+     <div  class='g-col-12 g-col-md-10 g-start-md-2'   >
+    <img src="img/lda_topic.svg" style="width:100.0%" />
+</div> 
+</div>
+<h4 id="vor--und-nachteile">
+  Vor- und Nachteile
+  <a class="anchor-link" href="#vor--und-nachteile" aria-label="Link to Vor- und Nachteile">
+    <i class="fa-solid fa-link fa-2xs"></i>
+  </a>
+</h4><ul class="fa-ul nd-fa-ul" style="text-align: justify;"> <li><span class="fa-li nd-fa-li"><i class='fa-solid fa-thumbs-up '  style='color: #39b185' ></i></span> Dokumente können simultan mehrere Themen abbilden, was die Komplexität realer Texte oftmals präziser widerspiegelt. </li>
+<li><span class="fa-li nd-fa-li"><i class='fa-solid fa-thumbs-up '  style='color: #39b185' ></i></span> Als Verfahren des unüberwachten maschinellen Lernens erfordert LDA keine vordefinierten Themenkategorien oder manuelle Klassifizierung von Trainingsdaten. </li>
+<li><span class="fa-li nd-fa-li"><i class='fa-solid fa-thumbs-down '  style='color: #cf597e' ></i></span> Die optimale Themenanzahl muss a priori festgelegt werden, obwohl hierfür keine eindeutigen Bestimmungskriterien existieren. </li>
+<li><span class="fa-li nd-fa-li"><i class='fa-solid fa-thumbs-down '  style='color: #cf597e' ></i></span> Die Themen müssen selbst interpretiert werden, da der Algorithmus lediglich repräsentative Begriffskombinationen ohne inhaltliche Deutung liefert. </li>
+<li><span class="fa-li nd-fa-li"><i class='fa-solid fa-thumbs-down '  style='color: #cf597e' ></i></span> Bei sehr kurzen Texten, wie etwa Social-Media-Beiträgen, zeigt die Methode erhebliche Schwächen in der Themenextraktion. </li>
+ </ul>
+<h3 id="kontextuelle-themenmodellierung">
+  Kontextuelle Themenmodellierung
+  <a class="anchor-link" href="#kontextuelle-themenmodellierung" aria-label="Link to Kontextuelle Themenmodellierung">
+    <i class="fa-solid fa-link fa-2xs"></i>
+  </a>
+</h3><p>Moderne Themenmodellierungsverfahren setzen zunehmend auf vortrainierte Sprachmodelle, wie <a  href=/basics#bert  class="nd-crossref">BERT <i class="fa-solid fa-link fa-2xs"></i></a>, um semantische Informationen noch präziser zu extrahieren.</p>
+<p>BERTopic ist ein modernes, auf neuronalen Netzen basierendes Verfahren, das die Stärken von Transformer-Modellen mit Clustering-Techniken kombiniert. Dadurch lassen sich kontextuelle Wortbedeutungen erkennen und thematische Strukturen auch in kurzen, komplexen Texten erfassen. Im Gegensatz zu klassischen Methoden wie LDA kann BERTopic flexibler auf neue Themen reagieren und bietet eine feinere semantische Differenzierung.</p>
+<p>Die Themenmodellierung erfolgt dabei in vier aufeinander aufbauenden Schritten:</p>
+<ul class="fa-ul nd-fa-ul" style="text-align: justify;"> <li><span class="fa-li nd-fa-li"><i class='fa-solid fa-robot ' ></i></span> <strong>Embeddings:</strong> Jeder Text wird vom Sprachmodell (BERT) in einen Zahlenvektor (Embedding) übersetzt, der seine Bedeutung im Kontext abbildet. </li>
+<li><span class="fa-li nd-fa-li"><i class='fa-solid fa-down-long ' ></i></span> <strong>Dimensionsreduktion:</strong> Diese aus dem ersten Schritt resultierenden hochdimensionalen Vektoren werden in wenige Dimensionen reduziert. </li>
+<li><span class="fa-li nd-fa-li"><i class='fa-solid fa-circle-nodes ' ></i></span> <strong>Cluster:</strong> Semantisch ähnliche Texte werden automatisch zu thematischen Gruppen zusammengefasst. </li>
+<li><span class="fa-li nd-fa-li"><i class='fa-solid fa-list ' ></i></span> <strong>Themenbeschreibung:</strong> Repräsentative Begriffe pro Gruppe helfen dabei, ein passendes Thema zu identifizieren. Diese Begriffe werden für jedes Cluster mithilfe der <a  href=/basics#tf-idf  class="nd-crossref">TF-IDF Methode <i class="fa-solid fa-link fa-2xs"></i></a> ermittelt. </li>
+ </ul>
+<div  class='grid my-4'   >
+     <div  class='g-col-12 g-col-md-10 g-start-md-2'   >
+    <img src="img/bertopic.svg" style="width:100.0%" />
+</div> 
+</div>
+<h4 id="vor--und-nachteile-1">
+  Vor- und Nachteile
+  <a class="anchor-link" href="#vor--und-nachteile-1" aria-label="Link to Vor- und Nachteile">
+    <i class="fa-solid fa-link fa-2xs"></i>
+  </a>
+</h4><ul class="fa-ul nd-fa-ul" style="text-align: justify;"> <li><span class="fa-li nd-fa-li"><i class='fa-solid fa-thumbs-up '  style='color: #39b185' ></i></span> BERTopic benötigt keine aufwendige Vorverarbeitung von Texten, da der Kontext berücksichtigt wird. Es sogar nachteilig sein, Wörter zu entfernen oder stark zu vereinfachen. </li>
+<li><span class="fa-li nd-fa-li"><i class='fa-solid fa-thumbs-up '  style='color: #39b185' ></i></span> Funktionieren zuverlässig auch bei kurzen oder informell geschriebenen Texten, wo LDA oft scheitert. </li>
+<li><span class="fa-li nd-fa-li"><i class='fa-solid fa-thumbs-up '  style='color: #39b185' ></i></span> Können mittels Fine Tuning und spezifischer Daten auf eigene, relevante Themen angepasst werden. </li>
+<li><span class="fa-li nd-fa-li"><i class='fa-solid fa-thumbs-down '  style='color: #cf597e' ></i></span> Da BERTopic aus mehreren aufeinander aufbauenden Verfahren besteht, erfordert die Umsetzung technisches Know-how, insbesondere zur Auswahl der Parameter. </li>
+<li><span class="fa-li nd-fa-li"><i class='fa-solid fa-thumbs-down '  style='color: #cf597e' ></i></span> Die Rechenleistung ist höher, insbesondere bei großen Datensätzen. </li>
+<li><span class="fa-li nd-fa-li"><i class='fa-solid fa-thumbs-down '  style='color: #cf597e' ></i></span> Wie auch bei LDA müssen die Themen selbst interpretiert werden. Die Zuordnung bleibt also subjektiv. </li>
+<li><span class="fa-li nd-fa-li"><i class='fa-solid fa-thumbs-down '  style='color: #cf597e' ></i></span> BERTopic kann zu vielen sehr kleinen Themen mit wenigen Texten führen, was die Interpretation erschwert. Eine Anpassung der Modellparameter hilft, diese zu bündeln. </li>
+ </ul>
+<h2 id="exemplarische-anwendung-mit-bertopic">
+  Exemplarische Anwendung mit BERTopic
+  <a class="anchor-link" href="#exemplarische-anwendung-mit-bertopic" aria-label="Link to Exemplarische Anwendung mit BERTopic">
+    <i class="fa-solid fa-link fa-2xs"></i>
+  </a>
+</h2><p>Auf dieser Seite können Sie ein BERTopic-Modell in Aktion erleben. Das Modell wurde auf einer Sammlung von Zeitungsartikeln trainiert, und die Ergebnisse werden in einer interaktiven Visualisierung dargestellt.</p>
+<h3 id="ausprobieren">
+  Ausprobieren
+  <a class="anchor-link" href="#ausprobieren" aria-label="Link to Ausprobieren">
+    <i class="fa-solid fa-link fa-2xs"></i>
+  </a>
+</h3><p>Geben Sie einen beliebigen Text in das untenstehende Feld ein, und unser BERTopic-Modell wird ihn analysieren und das wahrscheinlichste Thema bestimmen.</p>
+<div class="card">
+<div class="card-header">Text festlegen</div>
+<div class="card-body p-0">
+<input type="text" class="form-control" id="textInput1" aria-describedby="textInputHelp" placeholder="Hier Text eingeben"/>
+</div>
+</div>
+
+    </div>
+  </div>
+</div>
+
+
+  </main>
+  <footer>
+    <div class="container-fluid" style="background: var(--nd-navbar-bg) !important; color: var(--nd-navbar-color) !important">
+    <div class="container-xxl py-2">
+        <div class="d-flex justify-content-center align-middle flex-wrap">
+            <div class="p-4 align-self-center">
+                <img src="/assets/img/JLU_Giessen-Logo.png" width="200px">
+            </div>
+            <div class="p-4 align-self-center">
+                <img src="/assets/img/Hessen-Logo-grau.png" width="100px">
+            </div>
+        </div>
+    </div>
+    Copyright 2025. All rights reserved.
+</div>
+
+
+  </footer>
+</body>
+</html>

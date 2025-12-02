@@ -1,12 +1,7 @@
 project:
   type: hugo
   output-dir: _hugo
-  pre-render: /bin/sh -c "R -e 'renv::init()'"
-  post-render: |
-    /bin/sh -c "cd _hugo && \
-    hugo --cleanDestinationDir && \
-    /bin/cp -rf public ../_public"
-  # post-render: /bin/sh -c "cd hugo &&  hugo --cleanDestinationDir"
+  post-render: /bin/sh -c "cd _hugo && hugo --cleanDestinationDir --minify && /bin/cp -rf public ../_public"
 format:
   hugo-md:
     code-fold: true
@@ -20,7 +15,6 @@ engine: knitr
 knitr:
   opts_chunk:
     out.width: "100%"
-    # dev: ragg_png
     dev: svglite
     dev.args: { scaling: 1, bg: "transparent" }
 editor: source
