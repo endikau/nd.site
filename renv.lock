@@ -1332,43 +1332,6 @@
       "Maintainer": "Tyson Barrett <t.barrett88@gmail.com>",
       "Repository": "https://packagemanager.posit.co/cran/latest"
     },
-    "datapasta": {
-      "Package": "datapasta",
-      "Version": "3.1.0",
-      "Source": "Repository",
-      "Title": "R Tools for Data Copy-Pasta",
-      "Authors@R": "c( person(\"Miles\", \"McBain\", email = \"miles.mcbain@gmail.com\", role = c(\"aut\", \"cre\"),  comment = c(ORCID = \"0000-0003-2865-2548\")), person(\"Jonathan\", \"Carroll\", email = \"rpkg@jcarroll.com.au\", role = \"aut\",  comment = c(ORCID = \"0000-0002-1404-5264\")), person(\"Mark\", \"Dulhunty\", role = \"ctb\"), person(\"Andrew\", \"Collier\", email = \"andrew@exegetic.biz\", role = \"ctb\"), person(\"Sharla\", \"Gelfand\", email = \"sharla.gelfand@gmail.com\", role = \"aut\"), person(\"Suthira\", \"Owlarn\", email = \"suthira.owlarn@gmail.com\", role = \"aut\",  comment = c(ORCID = \"0000-0002-3258-1415\")), person(\"Garrick\", \"Aden-Buie\", email = \"garrick@adenbuie.com\", role = \"aut\", comment = c(ORCID = \"0000-0002-7111-0077\")))",
-      "Description": "RStudio addins and R functions that make copy-pasting vectors and tables to text painless.",
-      "Depends": [
-        "R (>= 3.3.0)"
-      ],
-      "Suggests": [
-        "tibble (>= 1.2)",
-        "testthat",
-        "knitr",
-        "rmarkdown",
-        "utils",
-        "covr",
-        "data.table"
-      ],
-      "Imports": [
-        "readr (>= 1.2.0)",
-        "clipr (>= 0.3.0)",
-        "rstudioapi (>= 0.6)",
-        "methods"
-      ],
-      "License": "MIT + file LICENSE",
-      "Encoding": "UTF-8",
-      "LazyData": "true",
-      "RoxygenNote": "7.0.1",
-      "URL": "https://github.com/milesmcbain/datapasta",
-      "BugReports": "https://github.com/milesmcbain/datapasta/issues",
-      "VignetteBuilder": "knitr",
-      "NeedsCompilation": "no",
-      "Author": "Miles McBain [aut, cre] (<https://orcid.org/0000-0003-2865-2548>), Jonathan Carroll [aut] (<https://orcid.org/0000-0002-1404-5264>), Mark Dulhunty [ctb], Andrew Collier [ctb], Sharla Gelfand [aut], Suthira Owlarn [aut] (<https://orcid.org/0000-0002-3258-1415>), Garrick Aden-Buie [aut] (<https://orcid.org/0000-0002-7111-0077>)",
-      "Maintainer": "Miles McBain <miles.mcbain@gmail.com>",
-      "Repository": "CRAN"
-    },
     "dbplyr": {
       "Package": "dbplyr",
       "Version": "2.5.1",
@@ -2113,7 +2076,7 @@
       "NeedsCompilation": "no",
       "Author": "Hadley Wickham [aut] (ORCID: <https://orcid.org/0000-0003-4757-117X>), Winston Chang [aut] (ORCID: <https://orcid.org/0000-0002-1576-2126>), Lionel Henry [aut], Thomas Lin Pedersen [aut, cre] (ORCID: <https://orcid.org/0000-0002-5147-4711>), Kohske Takahashi [aut], Claus Wilke [aut] (ORCID: <https://orcid.org/0000-0002-7470-9261>), Kara Woo [aut] (ORCID: <https://orcid.org/0000-0002-5125-4188>), Hiroaki Yutani [aut] (ORCID: <https://orcid.org/0000-0002-3385-7233>), Dewey Dunnington [aut] (ORCID: <https://orcid.org/0000-0002-9415-4582>), Teun van den Brand [aut] (ORCID: <https://orcid.org/0000-0002-9335-7468>), Posit, PBC [cph, fnd] (ROR: <https://ror.org/03wc8by49>)",
       "Maintainer": "Thomas Lin Pedersen <thomas.pedersen@posit.co>",
-      "Repository": "CRAN"
+      "Repository": "https://packagemanager.posit.co/cran/latest"
     },
     "ggraph": {
       "Package": "ggraph",
@@ -2177,14 +2140,14 @@
     },
     "ggrepel": {
       "Package": "ggrepel",
-      "Version": "0.9.6",
-      "Source": "Repository",
+      "Version": "0.9.6.9999",
+      "Source": "GitHub",
       "Authors@R": "c( person(\"Kamil\", \"Slowikowski\", email = \"kslowikowski@gmail.com\", role = c(\"aut\", \"cre\"), comment = c(ORCID = \"0000-0002-2843-6370\")), person(\"Alicia\", \"Schep\", role = \"ctb\", comment = c(ORCID = \"0000-0002-3915-0618\")), person(\"Sean\", \"Hughes\", role = \"ctb\", comment = c(ORCID = \"0000-0002-9409-9405\")), person(\"Trung Kien\", \"Dang\", role = \"ctb\", comment = c(ORCID = \"0000-0001-7562-6495\")), person(\"Saulius\", \"Lukauskas\", role = \"ctb\"), person(\"Jean-Olivier\", \"Irisson\", role = \"ctb\", comment = c(ORCID = \"0000-0003-4920-3880\")), person(\"Zhian N\", \"Kamvar\", role = \"ctb\", comment = c(ORCID = \"0000-0003-1458-7108\")), person(\"Thompson\", \"Ryan\", role = \"ctb\", comment = c(ORCID = \"0000-0002-0450-8181\")), person(\"Dervieux\", \"Christophe\", role = \"ctb\", comment = c(ORCID = \"0000-0003-4474-2498\")), person(\"Yutani\", \"Hiroaki\", role = \"ctb\"), person(\"Pierre\", \"Gramme\", role = \"ctb\"), person(\"Amir Masoud\", \"Abdol\", role = \"ctb\"), person(\"Malcolm\", \"Barrett\", role = \"ctb\", comment = c(ORCID = \"0000-0003-0299-5825\")), person(\"Robrecht\", \"Cannoodt\", role = \"ctb\", comment = c(ORCID = \"0000-0003-3641-729X\")), person(\"Michał\", \"Krassowski\", role = \"ctb\", comment = c(ORCID = \"0000-0002-9638-7785\")), person(\"Michael\", \"Chirico\", role = \"ctb\", comment = c(ORCID = \"0000-0003-0787-087X\")), person(\"Pedro\", \"Aphalo\", role = \"ctb\", comment = c(ORCID = \"0000-0003-3385-972X\")), person(\"Francis\", \"Barton\", role = \"ctb\") )",
       "Title": "Automatically Position Non-Overlapping Text Labels with 'ggplot2'",
       "Description": "Provides text and label geoms for 'ggplot2' that help to avoid overlapping text labels. Labels repel away from each other and away from the data points.",
       "Depends": [
         "R (>= 3.0.0)",
-        "ggplot2 (>= 2.2.0)"
+        "ggplot2 (>= 3.5.0)"
       ],
       "Imports": [
         "grid",
@@ -2219,10 +2182,14 @@
         "Rcpp"
       ],
       "Encoding": "UTF-8",
-      "NeedsCompilation": "yes",
-      "Author": "Kamil Slowikowski [aut, cre] (<https://orcid.org/0000-0002-2843-6370>), Alicia Schep [ctb] (<https://orcid.org/0000-0002-3915-0618>), Sean Hughes [ctb] (<https://orcid.org/0000-0002-9409-9405>), Trung Kien Dang [ctb] (<https://orcid.org/0000-0001-7562-6495>), Saulius Lukauskas [ctb], Jean-Olivier Irisson [ctb] (<https://orcid.org/0000-0003-4920-3880>), Zhian N Kamvar [ctb] (<https://orcid.org/0000-0003-1458-7108>), Thompson Ryan [ctb] (<https://orcid.org/0000-0002-0450-8181>), Dervieux Christophe [ctb] (<https://orcid.org/0000-0003-4474-2498>), Yutani Hiroaki [ctb], Pierre Gramme [ctb], Amir Masoud Abdol [ctb], Malcolm Barrett [ctb] (<https://orcid.org/0000-0003-0299-5825>), Robrecht Cannoodt [ctb] (<https://orcid.org/0000-0003-3641-729X>), Michał Krassowski [ctb] (<https://orcid.org/0000-0002-9638-7785>), Michael Chirico [ctb] (<https://orcid.org/0000-0003-0787-087X>), Pedro Aphalo [ctb] (<https://orcid.org/0000-0003-3385-972X>), Francis Barton [ctb]",
+      "Author": "Kamil Slowikowski [aut, cre] (ORCID: <https://orcid.org/0000-0002-2843-6370>), Alicia Schep [ctb] (ORCID: <https://orcid.org/0000-0002-3915-0618>), Sean Hughes [ctb] (ORCID: <https://orcid.org/0000-0002-9409-9405>), Trung Kien Dang [ctb] (ORCID: <https://orcid.org/0000-0001-7562-6495>), Saulius Lukauskas [ctb], Jean-Olivier Irisson [ctb] (ORCID: <https://orcid.org/0000-0003-4920-3880>), Zhian N Kamvar [ctb] (ORCID: <https://orcid.org/0000-0003-1458-7108>), Thompson Ryan [ctb] (ORCID: <https://orcid.org/0000-0002-0450-8181>), Dervieux Christophe [ctb] (ORCID: <https://orcid.org/0000-0003-4474-2498>), Yutani Hiroaki [ctb], Pierre Gramme [ctb], Amir Masoud Abdol [ctb], Malcolm Barrett [ctb] (ORCID: <https://orcid.org/0000-0003-0299-5825>), Robrecht Cannoodt [ctb] (ORCID: <https://orcid.org/0000-0003-3641-729X>), Michał Krassowski [ctb] (ORCID: <https://orcid.org/0000-0002-9638-7785>), Michael Chirico [ctb] (ORCID: <https://orcid.org/0000-0003-0787-087X>), Pedro Aphalo [ctb] (ORCID: <https://orcid.org/0000-0003-3385-972X>), Francis Barton [ctb]",
       "Maintainer": "Kamil Slowikowski <kslowikowski@gmail.com>",
-      "Repository": "CRAN"
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteUsername": "slowkow",
+      "RemoteRepo": "ggrepel",
+      "RemoteRef": "master",
+      "RemoteSha": "41f47d9ffa5aacf66a7ec8f4ecfe6dd7d5408b01"
     },
     "glmnet": {
       "Package": "glmnet",

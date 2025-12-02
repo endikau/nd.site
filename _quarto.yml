@@ -1,6 +1,7 @@
 project:
   type: hugo
-  output-dir: hugo
+  output-dir: _hugo
+  # pre-render: 
   post-render: /bin/sh -c "cd hugo &&  hugo --buildDrafts --cleanDestinationDir"
   # post-render: /bin/sh -c "cd hugo &&  hugo --cleanDestinationDir"
 format:

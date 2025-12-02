@@ -29,4 +29,4 @@ dependencies:
   - tk=8.6.13=noxft_h4845f30_101
   - tzdata=2024b=hc8b5060_0
   - wheel=0.45.1=pyhd8ed1ab_1
-prefix: /home/moritz/.local/share/r-miniconda/envs/nd.site.condaenv
+prefix: /home/rackelhahn69/.local/share/r-miniconda/envs/nd.site.condaenv
