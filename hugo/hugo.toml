@@ -3,7 +3,7 @@ title = "EnDiKaU"
 theme = "endikau_theme"
 
 ignoreFiles = [ "\\.qmd$", "\\.ipynb$", "\\.py$" ]
-publishDir = "../public"
+publishDir = "public"
 
 defaultContentLanguage = "de"
 defaultContentLanguageInSubdir = false

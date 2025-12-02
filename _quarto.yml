@@ -1,8 +1,11 @@
 project:
   type: hugo
   output-dir: _hugo
-  # pre-render: 
-  post-render: /bin/sh -c "cd hugo &&  hugo --buildDrafts --cleanDestinationDir"
+  pre-render: /bin/sh -c "R -e 'renv::init()'"
+  post-render: |
+    /bin/sh -c "cd _hugo && \
+    hugo --cleanDestinationDir && \
+    /bin/cp -rf public ../_public"
   # post-render: /bin/sh -c "cd hugo &&  hugo --cleanDestinationDir"
 format:
   hugo-md:
