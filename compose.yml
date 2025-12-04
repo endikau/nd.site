@@ -1,18 +1,18 @@
 services:
   static_render:
     container_name: static_render
-    image: static_render:nd_site
+    image: static_render:latest
     build:
       context: .
       dockerfile: Dockerfile
     pull_policy: never
     volumes:
-      - ./content:/project/content
-      - ./_hugo:/project/_hugo
-      - ./_public:/project/_public
-    # command: |
-    #   conda update -n base -c conda-forge conda && \
-    #   conda install conda-forge::deno && \
-    #   R -e "renv::init()" && \
-    #   quarto render && \
-    #   cp ./_public ./_outtt
+      - .:/project
+    command: |
+      sleep 60m
+
+
+    # R -e "renv::install(c('rmarkdown', 'pkgdepends'))" && quarto render
+      
+    # && \
+    #   # cp ./hugo/public ./_public
