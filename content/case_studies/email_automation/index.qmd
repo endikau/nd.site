@@ -1,0 +1,98 @@
+---
+title: "Automatisierte Bearbeitung von E-Mail-Anfragen"
+subtitle: "Eine automatisierte Bearbeitung von E-Mail-Anfragen am Beispiel des fiktiven Industrieunternehmens ENDI"
+figtitle: "️"
+draft: false
+toc_show: true
+execute:
+  echo: false
+  warning: false
+  message: false
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+```{r}
+ggplot2::theme_set(`+`(
+  ggplot2::theme_minimal(base_size = 14, base_family = "Open Sans"),
+  ggplot2::theme(
+    axis.text.x = ggplot2::element_text(size = 12),
+    axis.text.y = ggplot2::element_text(size = 12),
+    axis.title.x = ggplot2::element_text(size = 14),
+    axis.title.y = ggplot2::element_text(size = 14),
+    title = ggplot2::element_text(size = 14),
+    strip.text = ggplot2::element_text(size = 14),
+    panel.grid.major = ggplot2::element_blank(),
+    panel.grid.minor = ggplot2::element_blank(),
+    panel.background = ggplot2::element_rect(fill = NA, colour = NA),
+    plot.background = ggplot2::element_rect(fill = NA, colour = NA),
+    legend.position = "bottom"
+  )
+))
+```
+
+<!-- ## 🎯 Motivation der Fallstudie -->
+
+## Motivation der Fallstudie
+
+Das fiktive Unternehmen **ENDI** ist ein mittelständisches Industrieunternehmen. Die Kunden des Unternehmens stammen überwiegend aus dem deutschsprachigen B2B-Umfeld. In den vergangenen Jahren ist ENDI stark gewachsen. Das führte zu einem deutlichen Anstieg im Kundenanfragevolumen.
+
+Anfragen decken ein breites Spektrum ab:
+
+- **Onlineshop-Themen** (Bestellprobleme, Lieferzeiten, Angebote)  
+- **Produktprobleme** (Fehlfunktionen, Installationsfragen)  
+- **Garantiefälle** (Rücksendungen, Austauschgeräte)  
+- **Allgemeine technische Produktfragen**  
+- **Zufriedenheitsbekundungen und Lob**
+
+Bislang wurden alle Anfragen **manuell** von Servicemitarbeitenden beantwortet. Dies verursacht:
+
+- **Hohe Bearbeitungszeiten**  
+- **Inkonsistente Antwortqualität**  
+- **Engpässe bei hoher Last**  
+- **Hohe operative Kosten**
+
+Das Management von ENDI erkennt, dass eine **Automatisierung mithilfe eines KI-Agenten** das Potenzial hat, Effizienz und Qualität deutlich zu verbessern.
+
+
+## Zielsetzung
+
+Da keine "echten" E-Mail-Anfragen und -Antworten von ENDI zur Verfügung stehen, werden diese im Rahmen der Fallstudie **simuliert**. 
+
+Die simulierten Anfragen und Antworten dienen dem KI-Agenten als **Wissensgrundlage**, um:
+
+- die **Unternehmensphilosophie** von ENDI nachzubilden,  
+- den gewünschten **Tonfall** (freundlich, lösungsorientiert, technisch kompetent) zu erlernen,  
+- typische **Antwortmuster** und **Prozesslogiken** (z. B. Vorgehen bei Garantiefällen, Nachfragen bei technischen Problemen) zu verstehen.
+
+Auf Basis dieser fiktiven, aber realistisch gestalteten Wissensdatenbank soll der KI-Agent lernen, neue Kundenanfragen **im Sinne des Unternehmens** zu beantworten.
+
+Die folgende Tabelle gibt Beispielhafte Kundenanfragen und deren Antworten durch die Servicemitarbeiter wieder:
+
+```{r}
+library(tibble)
+library(gt)
+
+kundenanfragen_data <- tibble::tribble(
+  ~Anfrage, ~Antwort,
+
+  "Wir haben im Januar eine Fertigungsstraße FSL-300 bei Ihnen erworben. Seit dem Start der Produktion stellen wir fest, dass die Durchlaufzeit deutlich länger ist als in Ihren technischen Unterlagen angegeben. Wir benötigen hierzu schnellstmöglich Unterstützung.",
+  "Sehr geehrter Herr Kunde, wir bedauern zu hören, dass die Durchlaufzeit der FSL-300 nicht Ihren Erwartungen entspricht. Bitte senden Sie uns die Seriennummer der Anlage sowie detaillierte Informationen zu den beobachteten Durchlaufzeiten und den eingesetzten Materialien. Unser Technischer Support wird sich umgehend mit Ihnen in Verbindung setzen, um das Problem zu analysieren.",
+
+  "Wir haben einen Garantieanspruch für unsere Stanze ST-100. Die Maschine ist innerhalb der Garantiezeit defekt gegangen. Es handelt sich um einen Defekt der Hydraulik.",
+  "Sehr geehrter Herr Kunde, wir nehmen Ihren Garantieanspruch für die Stanze ST-100 entgegen. Bitte teilen Sie uns die Seriennummer der Maschine mit. Wir werden einen Servicetechniker beauftragen, die Hydraulik zu überprüfen und gegebenenfalls zu reparieren.",
+
+  "Ich möchte mich für den schnellen Support bedanken.",
+  "Vielen Dank für Ihr positives Feedback! Es freut uns sehr, dass Sie mit unserem Support zufrieden sind. Wir geben Ihr Lob sehr gerne an das gesamte Team weiter.",
+
+  "Ich habe noch keine Versandbestätigung zu meiner Bestellung erhalten.",
+  "Bitte entschuldigen Sie die Verzögerung. Wir prüfen den Status Ihrer Bestellung umgehend und melden uns zeitnah bei Ihnen."
+)
+
+kundenanfragen_data |>
+  gt::gt() |>
+  gt::tab_caption("Beispielhafte Kundenanfragen und Antworten") |>
+  gt::tab_options(table.width = gt::pct(100))
+```
+
