@@ -14,3 +14,4 @@ content/**/index.markdown_strict_files/
 content/**/index_files/libs/
 **/*.quarto_ipynb
 content/**/index_files/figure-html/
+.cache/
