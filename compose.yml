@@ -1,13 +1,17 @@
 services:
-  render_static:
-    container_name: render_static
+  static_render:
+    container_name: static_render
     image: nd_site-render_static:latest
     build:
       context: .
       dockerfile: Dockerfile
     pull_policy: never
+    # image: ghcr.io/endikau/nd_site-static_render:latest
     volumes:
       - ~/Documents/endikau/nd.site:/project
-      - ~/Documents/endikau/.cache/nd.site:/root/.cache
     command: |
+      sleep infinity
       quarto render
+
+    # R -e "renv::repair()"
+    # R -e "renv::snapshot()"

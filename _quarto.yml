@@ -20,3 +20,7 @@ knitr:
 editor: source
 editor_options:
   chunk_output_type: console
+# commands:
+#   clean: "rm -rf _book"
+#   preview: "quarto preview --port 7777"
+#   publish: "quarto render --to html && rsync -av _book/ myserver:/var/www/"

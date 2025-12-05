@@ -15,3 +15,8 @@ content/**/index_files/libs/
 **/*.quarto_ipynb
 content/**/index_files/figure-html/
 .cache/
+hugo/assets/
+hugo/static/
+node_modules/
+_hugo/content/
+_hugo/themes/endikau_theme/assets/

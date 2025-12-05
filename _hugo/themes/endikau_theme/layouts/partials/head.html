@@ -19,12 +19,13 @@
     {{ end }}
 {{ end }}
 
-<link href="/assets/fonts/fonts.css" rel="stylesheet">
+{{ $fonts := resources.Get "fonts/fonts.css" | minify | fingerprint }}
+<link href="{{ $fonts.RelPermalink }}" rel="stylesheet">
 
-{{ $js_navbar_height := resources.Get "js/navbar_height.js" | minify }}
+{{ $js_navbar_height := resources.Get "js/navbar_height.js" | minify | fingerprint }}
 <script src="{{ $js_navbar_height.RelPermalink }}"></script>
 
-{{ $js_toc_height := resources.Get "js/toc_height.js" | minify }}
+{{ $js_toc_height := resources.Get "js/toc_height.js" | minify | fingerprint }}
 <script src="{{ $js_toc_height.RelPermalink }}"></script>
 
 <script src="/assets/vendor/jquery/js/jquery.min.js"></script>

@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "copy-assets": "node scripts/copy_assets.cjs",
+    "postinstall": "npm run copy-assets"
+  },
+  "dependencies": {
+    "@endikau/nd_assets": "git+ssh://git@github.com:endikau/nd.assets.git#latest"
+  }
+}
