@@ -1,0 +1,13 @@
+services:
+  render_static:
+    container_name: render_static
+    image: nd_site-render_static:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    pull_policy: never
+    volumes:
+      - ~/Documents/endikau/nd.site:/project
+      - ~/Documents/endikau/.cache/nd.site:/root/.cache
+    command: |
+      quarto render

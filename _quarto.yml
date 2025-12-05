@@ -1,8 +1,7 @@
 project:
   type: hugo
-  output-dir: hugo
-  post-render: /bin/sh -c "cd hugo &&  hugo --buildDrafts --cleanDestinationDir"
-  # post-render: /bin/sh -c "cd hugo &&  hugo --cleanDestinationDir"
+  output-dir: _hugo
+  post-render: /bin/sh -c "cd _hugo && hugo --cleanDestinationDir --minify && /bin/cp -rf public ../_public"
 format:
   hugo-md:
     code-fold: true
@@ -16,7 +15,6 @@ engine: knitr
 knitr:
   opts_chunk:
     out.width: "100%"
-    # dev: ragg_png
     dev: svglite
     dev.args: { scaling: 1, bg: "transparent" }
 editor: source

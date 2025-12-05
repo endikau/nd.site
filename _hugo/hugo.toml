@@ -1,0 +1,109 @@
+baseURL = "https://endikau.dsjlu.wirtschaft.uni-giessen.de"
+title = "EnDiKaU"
+theme = "endikau_theme"
+
+ignoreFiles = [ "\\.qmd$", "\\.ipynb$", "\\.py$" ]
+publishDir = "public"
+
+defaultContentLanguage = "de"
+defaultContentLanguageInSubdir = false
+
+[languages]
+    [languages.de]
+        disabled = false
+        languageCode = "de-DE"
+        languageDirection = "ltr"
+        languageName = "Deutsch"
+
+[menu]
+    [[menu.main]]
+        weight = 1
+        identifier = "basics"
+        name = "Grundlagen"
+        pre = "fa-solid fa-water"
+        url = "/basics/"
+    [[menu.main]]
+        weight = 2
+        identifier = "methods"
+        name = "Methoden"
+        pre = "fa-solid fa-calculator"
+        url = "/methods/"
+    [[menu.main]]
+        weight = 1
+        identifier = "sentiment"
+        parent = "methods"
+        name = "Sentimentanalyse"
+        url = "/methods/sentiment/"
+    [[menu.main]]
+        weight = 2
+        identifier = "topic"
+        parent = "methods"
+        name = "Themenmodellierung"
+        url = "/methods/topic/"
+    [[menu.main]]
+        weight = 3
+        identifier = "ner"
+        parent = "methods"
+        name = "Entitätsanalyse"
+        url = "/methods/ner/"
+    [[menu.main]]
+        weight = 3
+        identifier = "case_studies"
+        name = "Fallstudien"
+        pre = "fa-solid fa-earth-americas"
+        url = "/case_studies/"
+    [[menu.main]]
+        weight = 1
+        identifier = "case_studies-customer_reviews"
+        parent = "case_studies"
+        name = "Kundenbewertungen"
+        url = "/case_studies/customer_reviews/"
+    [[menu.main]]
+        weight = 2
+        identifier = "case_studies-support_tickets"
+        parent = "case_studies"
+        name = "Support-Tickets"
+        url = "/case_studies/support_tickets/"
+    [[menu.main]]
+        weight = 3
+        identifier = "case_studies-network_analysis"
+        parent = "case_studies"
+        name = "Netzwerkanalyse"
+        url = "/case_studies/network_analysis"
+    # [[menu.main]]
+    #     weight = 4
+    #     identifier = "case_studies-case_study-1"
+    #     parent = "case_studies"
+    #     name = "Fallstudie I"
+    #     url = "/case_studies/case_study-1/"
+    # [[menu.main]]
+    #     weight = 5
+    #     identifier = "case_studies-case_study-2"
+    #     parent = "case_studies"
+    #     name = "Fallstudie II"
+    #     url = "/case_studies/case_study-2/"
+    # [[menu.main]]
+    #     weight = 4
+    #     identifier = "misc"
+    #     name = "Misc"
+    #     pre = "fa-solid fa-ellipsis"
+    #     url = "/misc/"
+    # [[menu.main]]
+    #     weight = 1
+    #     identifier = "mitmachen"
+    #     parent = "misc"
+    #     name = "Mitmachen"
+    #     url = "/misc/mitmachen/"
+
+[markup]
+    [markup.goldmark]
+        [markup.goldmark.renderer]
+            unsafe = true
+        [markup.goldmark.parser]
+            wrapStandAloneImageWithinParagraph = false
+    [markup.tableOfContents]
+        startLevel = 2
+        endLevel = 4
+        ordered = false
+
+

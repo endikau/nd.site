@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="de-DE" dir="ltr">
+<head>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Analyse von Kundenrezensionen | EnDiKaU</title>
+
+
+
+
+
+
+
+    
+    
+          
+            
+                <link rel="stylesheet" href="/css/nd_site.min.377ba30e2554bc807253c252011fed12fc1022177007ad5d516e5b929a06afc5.css" integrity="sha256-N3ujDiVUvIByU8JSAR/tEvwQIhdwB61dUW5bkpoGr8U=" crossorigin="anonymous">
+            
+        
+    
+
+
+<link href="/assets/fonts/fonts.css" rel="stylesheet">
+
+
+<script src="/js/navbar_height.min.js"></script>
+
+
+<script src="/js/toc_height.min.js"></script>
+
+<script src="/assets/vendor/jquery/js/jquery.min.js"></script>
+
+<script src="/assets/vendor/twemoji/js/twemoji.min.js"></script>
+<script>
+    function twemojiParse( element ) {
+        twemoji.parse( element, { base: '/assets/vendor/twemoji/', folder: 'svg', ext: '.svg' } ); 
+    }
+    twemojiParse( document )
+    window.onload = function() { twemojiParse( document ) }
+</script>
+<style> img.emoji { cursor: pointer; height: 1em; width: 1em; margin: 0 .05em 0 .1em; vertical-align: -0.1em; } </style>
+
+<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<script src="/assets/vendor/fontawesome/js/all.min.js"></script>
+
+<script src="/assets/vendor/wordcloud2/js/wordcloud2.js"></script>
+
+<script src="/assets/vendor/headroom/js/headroom.js"></script>
+<script type="module">
+    document.addEventListener("DOMContentLoaded", function () {
+
+        var pageNavbar = document.querySelector("#page-navbar-container");
+        var tocContainer = document.querySelector("#page-toc-container");
+
+        var headroomNavbar = new Headroom( pageNavbar, {
+            offset: 10, 
+            tolerance: 10,
+            onPin : function() {
+                if(tocContainer){ document.querySelector("#page-toc-container").style.top = "94pt" }
+            },
+            onUnpin : function() {
+                if(tocContainer){ document.querySelector("#page-toc-container").style.top = "24pt" }
+            },
+        });
+        headroomNavbar.init();
+    });
+</script>
+<style>
+    #page-toc-container {
+        will-change: top;
+        transition: top 200ms linear;
+    }
+    .headroom {
+        will-change: transform;
+        transition: transform 200ms linear;
+    }
+    .headroom--pinned {
+        transform: translateY(0%);
+    }
+    .headroom--unpinned {
+        transform: translateY(-100%);
+    }
+</style>
+
+<script src="/assets/vendor/iframe-resizer/js/iframe-resizer.parent.js"></script>
+
+<script src="/assets/vendor/d3/js/d3.min.js"></script>
+<script src="/assets/vendor/d3-cloud/js/d3.layout.cloud.js"></script>
+<script src="/assets/js/renderWordCloud.js"></script>
+
+<script src="/assets/vendor/masonry/js/masonry.pkgd.js"></script>
+
+
+
+
+<script src="/assets/vendor/glide/js/glide.js"></script>
+<link href="/assets/vendor/glide/css/glide.core.css" rel="stylesheet">
+<link href="/assets/vendor/glide/css/glide.theme.css" rel="stylesheet">
+
+
+<script>
+    var _paq = window._paq = window._paq || [];
+     
+    _paq.push(['trackPageView']);
+    _paq.push(['enableLinkTracking']);
+    (function() {
+        var u="https://webstatistik.uni-giessen.de/";
+        _paq.push(['setTrackerUrl', u+'matomo.php']);
+        _paq.push(['setSiteId', '7']);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+        g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+    })();
+</script>
+
+
+<style>
+    #chart {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 400px;
+    }
+</style> 
+
+</head>
+<body style="background: #e9ebe5 !important;">
+  <header class="headroom fixed-top">
+    <div id="page-navbar-container">
+    <nav class="navbar navbar-expand-md py-0 align-middle" id="page-navbar">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">EnDiKaU</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link px-3" href="/basics/" role="button">
+                            
+                            
+                            <i class="fa-solid fa-water"></i> 
+                            
+                            
+                            Grundlagen
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle px-3" href="/methods/" id="navbarDropdownMethoden" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            
+                            
+                            <i class="fa-solid fa-calculator"></i> 
+                            
+                            
+                            Methoden
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMethoden">
+                            
+                            <li>
+                                <a class="dropdown-item" href="/methods/sentiment/">Sentimentanalyse</a>
+                            </li>
+                            
+                            <li>
+                                <a class="dropdown-item" href="/methods/topic/">Themenmodellierung</a>
+                            </li>
+                            
+                            <li>
+                                <a class="dropdown-item" href="/methods/ner/">Entitätsanalyse</a>
+                            </li>
+                            
+                        </ul>
+                    </li>
+                    
+                    
+                    
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle px-3" href="/case_studies/" id="navbarDropdownFallstudien" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            
+                            
+                            <i class="fa-solid fa-earth-americas"></i> 
+                            
+                            
+                            Fallstudien
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownFallstudien">
+                            
+                            <li>
+                                <a class="dropdown-item" href="/case_studies/customer_reviews/">Kundenbewertungen</a>
+                            </li>
+                            
+                            <li>
+                                <a class="dropdown-item" href="/case_studies/support_tickets/">Support-Tickets</a>
+                            </li>
+                            
+                            <li>
+                                <a class="dropdown-item" href="/case_studies/network_analysis">Netzwerkanalyse</a>
+                            </li>
+                            
+                        </ul>
+                    </li>
+                    
+                    
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div id="page-navbar-spacer"></div>
+</div>
+  </header>
+  <main>
+    
+
+<div class="container-fluid" style="background: #e9ebe5 !important;">
+  <div class="container-xxl py-4 grid">
+    <div class="g-col-1 g-col-xl-3 text-end" style="font-size: 3.75rem;">
+      ⭐
+    </div>
+    <div class="g-col-11 g-col-xl-6">
+      <h1>Analyse von Kundenrezensionen</h1>
+      <span class="lead">
+        
+          Wie kann Kundenfeedback effektiv zur Produktoptimierung genutzt werden?
+        
+      </span>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid" style="background: var(--bs-body-bg)" tabindex="0" data-bs-spy="scroll" data-bs-target="#page-toc" data-bs-smooth-scroll="true">
+  <div class="container-xxl py-4 grid">
+    <div class="g-col-12 g-col-xl-3 order-xl-2 ms-xl-2">
+      
+        
+<div id="page-toc-container" class="nd-toc z-3">
+    <nav id="page-toc" aria-label="Inhaltsverzeichnis">
+        <strong class="h6 my-2">Inhaltsverzeichnis</strong>
+        <hr class="d-block my-2">
+        <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#laden-des-datensatzes">Laden des Datensatzes</a></li>
+        <li><a href="#vorverarbeitung-der-textdaten">Vorverarbeitung der Textdaten</a></li>
+        <li><a href="#analyse">Analyse</a>
+          <ul>
+            <li><a href="#erste-einblicke-vergleich-der-produktkategorien">Erste Einblicke: Vergleich der Produktkategorien</a></li>
+            <li><a href="#worthäufigkeiten">Worthäufigkeiten</a></li>
+            <li><a href="#sentimentanalyse">Sentimentanalyse</a></li>
+            <li><a href="#analyse-der-bigramme">Analyse der Bigramme</a></li>
+            <li><a href="#themenmodellierung">Themenmodellierung</a></li>
+          </ul>
+        </li>
+        <li><a href="#fazit">Fazit</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+    </nav>
+</div>
+
+      
+    </div>
+    <div class="g-col-12 g-col-xl-6 g-start-xl-4 order-xl-1 nd-article">
+      <p>Kundenrezensionen bieten wertvolle Einblicke in die Nutzung und Bewertung von Produkten, oft jedoch in unstrukturierter Form. Mittels Methoden der Textanalyse lassen sich diese Informationen systematisch aufbereiten und helfen, Nutzerbedürfnisse gezielt zu erkennen. Ziel dieser Case Study ist es, ein differenziertes Bild der Kundenerfahrungen mit verschiedenen technischen Produktgruppen zu zeichnen und daraus Verbesserungspotenziale abzuleiten.</p>
+<h3 id="laden-des-datensatzes">
+  Laden des Datensatzes
+  <a class="anchor-link" href="#laden-des-datensatzes" aria-label="Link to Laden des Datensatzes">
+    <i class="fa-solid fa-link fa-2xs"></i>
+  </a>
+</h3><p>Die Analyse basiert auf 3.413 deutschsprachigen Amazon-Rezensionen, die jeweils das Datum, die Sternebewertung und den Link der Rezension enthalten. Ein Ausschnitt der ersten Beobachtungen ist in der folgenden Tabelle dargestellt.</p>
+<div id="nd-452cb1dd01612098c0a471c2f7fe87c10377915c" class="glide nd-glide">
+<div class="glide__controls card d-flex flex-row align-middle mb-2" data-glide-el="controls">
+<button data-glide-dir="&lt;" class="glide__btn-left btn text-primary">
+<i class="fa-solid fa-angles-left"></i>
+</button>
+<div class="flex-fill text-center px-2 d-flex align-items-center justify-content-center">Beispielbeobachtungen aus dem Rohdatensatz</div>
+<button data-glide-dir="&gt;" class="glide__btn-right btn text-primary">
+<i class="fa-solid fa-angles-right"></i>
+</button>
+</div>
+<div class="glide__track py-1" data-glide-el="track">
+<div class="glide__slides">
+<div class="glide__slide">
+<div class="card" style="width: 100%;">
+<ul class="list-group list-group-flush">
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Datum:</code>
+13. Oktober 2016
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Titel:</code>
+Falsche Lieferung (eingeschränkte Version), Rücksendung dzt am Laufen. Produkt noch nicht getestet.
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Rezension:</code>
+In der Auswahl waren einige Galaxy S7 günstiger und mit "EUROPEAN SIM CARD ONLY" in der Produktbeschreibung gekennzeichnet. Das gekaufte S7 hatte (in der Beschreibung) diese Einschränkung nicht, was für mich wichtig ist, da ich oft in Canada &amp; USA unterwegs bin. Originalverpakt zurückgesand, ich erwarte Ersatz.Schlechte Bewertung bezieht sich daher auf den Lieferanten, nicht auf das S7 selbst.
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Bewertung:</code>
+<i class="fa-solid fa-star" role="presentation"></i>
+<i class="fa-regular fa-star" role="presentation"></i>
+<i class="fa-regular fa-star" role="presentation"></i>
+<i class="fa-regular fa-star" role="presentation"></i>
+<i class="fa-regular fa-star" role="presentation"></i>
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>URL:</code>
+<a href="https://www.amazon.de/Samsung-Galaxy-Smartphone-interner-Speicher-Black/product-reviews/B01BTZFM0W/ref=cm_cr_arp_d_paging_btm_105?ie=UTF8&amp;pageNumber=105&amp;reviewerType=all_reviews">https://www.amazon.de/Samsung-Galaxy-Smartphone-interner-Speicher-Black/product-reviews/B01BTZFM0W/ref=cm_cr_arp_d_paging_btm_105?ie=UTF8&amp;pageNumber=105&amp;reviewerType=all_reviews</a>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="glide__slide">
+<div class="card" style="width: 100%;">
+<ul class="list-group list-group-flush">
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Datum:</code>
+26. Februar 2017
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Titel:</code>
+Galaxy S7
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Rezension:</code>
+5.0 von 5 SternenBekanntes gutes smartphone
+<p>Konnte das Smartphone für unter 500 Euro ergattern und bin bislang sehr zufrieden,ich kann es weiterempfehlen.</p>
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Bewertung:</code>
+<i class="fa-solid fa-star" role="presentation"></i>
+<i class="fa-solid fa-star" role="presentation"></i>
+<i class="fa-solid fa-star" role="presentation"></i>
+<i class="fa-solid fa-star" role="presentation"></i>
+<i class="fa-solid fa-star" role="presentation"></i>
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>URL:</code>
+<a href="https://www.amazon.de/Samsung-Galaxy-Smartphone-interner-Speicher-Black/product-reviews/B01BTZFM0W/ref=cm_cr_arp_d_paging_btm_37?ie=UTF8&amp;pageNumber=37&amp;reviewerType=all_reviews">https://www.amazon.de/Samsung-Galaxy-Smartphone-interner-Speicher-Black/product-reviews/B01BTZFM0W/ref=cm_cr_arp_d_paging_btm_37?ie=UTF8&amp;pageNumber=37&amp;reviewerType=all_reviews</a>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="glide__slide">
+<div class="card" style="width: 100%;">
+<ul class="list-group list-group-flush">
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Datum:</code>
+13. Oktober 2016
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Titel:</code>
+Anlaufschwierigkeiten
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Rezension:</code>
+Display blieb nach dem ersten Aufladen schwarz. Der empfohlene Restart hat nicht funktioniert. Geraet liess sich auch nicht abschalten. Akku war heissgelaufen. Samsung Reparaturservice hat Hardwarefehler festgestellt &amp; hat Platine ausgewechselt. Danach ging die Kamera nicht. Samsung hat deshalb auch die Kamera ausgewechselt. Zur Zeit funktioniert es. Sollte es so bleiben, ist es ein gutes Geraet.
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Bewertung:</code>
+<i class="fa-solid fa-star" role="presentation"></i>
+<i class="fa-solid fa-star" role="presentation"></i>
+<i class="fa-solid fa-star" role="presentation"></i>
+<i class="fa-solid fa-star" role="presentation"></i>
+<i class="fa-regular fa-star" role="presentation"></i>
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>URL:</code>
+<a href="https://www.amazon.de/Samsung-Galaxy-Smartphone-interner-Speicher-Black/product-reviews/B01BTZFM0W/ref=cm_cr_arp_d_paging_btm_41?ie=UTF8&amp;pageNumber=41&amp;reviewerType=all_reviews">https://www.amazon.de/Samsung-Galaxy-Smartphone-interner-Speicher-Black/product-reviews/B01BTZFM0W/ref=cm_cr_arp_d_paging_btm_41?ie=UTF8&amp;pageNumber=41&amp;reviewerType=all_reviews</a>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="glide__slide">
+<div class="card" style="width: 100%;">
+<ul class="list-group list-group-flush">
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Datum:</code>
+4. Februar 2020
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Titel:</code>
+für tägliche Nutzung ungeeignet
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Rezension:</code>
+nicht besonders, 2 mal gekauft und jeweils nach spätestens 6 Monaten defekt
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Bewertung:</code>
+<i class="fa-solid fa-star" role="presentation"></i>
+<i class="fa-regular fa-star" role="presentation"></i>
+<i class="fa-regular fa-star" role="presentation"></i>
+<i class="fa-regular fa-star" role="presentation"></i>
+<i class="fa-regular fa-star" role="presentation"></i>
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>URL:</code>
+<a href="https://www.amazon.de/Gritin-Kopfh%C3%B6rer-Metallisches-Ohrst%C3%B6pseln-Smartphones/product-reviews/B07BWHHBST/ref=cm_cr_arp_d_paging_btm_39?ie=UTF8&amp;filterByStar=critical&amp;pageNumber=39&amp;reviewerType=all_reviews">https://www.amazon.de/Gritin-Kopfh%C3%B6rer-Metallisches-Ohrst%C3%B6pseln-Smartphones/product-reviews/B07BWHHBST/ref=cm_cr_arp_d_paging_btm_39?ie=UTF8&amp;filterByStar=critical&amp;pageNumber=39&amp;reviewerType=all_reviews</a>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="glide__slide">
+<div class="card" style="width: 100%;">
+<ul class="list-group list-group-flush">
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Datum:</code>
+25. Oktober 2018
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Titel:</code>
+Unzufrieden
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Rezension:</code>
+Habe inzwischen drei von diesen T Shirts bestellt. In schwarz, lila und weiß. Alle drei haben schon nach dem ersten Kickboxtraining Fäden gezogen, was einfach das gesamte T Shirt hässlich aussehen ließ. Unter einem Pullover würde ich das T Shirt auch nicht anziehen, da durch die Reibung mit dem Innenfutter der meksten Pullover unschöne Stellen entstehen können.
+Zwei sofort wieder zurückgeschickt, das dritte behalte ich jetzt einfach, weil ich keine Lust mehr auf das Hin und Herfahren zum Rücksenden habe.
+Die Größe hingegegen war gut. L ist L. Ich bin 1,94 groß und wiege 68 KG, L war saß nicht zu knapp aber auch nicht zu eng.
+Alles in allem bin ich sehr enttäuscht von Nike. Bin ein großer Nike Fan.
+Würde für alle, die eine etwas aktivere Sportart machen Baumwoll T Shirts empfehlen. Habe mir die von Erima gekauft und bin vollstens zufrieden.
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Bewertung:</code>
+<i class="fa-solid fa-star" role="presentation"></i>
+<i class="fa-regular fa-star" role="presentation"></i>
+<i class="fa-regular fa-star" role="presentation"></i>
+<i class="fa-regular fa-star" role="presentation"></i>
+<i class="fa-regular fa-star" role="presentation"></i>
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>URL:</code>
+<a href>NA</a>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="glide__slide">
+<div class="card" style="width: 100%;">
+<ul class="list-group list-group-flush">
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Datum:</code>
+12. November 2016
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Titel:</code>
+Von iPhone 4 zu Samsung Galaxy S7
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Rezension:</code>
+Ich habe bislang ein iPhone 4 genutzt. Das wurde aber nach ca. 5 Jahren immer langsamer. Wollte ein Handy mit LTE und Power. Umstellung von iOS auf Android war nicht wirklich schwierig. Die Kamera und ihre Funktionen sind wirklich super. Nach ca. 1/2 Jahr Nutzung bin ich noch immer voll zufrieden und kann es jedem weiterempfehlen.
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Bewertung:</code>
+<i class="fa-solid fa-star" role="presentation"></i>
+<i class="fa-solid fa-star" role="presentation"></i>
+<i class="fa-solid fa-star" role="presentation"></i>
+<i class="fa-solid fa-star" role="presentation"></i>
+<i class="fa-solid fa-star" role="presentation"></i>
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>URL:</code>
+<a href="https://www.amazon.de/Samsung-Galaxy-Smartphone-interner-Speicher-Black/product-reviews/B01BTZFM0W/ref=cm_cr_arp_d_paging_btm_87?ie=UTF8&amp;pageNumber=87&amp;reviewerType=all_reviews">https://www.amazon.de/Samsung-Galaxy-Smartphone-interner-Speicher-Black/product-reviews/B01BTZFM0W/ref=cm_cr_arp_d_paging_btm_87?ie=UTF8&amp;pageNumber=87&amp;reviewerType=all_reviews</a>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="glide__slide">
+<div class="card" style="width: 100%;">
+<ul class="list-group list-group-flush">
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Datum:</code>
+20. November 2019
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Titel:</code>
+Sehr gutes Warehouse-Deal-Schnäppchen!
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Rezension:</code>
+Nachdem sich nach vielen Jahren eines unserer beiden Mobilteile "verabschiedet" hat (Stimme des Anrufenden plötzlich sehr leise trotz Lautstärke max.), musste was Neues her... Habe mich wieder für Gigaset entschieden und das Mobilteil sollte wieder
+- ohne Basis - direkt an die Fritzbox angemeldet werden. Nach Lesen von Rezensionen und Testberichten habe ich dieses Modell sogar zweimal als Warehouse-Deal bestellt, das noch funktionierende Mobilteil wird als drittes weiter benutzt. Die gelieferten Geräte waren in einwandfreiem Zustand und ließen sich einfach anmelden und einrichten. Bei beiden Geräte hieß es als Warehouse-Deal "fehlendes Zubehör", aber nur bei einem Gerät fehlten die Akkus (AAA), welche ich vom alten Telefon weiter benutzt habe. Ein guter Kauf!
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Bewertung:</code>
+<i class="fa-solid fa-star" role="presentation"></i>
+<i class="fa-solid fa-star" role="presentation"></i>
+<i class="fa-solid fa-star" role="presentation"></i>
+<i class="fa-solid fa-star" role="presentation"></i>
+<i class="fa-solid fa-star" role="presentation"></i>
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>URL:</code>
+<a href="https://www.amazon.de/Gigaset-C430HX-Universal-Mobilteil-Basisstationen-schwarz-silber-schwarz/product-reviews/B01BI8HG5Y/ref=cm_cr_arp_d_paging_btm_3?ie=UTF8&amp;pageNumber=3&amp;reviewerType=all_reviews">https://www.amazon.de/Gigaset-C430HX-Universal-Mobilteil-Basisstationen-schwarz-silber-schwarz/product-reviews/B01BI8HG5Y/ref=cm_cr_arp_d_paging_btm_3?ie=UTF8&amp;pageNumber=3&amp;reviewerType=all_reviews</a>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="glide__slide">
+<div class="card" style="width: 100%;">
+<ul class="list-group list-group-flush">
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Datum:</code>
+9. Februar 2020
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Titel:</code>
+Naja
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Rezension:</code>
+Vom Klang her okay,
+Aber nach 2 Monaten Kabelbruch.
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Bewertung:</code>
+<i class="fa-solid fa-star" role="presentation"></i>
+<i class="fa-solid fa-star" role="presentation"></i>
+<i class="fa-regular fa-star" role="presentation"></i>
+<i class="fa-regular fa-star" role="presentation"></i>
+<i class="fa-regular fa-star" role="presentation"></i>
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>URL:</code>
+<a href="https://www.amazon.de/JBL-Ear-Kopfh%C3%B6rer-Steuerung-Mikrofon-schwarz/product-reviews/B01MG62Z5M/ref=cm_cr_arp_d_paging_btm_22?ie=UTF8&amp;filterByStar=critical&amp;pageNumber=22&amp;reviewerType=all_reviews">https://www.amazon.de/JBL-Ear-Kopfh%C3%B6rer-Steuerung-Mikrofon-schwarz/product-reviews/B01MG62Z5M/ref=cm_cr_arp_d_paging_btm_22?ie=UTF8&amp;filterByStar=critical&amp;pageNumber=22&amp;reviewerType=all_reviews</a>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="glide__slide">
+<div class="card" style="width: 100%;">
+<ul class="list-group list-group-flush">
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Datum:</code>
+5. Dezember 2016
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Titel:</code>
+Keine 2 Monate in Betrieb und schon defekt....
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Rezension:</code>
+Seit Freitag den 03.12.2016 kaputt/ defekt... Mal sehen wie das mit dem Umtausch/Rückgabe läuft... Ist infach nervig, gerade vor Weihnachten
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Bewertung:</code>
+<i class="fa-solid fa-star" role="presentation"></i>
+<i class="fa-regular fa-star" role="presentation"></i>
+<i class="fa-regular fa-star" role="presentation"></i>
+<i class="fa-regular fa-star" role="presentation"></i>
+<i class="fa-regular fa-star" role="presentation"></i>
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>URL:</code>
+<a href="https://www.amazon.de/Oral-B-600-CrossAction-Elektrische-Zahnb%C3%BCrste/product-reviews/B00KBWBPRY/ref=cm_cr_arp_d_paging_btm_20?ie=UTF8&amp;filterByStar=critical&amp;pageNumber=20&amp;reviewerType=all_reviews">https://www.amazon.de/Oral-B-600-CrossAction-Elektrische-Zahnb%C3%BCrste/product-reviews/B00KBWBPRY/ref=cm_cr_arp_d_paging_btm_20?ie=UTF8&amp;filterByStar=critical&amp;pageNumber=20&amp;reviewerType=all_reviews</a>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="glide__slide">
+<div class="card" style="width: 100%;">
+<ul class="list-group list-group-flush">
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Datum:</code>
+4. März 2019
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Titel:</code>
+Not good
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Rezension:</code>
+I used only for 3 months and then it's broken. Really I didn't like this product. One of the bed point of this handsfree was it had connection problem with my phone.overall I will not recommend to buy this handsfree.
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Bewertung:</code>
+<i class="fa-solid fa-star" role="presentation"></i>
+<i class="fa-regular fa-star" role="presentation"></i>
+<i class="fa-regular fa-star" role="presentation"></i>
+<i class="fa-regular fa-star" role="presentation"></i>
+<i class="fa-regular fa-star" role="presentation"></i>
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>URL:</code>
+<a href>NA</a>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>document.addEventListener('DOMContentLoaded', function () {
+  new Glide('#nd-452cb1dd01612098c0a471c2f7fe87c10377915c', {
+    type: 'carousel',
+    perView: 2,
+    gap: 24,
+    autoplay: 5000,
+    breakpoints: {
+      576: { perView: 1 }
+    }
+  }).mount();
+})</script>
+<h3 id="vorverarbeitung-der-textdaten">
+  Vorverarbeitung der Textdaten
+  <a class="anchor-link" href="#vorverarbeitung-der-textdaten" aria-label="Link to Vorverarbeitung der Textdaten">
+    <i class="fa-solid fa-link fa-2xs"></i>
+  </a>
+</h3><p>In dieser Analyse kommen überwiegend <strong>lexikon- und regelbasierte Verfahren</strong> zum Einsatz, die empfindlich auf irrelevante Inhalte reagieren. Bevor sich jedoch das Signal erkennen lässt, muss das Rauschen entfernt werden.</p>
+<p>Als erster Schritt wird der Text daher so aufbereitet, dass aus der Vielzahl an Formulierungen, Füllwörtern und inhaltsarmen Begriffen jene sprachlichen Elemente herausgefiltert werden, die einen <strong>bedeutungsvollen Mehrwert</strong> bieten. Dieser Prozess ist als <a  href=/basics#textdaten-f%c3%bcr-analysen-vorbereiten  class="nd-crossref">Vorverarbeitung <i class="fa-solid fa-link fa-2xs"></i></a> bekannt und bildet die Grundlage für konsistente und aussagekräftige Ergebnisse.</p>
+<p>Die folgenden Schritte wurden dabei durchgeführt:</p>
+<ul class="fa-ul nd-fa-ul" style="text-align: justify;"> <li><span class="fa-li nd-fa-li"><i class='fa-solid fa-broom ' ></i></span> <strong>Bereinigung der Sternebewertungen:</strong> Bewertungsangaben im Fließtext wurden extrahiert und als numerische Werte gespeichert (z.B. „5,0 von 5 Sternen&quot; → 5). </li>
+<li><span class="fa-li nd-fa-li"><i class='fa-solid fa-scissors ' ></i></span> <strong>Tokenisierung:</strong> Die Texte wurden in einzelne Wörter zerlegt, um eine strukturierte Analyse zu ermöglichen. </li>
+<li><span class="fa-li nd-fa-li"><i class='fa-solid fa-filter ' ></i></span> <strong>Stopword-Filter:</strong> Häufige, wenig aussagekräftige Wörter (z.B. „und&quot;, „ist&quot;, &ldquo;oder&rdquo;) sowie produktspezifische Begriffe wurden entfernt. </li>
+ </ul>
+<p>Diese Schritte gewährleisten, dass die nachfolgenden Analysen auf dem <strong>wesentlichen Kern</strong> der Kundenrezensionen basieren.</p>
+<div id="nd-7a30569b198dcb1038729a4b1cdf0a01b964b9c1" class="glide nd-glide">
+<div class="glide__controls card d-flex flex-row align-middle mb-2" data-glide-el="controls">
+<button data-glide-dir="&lt;" class="glide__btn-left btn text-primary">
+<i class="fa-solid fa-angles-left"></i>
+</button>
+<div class="flex-fill text-center px-2 d-flex align-items-center justify-content-center">Beispielbeobachtung nach der Vorverarbeitung</div>
+<button data-glide-dir="&gt;" class="glide__btn-right btn text-primary">
+<i class="fa-solid fa-angles-right"></i>
+</button>
+</div>
+<div class="glide__track py-1" data-glide-el="track">
+<div class="glide__slides">
+<div class="glide__slide">
+<div class="card" style="width: 100%;">
+<ul class="list-group list-group-flush">
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Produkt:</code>
+Gigaset C430HX Universal Mobilteil Basisstationen schwarz silber schwarz
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Produkttyp:</code>
+Telefonzubehör
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Bewertung:</code>
+5
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Wörter:</code>
+["genau", "suchte", "perfektes", "preis", "leistungsverhältnis"]
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="glide__slide">
+<div class="card" style="width: 100%;">
+<ul class="list-group list-group-flush">
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Produkt:</code>
+Samsung Galaxy Smartphone interner Speicher Black
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Produkttyp:</code>
+Smartphone
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Bewertung:</code>
+1
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Wörter:</code>
+["verkäufer", "wirbt", "produktinformation", "europäischer", "modellnummer", "sm", "g930fzkadbt", "geliefert", "nordamerikanischer", "g930u", "funktioniert", "europa", "vollem", "umfang", "z.b", "sim", "karte", "unterschiedlich", "originale", "label", "wurde", "überklebt", "u", "steht", "land", "handy", "hergestellt", "g930f", "europäischen", "martk", "bestimmter", "variante", "noramerika", "markt", "telefon", "grundsätzlich", "gleichen", "leistungsmerkmale", "jedoch", "verbindung", "deutschen", "probleme", "bereiten", "bzw", "netzabhängigen", "nutzbar", "h", "gerritsen"]
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="glide__slide">
+<div class="card" style="width: 100%;">
+<ul class="list-group list-group-flush">
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Produkt:</code>
+Gritin Kopfhörer Metallisches Ohrstöpseln Smartphones
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Produkttyp:</code>
+Smartphone
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Bewertung:</code>
+1
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Wörter:</code>
+["preis", "ganz", "solide", "sowohl", "qualität", "klang", "her", "problem", "nacht", "mal", "monaten", "funktioniert", "buds", "mehr", "trotz", "pfleglichem", "gebrauch", "daher", "eigentlich", "kaum", "gebrauchen"]
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="glide__slide">
+<div class="card" style="width: 100%;">
+<ul class="list-group list-group-flush">
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Produkt:</code>
+Gigaset Schnurloses Anrufbeantworter Freisprechfunktion Bedienung schwarz
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Produkttyp:</code>
+Telefonzubehör
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Bewertung:</code>
+2
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Wörter:</code>
+["qualität", "mehr", "versprochen", "ton", "auswahl", "melodien", "befriedigend"]
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="glide__slide">
+<div class="card" style="width: 100%;">
+<ul class="list-group list-group-flush">
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Produkt:</code>
+Gigaset C430HX Universal Mobilteil Basisstationen schwarz silber schwarz
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Produkttyp:</code>
+Telefonzubehör
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Bewertung:</code>
+5
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Wörter:</code>
+["telefon", "knopfdruck", "router", "angemeldet", "ansonsten", "einfach", "bedienen"]
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="glide__slide">
+<div class="card" style="width: 100%;">
+<ul class="list-group list-group-flush">
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Produkt:</code>
+AVM DECT Komforttelefon Komfortdienste Box Funktionen deutschsprachige Schwarz
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Produkttyp:</code>
+Telefonzubehör
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Bewertung:</code>
+3
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Wörter:</code>
+["benötige", "telefon", "demnächsat", "hause", "arbeiten", "wahl", "verschiedenen", "gründen", "fritz", "fon", "c5", "u", "a", "optisch", "wirklich", "besser", "ausschaut", "sont", "üblichen", "gigasets", "lieferung", "kam", "schnell", "ausgepackt", "angeschlossen", "positiv", "optik", "anschluss", "einfach", "funktioniert", "bzw", "obwohl", "fritzbox", "weit", "garage", "hängt", "internetradio", "eigentlich", "spässchen", "klang", "her", "geht", "gut", "negativ", "hinten", "billiges", "plastik", "leider", "überall", "vorne", "schöne", "oberfläche", "sofort", "fingerabdrücken", "verziert", "immer", "brillenputztuch", "daneben", "legen", "annäherungssensor", "wohl", "vorhanden", "egal", "tut", "ändert", "tastaturbeleuchtung", "doll", "regel", "sekunde", "länger", "mal", "sekunden", "unterschiedlich", "je", "gerät", "hält", "möchte", "funktion", "nutzen", "hell", "büro", "nervt", "zusammenspiel", "näherungssensor", "ja", "irgendwie", "schon", "doof", "stationären", "telefonen", "eindeutig", "gelöst", "rigide", "geregelt", "funken", "licht", "bleibt", "dunkel", "greift", "wenig", "früh", "energiesparmodus", "abhilfe", "beim", "wählen", "finger", "lichtsensor"]
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="glide__slide">
+<div class="card" style="width: 100%;">
+<ul class="list-group list-group-flush">
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Produkt:</code>
+Samsung Galaxy Smartphone interner Speicher Black
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Produkttyp:</code>
+Smartphone
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Bewertung:</code>
+5
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Wörter:</code>
+["tja", "sagen", "eigentlich", "außer", "weltklasse", "läuft", "flüssig", "verbauten", "sachen", "verwunderlich", "liegt", "super", "hand", "vorher", "vertrag", "ausgelaufen", "somit", "übersprungen", "vielleicht", "deswegen", "extrem", "begeistert", "tolle", "gerät", "schmälern", "wirklich", "klasse", "jemand", "schon", "schrieb", "zwingend", "notwendig", "holen", "denke", "mal", "unterschied", "sooooo", "riesig", "na", "ja", "lange", "rede", "kurzer", "sinn", "fälle", "empfehlen", "top", "teil", "akku", "leider", "echt", "froh", "gleich", "geholt", "erst", "angedacht", "xperia", "z5"]
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="glide__slide">
+<div class="card" style="width: 100%;">
+<ul class="list-group list-group-flush">
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Produkt:</code>
+Samsung Galaxy Smartphone interner Speicher Black
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Produkttyp:</code>
+Smartphone
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Bewertung:</code>
+4
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Wörter:</code>
+["etwa", "jahr", "gebrauch", "praktisch", "nie", "stich", "gelassen", "verwende", "insbesondere", "arbeiten", "sodass", "rezension", "hiernach", "richten", "möchte", "verarbeitung", "design", "mag", "mittlerweile", "veraltetes", "aufweisen", "zumal", "nahezu", "randlosen", "allerdings", "lässt", "kaum", "wünsche", "übrig", "spaltmaße", "stimmig", "aluminiumgehäuse", "macht", "dennoch", "her", "sicherlich", "größere", "ränder", "führen", "besseren", "bedienbarkeit", "hierdurch", "fehleingaben", "minimiert", "insofern", "bleibt", "relativ", "schickes", "physischen", "homebutton", "vielen", "kunden", "immer", "gefallen", "funktionsumfang", "bereits", "geraumer", "zeit", "android", "oreo", "update", "ausgerollt", "gerät", "läuft", "mehr", "weniger", "butterweich", "ansonsten", "werkelt", "samsungs", "eigene", "benutzeroberfläche", "jahren", "hübscher", "geworden", "intuitiv", "bedienen", "bietet", "ehemaligen", "flagschiff", "recht", "großen", "display", "hervorragender", "schärfe", "guter", "helligkeit", "zügigen", "exynos", "prozessor", "drahtloses", "laden", "uvm", "misse", "eigentlich", "fehlende", "gesichtsentsperrung", "integrierten", "fingerabdrucksensor", "wettgemacht", "passt", "preisdiskussion", "offensichtlich", "preis", "stark", "wäre", "euro", "völlig", "solides", "arbeitsgerät", "sehe", "funktionstechnisch", "unterschiede", "neueren", "geräten", "mal", "abgesehen", "wenig", "neues", "bieten", "dank", "aufmerksamkeit"]
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="glide__slide">
+<div class="card" style="width: 100%;">
+<ul class="list-group list-group-flush">
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Produkt:</code>
+Gigaset C430HX Universal Mobilteil Basisstationen schwarz silber schwarz
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Produkttyp:</code>
+Telefonzubehör
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Bewertung:</code>
+5
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Wörter:</code>
+["altes", "hagenuk", "telefon", "ersetzt", "gute", "verarbeitung", "lange", "standzeit", "sprachqualität", "hochfrequent", "gut", "verständlich", "jederzeit", "kaufen"]
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="glide__slide">
+<div class="card" style="width: 100%;">
+<ul class="list-group list-group-flush">
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Produkt:</code>
+Gigaset C430HX Universal Mobilteil Basisstationen schwarz silber schwarz
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Produkttyp:</code>
+Telefonzubehör
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Bewertung:</code>
+5
+</div>
+</li>
+<li class="list-group-item">
+<div style="overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;">
+<code>Wörter:</code>
+["gestern", "schöne", "telefon", "angekommen", "akkus", "hand", "teil", "eingelegt", "station", "steckdose", "router", "anmelden", "gedrückt", "schon", "konnte", "telefonieren", "minuten", "gedauert", "richten", "völlig", "problemlos", "selbsterklärend", "sogar", "hd", "gesprächsqualität", "super", "sache", "allerdings", "normalen", "genommen", "mah", "amazon", "bestellt", "einfach", "mehr", "leistung", "halten", "länger", "standby", "zeit", "erhöht", "dadurch", "merklich"]
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>document.addEventListener('DOMContentLoaded', function () {
+  new Glide('#nd-7a30569b198dcb1038729a4b1cdf0a01b964b9c1', {
+    type: 'carousel',
+    perView: 2,
+    gap: 24,
+    autoplay: 5000,
+    breakpoints: {
+      576: { perView: 1 }
+    }
+  }).mount();
+})</script>
+<h3 id="analyse">
+  Analyse
+  <a class="anchor-link" href="#analyse" aria-label="Link to Analyse">
+    <i class="fa-solid fa-link fa-2xs"></i>
+  </a>
+</h3><h4 id="erste-einblicke-vergleich-der-produktkategorien">
+  Erste Einblicke: Vergleich der Produktkategorien
+  <a class="anchor-link" href="#erste-einblicke-vergleich-der-produktkategorien" aria-label="Link to Erste Einblicke: Vergleich der Produktkategorien">
+    <i class="fa-solid fa-link fa-2xs"></i>
+  </a>
+</h4><p>Wir beginnen mit einer rein <strong>explorativen Betrachtung:</strong> Gibt es Unterschiede in der durchschnittlichen Bewertung zwischen den Produktkategorien?</p>
+<p>Dazu werden die Produktnamen aus den URLs extrahiert und manuell drei Kategorien zugeordnet: <strong>Smartphones</strong>, <strong>Kopfhörer</strong> und <strong>Telefonzubehör.</strong></p>
+<p><strong>Beispiel:</strong> Aus der URL <em><a href="https://www.amazon.de/sony-kopfhoerer-mdr/product-reviews/">https://www.amazon.de/sony-kopfhoerer-mdr/product-reviews/</a></em> wird „sony kopfhoerer mdr&quot; extrahiert und der Kategorie „Kopfhörer&quot; zugewiesen.</p>
+<?xml version="1.0" encoding="UTF-8"?>
+<div id="jqtgvlkrlg" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+  <table class="gt_table" data-quarto-disable-processing="true" data-quarto-bootstrap="false" style="-webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-family: var(--bs-body-font-family); display: table; border-collapse: collapse; line-height: normal; margin-left: auto; margin-right: auto; color: #333333; font-size: var(--bs-body-font-size); font-weight: var(--bs-body-fontweight); font-style: normal; background-color: rgba(255, 255, 255, 0); width: 100%; border-top-style: solid; border-top-width: 2px; border-top-color: #A8A8A8; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #A8A8A8; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3;" width="100%" bgcolor="rgba(255, 255, 255, 0)">
+    <thead style="border-style: none;">
+      <tr class="gt_col_headings" style="border-style: none; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3;">
+        <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="Produkttyp" style="border-style: none; color: #333333; background-color: rgba(255, 255, 255, 0); font-size: 100%; font-weight: bold; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; overflow-x: hidden; text-align: left;" bgcolor="rgba(255, 255, 255, 0)" valign="bottom" align="left">Produkttyp</th>
+        <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="avg_rating" style="border-style: none; color: #333333; background-color: rgba(255, 255, 255, 0); font-size: 100%; font-weight: bold; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; overflow-x: hidden; text-align: right; font-variant-numeric: tabular-nums;" bgcolor="rgba(255, 255, 255, 0)" valign="bottom" align="right">Ø Bewertung</th>
+      </tr>
+    </thead>
+    <tbody class="gt_table_body" style="border-style: none; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3;">
+      <tr style="border-style: none;">
+        <td headers="Produkttyp" class="gt_row gt_left" style="border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; text-align: left;" valign="middle" align="left">Telefonzubehör</td>
+        <td headers="avg_rating" class="gt_row gt_right" style="border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; text-align: right; font-variant-numeric: tabular-nums;" valign="middle" align="right">3.62</td>
+      </tr>
+      <tr style="border-style: none;">
+        <td headers="Produkttyp" class="gt_row gt_left" style="border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; text-align: left;" valign="middle" align="left">Smartphone</td>
+        <td headers="avg_rating" class="gt_row gt_right" style="border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; text-align: right; font-variant-numeric: tabular-nums;" valign="middle" align="right">3.09</td>
+      </tr>
+      <tr style="border-style: none;">
+        <td headers="Produkttyp" class="gt_row gt_left" style="border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; text-align: left;" valign="middle" align="left">Kopfhörer</td>
+        <td headers="avg_rating" class="gt_row gt_right" style="border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; text-align: right; font-variant-numeric: tabular-nums;" valign="middle" align="right">1.87</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<p>Ein Blick auf den Durchschnitt der Bewertungen nach Produktkategorie zeigt zusätzlich Unterschiede in der Kundenzufriedenheit:</p>
+<ul class="fa-ul nd-fa-ul" style="text-align: justify;"> <li><span class="fa-li nd-fa-li"><i class='fa-solid fa-lightbulb ' ></i></span> Die Kategorie &ldquo;Telefonzubehör&rdquo; (z.B. Anrufbeantworter) schneidet im Schnitt am besten ab. </li>
+<li><span class="fa-li nd-fa-li"><i class='fa-solid fa-lightbulb ' ></i></span> Kopfhörer hingegen zeigen im Vergleich die niedrigsten Durchschnittsbewertungen. </li>
+ </ul>
+<h4 id="worthäufigkeiten">
+  Worthäufigkeiten
+  <a class="anchor-link" href="#worth%c3%a4ufigkeiten" aria-label="Link to Worthäufigkeiten">
+    <i class="fa-solid fa-link fa-2xs"></i>
+  </a>
+</h4><p>Um ein erstes Gefühl für den Inhalt der Kundenrezensionen zu erhalten, bietet sich eine einfache <strong>Häufigkeitsanalyse</strong> der verwendeten Begriffe an. Die erste Grafik zeigt die häufigsten Wörter über alle Produktkategorien hinweg. Begriffe wie &ldquo;super&rdquo;, &ldquo;funktioniert&rdquo; und &ldquo;zufrieden&rdquo; lassen bereits darauf schließen, dass Kund:innen grundsätzlich positive Erfahrungen mit den Produkten machen. Sie liefern jedoch wenig tiefergehende Erkenntnisse, da sie sehr allgemein sind.</p>
+<img src="index.markdown_strict_files/figure-markdown_strict/unnamed-chunk-9-1.svg" style="width:100.0%" />
+<p>Im nächsten Schritt untersuchen wir die <strong>häufigsten Begriffe pro Kategorie</strong>, um inhaltliche Unterschiede sichtbar zu machen.</p>
+<img src="index.markdown_strict_files/figure-markdown_strict/unnamed-chunk-10-1.svg" style="width:100.0%" />
+<p>Während bei <em>Smartphones</em> und <em>Telefonzubehör</em> Begriffe wie „funktioniert&quot; oder „super&quot; dominieren, tauchen bei <em>Kopfhörern</em> vermehrt Wörter wie „kaputt&quot; oder „wackelkontakt&quot; auf. In Kombination mit der vergleichsweise niedrigen Durchschnittsbewertung deutet dies darauf hin, dass gerade bei Kopfhörern häufiger Probleme auftreten.</p>
+<p>Häufigkeitsanalysen zeigen dominante Begriffe, vernachlässigen jedoch deren Aussagekraft pro Kategorie. Die TF-IDF-Analyse hebt hingegen kategorietypische Begriffe hervor. Die <a  href=/basics#tf-idf  class="nd-crossref">TF-IDF-Metrik <i class="fa-solid fa-link fa-2xs"></i></a> gewichtet Wörter nicht nur nach ihrer Häufigkeit, sondern berücksichtigt auch, wie exklusiv sie für eine bestimmte Kategorie sind.</p>
+<img src="index.markdown_strict_files/figure-markdown_strict/unnamed-chunk-11-1.svg" style="width:100.0%" />
+<p>In der Grafik wird deutlich:</p>
+<ul class="fa-ul nd-fa-ul" style="text-align: justify;"> <li><span class="fa-li nd-fa-li"><i class='fa-solid fa-lightbulb ' ></i></span> Bei <em>Kopfhörern</em> stehen „musik&quot;, „kabelbruch&quot; und „enttäuschend&quot; für typische Nutzung und Schwächen. </li>
+<li><span class="fa-li nd-fa-li"><i class='fa-solid fa-lightbulb ' ></i></span> Bei <em>Smartphones</em> dominieren Themen wie „kamera&quot;, „videos&quot; und „wasserdicht&quot;. </li>
+<li><span class="fa-li nd-fa-li"><i class='fa-solid fa-lightbulb ' ></i></span> Die Kategorie <em>Telefonzubehör</em> ist geprägt von Begriffen wie „fritzbox&quot;, „router&quot; und „reichweite&quot;. </li>
+ </ul>
+<p>Dadurch lassen sich erste Hinweise auf die zentralen Themen und Probleme pro Produktkategorie identifizieren. Dies stellt einen wichtiger Schritt dar, um die Inhalte der Rezensionen gezielter auszuwerten und in späteren Analysen (z.B. Sentiment oder Themenmodellierung) weiter zu untersuchen.</p>
+<h4 id="sentimentanalyse">
+  Sentimentanalyse
+  <a class="anchor-link" href="#sentimentanalyse" aria-label="Link to Sentimentanalyse">
+    <i class="fa-solid fa-link fa-2xs"></i>
+  </a>
+</h4><p>Um über reine Sternebewertungen hinauszugehen, analysieren wir den Textinhalt der Rezensionen mithilfe einer <a  href=/methods/sentiment#lexikonbasierte-sentimentanalyse  class="nd-crossref">lexikonbasierten Sentimentanalyse <i class="fa-solid fa-link fa-2xs"></i></a>. Dabei wird jeder Rezension einen numerischen Sentimentwert zugewiesen, der positive und negative Begriffe entsprechend abbildet.</p>
+<img src="index.markdown_strict_files/figure-markdown_strict/unnamed-chunk-14-1.svg" style="width:100.0%" />
+<p>Um die Stimmung in den Rezensionen je Produktkategorie besser einordnen zu können, wurden die Anteile positiver, negativer und neutraler Bewertungen berechnet und in einem Vergleichsdiagramm nach Produktgruppen visualisiert.</p>
+<p>Die Kategorie <em>Telefonzubehör</em> sticht positiv hervor: Sie weist nicht nur den höchsten durchschnittlichen Sentimentwert auf (+0.45), sondern auch den größten Anteil an positiv formulierten Rezensionen (52%).</p>
+<p><em>Kopfhörer</em> hingegen erreichen den niedrigsten Sentimentwert (-0.37) und haben zugleich den geringsten Anteil an positiven Kommentaren (38%). Diese Ergebnisse decken sich mit den bisherigen Beobachtungen.</p>
+<img src="index.markdown_strict_files/figure-markdown_strict/unnamed-chunk-15-1.svg" style="width:100.0%" />
+<p>Über den Zeitverlauf hinweg zeigen die quartalsweisen Durchschnittswerte des Sentiments in den frühen Jahren teils starke Schwankungen, besonders bei <em>Kopfhörern</em> und <em>Telefonzubehör.</em> Ab etwa 2018 pendeln sich die Werte aller Produktkategorien nahe der neutralen Linie ein, mit leichten positiven Ausschlägen in den letzten Quartalen. Diese Entwicklung deutet auf eine zunehmende Stabilität in der Kundenwahrnehmung hin und ermöglicht es, potenzielle Stimmungseinbrüche frühzeitig zu erkennen und gezielt gegenzusteuern.</p>
+<p>Während diese Gesamtentwicklung ein nützliches Stimmungsbarometer darstellt, bleibt jedoch unklar, welche konkreten Produktaspekte zu positiven oder negativen Bewertungen führen. Hier setzt die <strong>aspektbasierte Sentimentanalyse (ABSA)</strong>. Anstatt nur das Gesamtsentiment zu messen, wird jede Rezension auf <strong>inhaltliche Schwerpunkte</strong> wie Preis, Funktionalität, Qualität oder Service untersucht. So lässt sich nachvollziehen, ob ein Produkt trotz positiver Gesamtbewertung z. B. wegen mangelhafter Qualität kritisiert wird oder ob ein guter Service die Stimmung hebt.</p>
+<img src="index.markdown_strict_files/figure-markdown_strict/unnamed-chunk-16-1.svg" style="width:100.0%" />
+<p>Die durchschnittlichen Sentimentwerte je Aspekt zeigen deutliche Unterschiede zwischen den Produktkategorien. Während <strong>Preis</strong> in allen Kategorien überwiegend positiv bewertet wird, schneidet <strong>Qualität</strong> insbesondere bei <em>Kopfhörern</em> negativ ab. <strong>Funktionalität</strong> wird insgesamt neutral bis leicht negativ wahrgenommen, wohingegen der Aspekt <strong>Service</strong> vor allem bei <em>Telefonzubehör</em> besonders positiv bewertet wird. Diese Auswertung verdeutlicht, welche <strong>Stärken und Schwächen aus Kundensicht je Kategorie</strong> vorliegen.</p>
+<p>Die Sentimentanalysen zeigen, dass insbesondere in der Kategorie <em>Kopfhörer</em> eine hohe Unzufriedenheit besteht.
+Um die Ursachen dieser negativen Bewertungen besser zu verstehen, wird im Folgenden die Analyse gezielt auf diese Produktkategorie fokussiert. Ziel ist, herauszufinden, welche konkreten Probleme Kund:innen in Verbindung mit Kopfhörern am häufigsten nennen.</p>
+<h4 id="analyse-der-bigramme">
+  Analyse der Bigramme
+  <a class="anchor-link" href="#analyse-der-bigramme" aria-label="Link to Analyse der Bigramme">
+    <i class="fa-solid fa-link fa-2xs"></i>
+  </a>
+</h4><p>Da die Sentimentanalyse bei Kopfhörern stark negativ ausfiel, lohnt es sich einen genaueren Blick auf wiederkehrende <strong>Wortpaare</strong> (Bigramme) zu werfen. Bigramme zeigen, welche Begriffe in den Rezensionen besonders häufig direkt aufeinander folgen und damit inhaltlich zusammengehören. So lassen sich typische Formulierungen und wiederkehrende Sprachmuster identifizieren, die bei der Analyse einzelner Wörter verborgen bleiben.</p>
+<p>Eine Untersuchung der am häufigsten vorkommenden Bigramme in den Rezensionen für <em>Kopfhörer</em> offenbart ein zentrales Problem:</p>
+<img src="index.markdown_strict_files/figure-markdown_strict/unnamed-chunk-17-1.svg" style="width:100.0%" />
+<p>Wortpaare wie „kaputt gegangen&quot;, „monaten kaputt&quot;, oder „kurzer zeit&quot; zeigen, dass viele Bewertungen auf schnelle Defekte und kurze Lebensdauer hinweisen. Kund:innen berichten von frühzeitigen Ausfällen, oft bereits nach wenigen Wochen oder Monaten.</p>
+<p>Welche konkreten Themen die Konsumenten bezüglich der Produktkategorie <em>Kopfhörer</em> beschäftigt, wird im nächsten Schritt mithilfe einer Themenmodellierung betrachtet.</p>
+<h4 id="themenmodellierung">
+  Themenmodellierung
+  <a class="anchor-link" href="#themenmodellierung" aria-label="Link to Themenmodellierung">
+    <i class="fa-solid fa-link fa-2xs"></i>
+  </a>
+</h4><p>Um die zentralen Kritikpunkte in den Rezensionen zur Produktkategorie <em>Kopfhörer</em> präziser herauszuarbeiten, berechnen wir im nächsten Schritt ein <strong>Structural Topic Modelling (STM)</strong>. Diese Methode bietet die Möglichkeit andere Faktoren, die die Themen beeinflussen könnten, zu berücksichtigen, wie die Bewertungen der Kund:innen und das Datum, an dem die Rezension verfasst wurde. Für unser Korpus ergeben sich fünf Schwerpunkte: Langlebigkeit, Verarbeitung, Passform, Sound und Preis-Leistung.</p>
+<p>Die folgende Grafik zeigt für jedes Thema die repräsentativsten Begriffe. So wird deutlich, warum wir die Themen so benannt haben (z.B. „monaten&quot;, „wochen&quot; oder &ldquo;lebensdauer&rdquo; im Thema <em>Langlebigkeit</em>).</p>
+<img src="index.markdown_strict_files/figure-markdown_strict/unnamed-chunk-19-1.svg" style="width:100.0%" />
+<p>Direkt anschließend betrachten wir, wie häufig diese Themen im Gesamtkorpus auftreten. Die Balkenhöhen geben die durchschnittliche Dokument‑Wahrscheinlichkeit je Thema an, was dem durchschnittlichen Anteil entspricht, den ein Thema an einer Rezension hat. Dadurch sehen wir nicht nur Beispiele, sondern die gewichtete Verteilung der Themen über alle Rezensionen hinweg.</p>
+<img src="index.markdown_strict_files/figure-markdown_strict/unnamed-chunk-20-1.svg" style="width:100.0%" />
+<p>Die Themen treten insgesamt relativ ausgeglichen auf, mit leicht höheren Anteilen für <em>Langlebigkeit</em> und <em>Preis-Leistung</em>, gefolgt von <em>Sound</em>, <em>Verarbeitung</em> und <em>Passform.</em></p>
+<img src="index.markdown_strict_files/figure-markdown_strict/unnamed-chunk-22-1.svg" style="width:100.0%" />
+<p>Nachdem wir die Häufigkeit der Themen im Gesamtkorpus betrachtet haben, wenden wir uns nun der Frage zu, wie positiv oder negativ diese jeweils bewertet werden. Die Analyse der Sentimentwerte pro Thema zeigt: Am stärksten negativ wird die <em>Verarbeitung</em> bewertet. Auch beim <em>Sound</em> äußern Kunden deutliche Kritik, vermutlich aufgrund auftretender Probleme bei hohen Tönen, wie aus der Worthäufigkeitsanalyse der Themen hervorgeht. Die Themen <em>Preis-Leistung</em>, <em>Passform</em> und <em>Langlebigkeit</em> schneiden im Vergleich etwas besser ab, weisen jedoch ebenfalls einen negativen Grundton auf.</p>
+<img src="index.markdown_strict_files/figure-markdown_strict/unnamed-chunk-23-1.svg" style="width:100.0%" />
+<p>Die zeitliche Entwicklung der Themenanteile zeigt deutliche Verschiebungen in den Rezensionen: 2017 dominierten noch <em>Passform</em> und <em>Verarbeitung</em>, die in den ersten Monaten besonders häufig genannt wurden. Im Zeitverlauf rückten dagegen <em>Sound</em>, <em>Preis‑Leistung</em> und <em>Langlebigkeit</em> in den Vordergrund und lösten die zuvor dominierenden Themen ab. Das deutet darauf hin, dass sich die Kundenerwartungen von der anfänglichen Produktanpassung hin zu langfristiger Qualität zu einem fairen Preis verlagert haben. Positiv anzumerken ist, dass damit das Thema mit der negativsten Stimmung deutlich zurückgegangen ist.</p>
+<h3 id="fazit">
+  Fazit
+  <a class="anchor-link" href="#fazit" aria-label="Link to Fazit">
+    <i class="fa-solid fa-link fa-2xs"></i>
+  </a>
+</h3><p>In dieser Fallstudie haben wir gezeigt, welches Potenzial in der <strong>systematischen Auswertung von Kundenrezensionen</strong> steckt. Der freie Text in Rezensionen liefert wertvolle Informationen, ohne dass zusätzliche Befragungen oder aufwändige Erhebungen notwendig sind, wodurch <strong>Ressourcen gespart</strong> und anders eingesetzt werden können. Mithilfe geeigneter Analysemethoden lassen sich daraus konkrete Hinweise auf Produktqualität, Nutzererwartungen und mögliche Verbesserungspotenziale ableiten. Darüber hinaus kann die Analyse als <strong>Echtzeit-Stimmungsbarometer</strong> dienen. Unternehmen können frühzeitig erkennen, wenn sich negative Trends abzeichnen, und zeitnah reagieren, etwa durch Qualitätsverbesserungen, gezielte Kundenkommunikation oder Anpassung des Serviceangebots. So lassen sich Schwachstellen schneller beheben und die Produkte noch konsequenter an den Bedürfnissen der Kund:innen ausrichten.</p>
+
+    </div>
+  </div>
+</div>
+
+
+  </main>
+  <footer>
+    <div class="container-fluid" style="background: var(--nd-navbar-bg) !important; color: var(--nd-navbar-color) !important">
+    <div class="container-xxl py-2">
+        <div class="d-flex justify-content-center align-middle flex-wrap">
+            <div class="p-4 align-self-center">
+                <img src="/assets/img/JLU_Giessen-Logo.png" width="200px">
+            </div>
+            <div class="p-4 align-self-center">
+                <img src="/assets/img/Hessen-Logo-grau.png" width="100px">
+            </div>
+        </div>
+    </div>
+    Copyright 2025. All rights reserved.
+</div>
+
+
+  </footer>
+</body>
+</html>
