@@ -12,7 +12,14 @@ const pkgAssets = path.join(
 );
 
 // Where you want them in your Hugo site:
-const hugoAssets = path.join(__dirname, "..", "hugo", "assets", "nd_assets");
+const hugoAssets = path.join(
+    __dirname, 
+    "..", 
+    "_hugo", 
+    "themes", 
+    "endikau_theme", 
+    "assets"
+);
 
 // Clean old copy
 fs.rmSync(hugoAssets, { recursive: true, force: true });
