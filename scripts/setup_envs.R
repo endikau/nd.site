@@ -5,11 +5,11 @@ install.packages(
   repos = "https://cloud.r-project.org"
 )
 
-install.packages(
-  pkgs = setdiff("pak", rownames(installed.packages())),
-  repos = "https://cloud.r-project.org"
-)
-options(renv.config.pak.enabled = TRUE)
+# install.packages(
+#   pkgs = setdiff("pak", rownames(installed.packages())),
+#   repos = "https://cloud.r-project.org"
+# )
+# options(renv.config.pak.enabled = TRUE)
 
 renv::activate()
 
