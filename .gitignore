@@ -21,3 +21,4 @@ node_modules/
 _hugo/content/
 _hugo/themes/endikau_theme/assets/
 _hugo/resources/_gen/
+_public/
