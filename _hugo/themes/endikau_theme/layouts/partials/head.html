@@ -19,8 +19,7 @@
     {{ end }}
 {{ end }}
 
-{{ $fonts := resources.Get "fonts/fonts.css" | minify | fingerprint }}
-<link href="{{ $fonts.RelPermalink }}" rel="stylesheet">
+<link href="/assets/fonts/fonts.css" rel="stylesheet">
 
 {{ $js_navbar_height := resources.Get "js/navbar_height.js" | minify | fingerprint }}
 <script src="{{ $js_navbar_height.RelPermalink }}"></script>
