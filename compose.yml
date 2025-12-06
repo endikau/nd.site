@@ -8,9 +8,20 @@ services:
     # pull_policy: never
     image: ghcr.io/endikau/nd_site-static_render:latest
     volumes:
-      - ~/Documents/endikau/nd.site:/project
+      - .:/project
     command: |
-      quarto render
+      quarto render && \
+        sleep infinity
+  static_serve:
+    container_name: static_serve
+    image: joseluisq/static-web-server:2-alpine
+    restart: unless-stopped
+    ports: 
+      - 12345:80
+    environment:
+      - SERVER_ROOT=/var/public
+    volumes:
+      - ./_public:/var/public:ro
 
     # R -e "renv::repair()"
     # R -e "renv::snapshot()"

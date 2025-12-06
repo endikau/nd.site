@@ -39,11 +39,11 @@
 <polyline points='295.62,97.14 295.62,6.97 ' style='stroke-width: 1.36; stroke: #EBEBEB; stroke-linecap: butt;' />
 <polyline points='404.21,97.14 404.21,6.97 ' style='stroke-width: 1.36; stroke: #EBEBEB; stroke-linecap: butt;' />
 <polyline points='512.79,97.14 512.79,6.97 ' style='stroke-width: 1.36; stroke: #EBEBEB; stroke-linecap: butt;' />
-<rect x='113.67' y='78.93' width='399.12' height='15.61' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #E9E29C;' />
-<rect x='375.63' y='61.59' width='137.16' height='15.61' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #CF597E;' />
-<rect x='462.29' y='44.25' width='50.50' height='15.61' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #9CCB86;' />
-<rect x='512.79' y='26.91' width='7.24' height='15.61' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #EEB479;' />
-<rect x='512.79' y='9.57' width='34.55' height='15.61' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #009392;' />
+<rect x='113.67' y='78.93' width='399.12' height='15.61' style='stroke-width: 1.36; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #E9E29C;' />
+<rect x='375.63' y='61.59' width='137.16' height='15.61' style='stroke-width: 1.36; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #CF597E;' />
+<rect x='462.29' y='44.25' width='50.50' height='15.61' style='stroke-width: 1.36; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #9CCB86;' />
+<rect x='512.79' y='26.91' width='7.24' height='15.61' style='stroke-width: 1.36; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #EEB479;' />
+<rect x='512.79' y='9.57' width='34.55' height='15.61' style='stroke-width: 1.36; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #009392;' />
 </g>
 <g clip-path='url(#cpMC4wMHw1NzYuMDB8MC4wMHwxMzguNzE=)'>
 <text x='85.71' y='91.02' text-anchor='end' style='font-size: 12.00px;fill: #4D4D4D; font-family: "Open Sans";' textLength='73.00px' lengthAdjust='spacingAndGlyphs'>Verarbeitung</text>

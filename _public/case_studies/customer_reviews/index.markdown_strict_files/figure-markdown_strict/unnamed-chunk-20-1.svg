@@ -40,11 +40,11 @@
 <polyline points='320.49,97.14 320.49,6.97 ' style='stroke-width: 1.36; stroke: #EBEBEB; stroke-linecap: butt;' />
 <polyline points='408.64,97.14 408.64,6.97 ' style='stroke-width: 1.36; stroke: #EBEBEB; stroke-linecap: butt;' />
 <polyline points='496.80,97.14 496.80,6.97 ' style='stroke-width: 1.36; stroke: #EBEBEB; stroke-linecap: butt;' />
-<rect x='144.19' y='9.57' width='404.61' height='15.61' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #CF597E;' />
-<rect x='144.19' y='26.91' width='376.83' height='15.61' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #ED9C72;' />
-<rect x='144.19' y='44.25' width='352.57' height='15.61' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #E9E29C;' />
-<rect x='144.19' y='61.59' width='347.86' height='15.61' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #71BE83;' />
-<rect x='144.19' y='78.93' width='281.19' height='15.61' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #009392;' />
+<rect x='144.19' y='9.57' width='404.61' height='15.61' style='stroke-width: 1.36; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #CF597E;' />
+<rect x='144.19' y='26.91' width='376.83' height='15.61' style='stroke-width: 1.36; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #ED9C72;' />
+<rect x='144.19' y='44.25' width='352.57' height='15.61' style='stroke-width: 1.36; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #E9E29C;' />
+<rect x='144.19' y='61.59' width='347.86' height='15.61' style='stroke-width: 1.36; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #71BE83;' />
+<rect x='144.19' y='78.93' width='281.19' height='15.61' style='stroke-width: 1.36; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #009392;' />
 </g>
 <g clip-path='url(#cpMC4wMHw1NzYuMDB8MC4wMHwxMzguNzE=)'>
 <text x='117.68' y='91.02' text-anchor='end' style='font-size: 12.00px;fill: #4D4D4D; font-family: "Open Sans";' textLength='78.73px' lengthAdjust='spacingAndGlyphs'>Preis-Leistung</text>
