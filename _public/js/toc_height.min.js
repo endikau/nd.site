@@ -1,1 +1,0 @@
-function adjustTOCHeight(){var e,t=document.querySelector("#page-toc-container");!t||(e=document.querySelector("#page-toc"),!e||(t.style.height=e.scrollHeight+"px"))}window.addEventListener("load",adjustTOCHeight),window.addEventListener("resize",adjustTOCHeight)
