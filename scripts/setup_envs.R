@@ -23,9 +23,8 @@ options(
   renv.config.ppm.enabled = TRUE
 )
 renv::install("yaml", prompt = FALSE)
-renv::restore()
 
-renv::repair()
+renv::restore()
 
 cli::cli_alert_success("renv restored")
 
