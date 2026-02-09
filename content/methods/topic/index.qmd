@@ -11,7 +11,7 @@ toc_show: true
 <!-- {{{< div class="grid" >}}} {{{< div class="g-col-12 g-col-md-4 g-start-md-5" >}}}  -->
 
 <!-- ```{r} -->
-<!-- knitr::include_graphics(here::here("content/methods/topic/img/book.svg")) -->
+<!-- knitr::include_graphics(here::here("content/assets/img/book.svg")) -->
 <!-- ``` -->
 
 <!-- {{{< /div >}}} {{{< /div >}}} -->
@@ -44,7 +44,7 @@ Latent Dirichlet Allocation (LDA) ist eines der bekanntesten probabilistischen M
 {{{< div class="grid my-4" >}}} {{{< div class="g-col-12 g-col-md-10 g-start-md-2" >}}}
 
 ```{r}
-knitr::include_graphics(here::here("content/methods/topic/img/lda_topic.svg"))
+knitr::include_graphics(here::here("content/assets/img/lda_topic.svg"))
 ```
 
 {{{< /div >}}} {{{< /div >}}}
@@ -80,7 +80,7 @@ Die Themenmodellierung erfolgt dabei in vier aufeinander aufbauenden Schritten:
 {{{< div class="grid my-4" >}}} {{{< div class="g-col-12 g-col-md-10 g-start-md-2" >}}}
 
 ```{r}
-knitr::include_graphics(here::here("content/methods/topic/img/bertopic.svg"))
+knitr::include_graphics(here::here("content/assets/img/bertopic.svg"))
 ```
 
 {{{< /div >}}} {{{< /div >}}}

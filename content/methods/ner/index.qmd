@@ -19,7 +19,7 @@ Die Entitätsanalyse ist eine NLP-Methode zur automatischen Erkennung und Klassi
 {{{< div class="grid my-4" >}}} {{{< div class="g-col-12" >}}} 
 
 ```{r}
-knitr::include_graphics(here::here("content/methods/ner/img/ner.svg"))
+knitr::include_graphics(here::here("content/assets/img/ner.svg"))
 ```
 
 {{{< /div >}}} {{{< /div >}}}
@@ -105,7 +105,7 @@ Besonders empfehlenswert sind Modelle aus der BERT-Familie, da sie speziell für
 Um den Unterschied der beiden Methoden zu verdeutlichen, zeigen wir, wie jede Methode den folgendenen Sätze klassifizieren würde: 
 
 ```{r}
-knitr::include_graphics(here::here("content/methods/ner/img/context_ner.svg"))
+knitr::include_graphics(here::here("content/assets/img/context_ner.svg"))
 ```
 
 Der kontextuelle Ansatz berücksichtigt die Wörter um den zentralen Begriff und entscheidet so, ob es sich bei "Bank" um eine Parkbank oder ein Finanzinstitut handelt. Grundsätzlich könnte auch ein regelbasierter Ansatz die Ambiguität von "Bank" auflösen, etwa über spezifisch formulierte Regeln. Solche Regeln funktionieren in kontrollierten Szenarien, skalieren jedoch schlecht, sind anfällig für Formulierungsvarianten und erfordern kontinuierliche Wartung. Kontextuelle Verfahren lernen diese Muster aus Daten und treffen die Unterscheidung in neuen Sätzen zuverlässiger.

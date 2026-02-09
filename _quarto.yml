@@ -1,7 +1,7 @@
 project:
   type: hugo
   output-dir: _hugo
-  post-render: /bin/sh -c "cd _hugo && hugo --cleanDestinationDir --minify && /bin/cp -rf public ../_public"
+  post-render: /bin/sh -c "cd _hugo && hugo --cleanDestinationDir --minify"
 format:
   hugo-md:
     code-fold: true
@@ -10,7 +10,7 @@ execute:
   warning: false
   message: false
   cache: false
-  freeze: auto
+  freeze: true
 engine: knitr
 knitr:
   opts_chunk:

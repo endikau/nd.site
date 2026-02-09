@@ -40,7 +40,7 @@ Zur Bewertung werden die Wörter des Textes mit den Einträgen des Lexikons (bsp
 
 ```{r}
 knitr::include_graphics(here::here(
-  "content/methods/sentiment/img/dict_senti.svg"
+  "content/assets/img/dict_senti.svg"
 ))
 ```
 
@@ -80,7 +80,7 @@ Diese Modelle lernen aus einer Vielzahl von Beispielen und liefern auch in unbek
 
 ```{r}
 knitr::include_graphics(here::here(
-  "content/methods/sentiment/img/ml_senti.svg"
+  "content/assets/img/ml_senti.svg"
 ))
 ```
 

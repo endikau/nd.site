@@ -911,7 +911,11 @@ docs_worst <- tokens_for_stm |>
 
 meta_worst <- reviews |>
   filter(Produkttyp == "Kopfhörer", ID %in% docs_worst$ID) |>
-  mutate(Bewertung = as.factor(Bewertung)) |>
+  mutate(
+    Bewertung = as.factor(Bewertung),
+    # Datum = lubridate::dmy(Datum, locale = "de_DE.UTF-8")
+    Datum = 1
+  ) |>
   arrange(match(ID, docs_worst$ID))
 
 processed <- textProcessor(
@@ -935,7 +939,7 @@ stm_model <- stm(
   K = 5,
   prevalence = ~ Bewertung +
     Produkt +
-    lubridate::dmy(Datum, locale = "de_DE.UTF-8"),
+    Datum,
   data = out$meta,
   init.type = "Spectral",
   verbose = FALSE,

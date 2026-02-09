@@ -60,11 +60,17 @@ publishDir = "../_public"
         parent = "case_studies"
         name = "Netzwerkanalyse"
         url = "/case_studies/network_analysis"
+    [[menu.main]]
+        weight = 4
+        identifier = "case_studies-rag_system"
+        parent = "case_studies"
+        name = "RAG-System"
+        url = "/case_studies/rag_system"
 
 [module]
-  [[module.mounts]]
+    [[module.mounts]]
     source = "../node_modules/@endikau/nd_assets/dist/"
-    target = "assets/fonts"
+    target = "static/assets"
 
 [markup]
     [markup.goldmark]
@@ -86,4 +92,3 @@ defaultContentLanguageInSubdir = false
         languageCode = "de-DE"
         languageDirection = "ltr"
         languageName = "Deutsch"
-

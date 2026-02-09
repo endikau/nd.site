@@ -54,7 +54,7 @@ Textdaten wie E-Mails, Kundenrezensionen oder interne Dokumente stellen viele Un
 {{{< div class="grid my-4" >}}} {{{< div class="g-col-12 g-col-md-8 g-start-md-3" >}}} 
 
 ```{r}
-knitr::include_graphics(here::here("content/basics/img/nlp.svg"))
+knitr::include_graphics(here::here("content/assets/img/nlp.svg"))
 ```
 
 {{{< /div >}}} {{{< /div >}}}
@@ -67,7 +67,7 @@ knitr::include_graphics(here::here("content/basics/img/nlp.svg"))
 {{{< div class="grid my-4" >}}} {{{< div class="g-col-8 g-start-3 g-col-md-6 g-start-md-4" >}}} 
 
 ```{r}
-knitr::include_graphics(here::here("content/basics/img/text_mining.svg"))
+knitr::include_graphics(here::here("content/assets/img/text_mining.svg"))
 ```
 
 {{{< /div >}}} {{{< /div >}}}
@@ -88,7 +88,7 @@ In den nächsten Abschnitten werden eine Reihe von Vorverarbeitungsschritten erl
 {{{< div class="grid my-4" >}}} {{{< div class="g-col-12" >}}} 
 
 ```{r}
-knitr::include_graphics(here::here("content/basics/img/token.svg"))
+knitr::include_graphics(here::here("content/assets/img/token.svg"))
 ```
 
 {{{< /div >}}} {{{< /div >}}}
@@ -102,7 +102,7 @@ Um verschiedene Formen von Wörtern auf den jeweiligen Stamm, die sie miteinande
 {{{< div class="grid my-4" >}}} {{{< div class="g-col-12 g-col-md-8 g-start-md-3" >}}} 
 
 ```{r}
-knitr::include_graphics(here::here("content/basics/img/stemm_lemm.svg"))
+knitr::include_graphics(here::here("content/assets/img/stemm_lemm.svg"))
 ```
 
 {{{< /div >}}} {{{< /div >}}}
@@ -201,7 +201,7 @@ In der Grafik sieht man, dass das Modell nicht nur erkennt, dass „König“ un
 {{{< div class="grid my-4" >}}} {{{< div class="g-col-12 g-col-md-6 g-start-md-4" >}}} 
 
 ```{r}
-knitr::include_graphics(here::here("content/basics/img/embeddings.svg"))
+knitr::include_graphics(here::here("content/assets/img/embeddings.svg"))
 ```
 
 {{{< /div >}}} {{{< /div >}}}
