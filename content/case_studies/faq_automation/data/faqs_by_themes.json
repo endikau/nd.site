@@ -1,0 +1,367 @@
+[
+  {
+    "themes": "Lieferung & Bestellung",
+    "faqs": [
+      {
+        "faq_id": "keine_versandbestaetigung",
+        "title": "Versandbestätigung fehlt",
+        "canonical_question": "Ich habe noch keine Versandbestätigung für meine Bestellung erhalten. Was kann ich tun?",
+        "answer": "Bitte überprüfen Sie zunächst Ihren Spam-Ordner. Sollte die Versandbestätigung dort nicht vorhanden sein, kontaktieren Sie uns bitte mit Ihrer Bestellnummer, damit wir dies prüfen können.",
+        "needed_info": "Bestellnummer",
+        "common_variants": ["Wo ist meine Versandbestätigung?", "Ich habe keine E-Mail mit der Versandbestätigung bekommen."],
+        "tags": ["Versandbestätigung", "Bestellung", "E-Mail"],
+        "priority": "high"
+      },
+      {
+        "faq_id": "bestellstatus_abfragen",
+        "title": "Bestellstatus abfragen",
+        "canonical_question": "Wie kann ich den Status meiner Bestellung überprüfen?",
+        "answer": "Sie können den Status Ihrer Bestellung online in Ihrem Kundenkonto einsehen oder uns Ihre Bestellnummer mitteilen, damit wir den Status für Sie prüfen können.",
+        "needed_info": "Bestellnummer",
+        "common_variants": ["Wo ist meine Bestellung?", "Wann wird meine Bestellung versendet?", "Was ist mit meiner Bestellung?"],
+        "tags": ["Bestellstatus", "Bestellung", "Lieferung"],
+        "priority": "high"
+      },
+      {
+        "faq_id": "lieferzeit_ersatzteil",
+        "title": "Lieferzeit von Ersatzteilen",
+        "canonical_question": "Wie lange dauert die Lieferung eines Ersatzteils?",
+        "answer": "Die Lieferzeit von Ersatzteilen kann variieren. Sie hängt von der Verfügbarkeit des Teils und dem Versandort ab. Bitte geben Sie uns die Artikelnummer oder eine genaue Bezeichnung des Ersatzteils sowie Ihren Standort, damit wir Ihnen eine genauere Auskunft geben können.",
+        "needed_info": ["Artikelnummer", "Ersatzteilbezeichnung", "Standort"],
+        "common_variants": ["Wann bekomme ich das Ersatzteil?", "Wie lange dauert der Versand des Ersatzteils?"],
+        "tags": ["Ersatzteil", "Lieferzeit", "Versand"],
+        "priority": "normal"
+      },
+      {
+        "faq_id": "bestellnummer_fehlend",
+        "title": "Bestellnummer fehlt bei Anfrage",
+        "canonical_question": "Ich habe eine Frage zu meiner Bestellung, aber ich habe keine Bestellnummer.",
+        "answer": "Um Ihre Bestellung schnell identifizieren zu können, benötigen wir die Bestellnummer. Bitte suchen Sie in Ihrer Bestellbestätigung nach der Bestellnummer. Falls Sie diese nicht finden können, teilen Sie uns bitte Ihren vollständigen Namen, Ihre E-Mail-Adresse und das ungefähre Bestelldatum mit, damit wir versuchen können, Ihre Bestellung zu finden.",
+        "needed_info": ["Name", "E-Mail-Adresse", "Bestelldatum (ungefähr)"],
+        "common_variants": ["Ich kann meine Bestellnummer nicht finden.", "Ich habe meine Bestellbestätigung verloren."],
+        "tags": ["Bestellnummer", "Bestellung", "Identifizierung"],
+        "priority": "normal"
+      },
+      {
+        "faq_id": "dringende_bestellung",
+        "title": "Dringlichkeit der Bestellung",
+        "canonical_question": "Ich benötige meine Bestellung dringend. Können Sie etwas beschleunigen?",
+        "answer": "Wir verstehen, dass Sie Ihre Bestellung dringend benötigen. Wir werden unser Bestes tun, um den Versand so schnell wie möglich zu veranlassen. Bitte geben Sie uns Ihre Bestellnummer, damit wir den aktuellen Status prüfen und mögliche Optionen mit Ihnen besprechen können. Bitte beachten Sie, dass wir den Versandprozess nicht garantieren können.",
+        "needed_info": "Bestellnummer",
+        "common_variants": ["Ich brauche die Bestellung schnell.", "Kann meine Bestellung priorisiert werden?"],
+        "tags": ["Dringlichkeit", "Bestellung", "Versand"],
+        "priority": "normal"
+      }
+    ]
+  },
+  {
+    "themes": "Software & IT",
+    "faqs": [
+      {
+        "faq_id": "software_crash",
+        "title": "Software-Abstürze",
+        "canonical_question": "Warum stürzt die Software ab?",
+        "answer": "Software-Abstürze können verschiedene Ursachen haben, darunter inkompatible Software, beschädigte Dateien, unzureichende Systemressourcen oder Fehler in der Software selbst. Bitte führen Sie die folgenden Schritte durch:\n1. Starten Sie die Software neu.\n2. Starten Sie Ihren Computer neu.\n3. Stellen Sie sicher, dass Ihr System die Mindestanforderungen für die Software erfüllt.\n4. Überprüfen Sie, ob Updates für die Software verfügbar sind und installieren Sie diese.\n5. Wenn das Problem weiterhin besteht, wenden Sie sich an den Support und stellen Sie detaillierte Informationen bereit.",
+        "needed_info": ["Softwareversion", "Betriebssystem", "Fehlermeldung (falls vorhanden)", "Schritte zur Reproduktion", "Systemressourcen (RAM, CPU)", "Event-Log (falls vorhanden)"],
+        "common_variants": ["Software hängt sich auf", "Programm stürzt ab", "Anwendung beendet sich unerwartet"],
+        "tags": ["Absturz", "Fehler", "Software", "Stabilität"],
+        "priority": "high"
+      },
+      {
+        "faq_id": "update_issues",
+        "title": "Probleme mit Updates",
+        "canonical_question": "Was tun, wenn Software-Updates fehlschlagen?",
+        "answer": "Probleme bei Software-Updates können durch verschiedene Faktoren verursacht werden, wie z.B. Netzwerkprobleme, fehlende Berechtigungen oder beschädigte Update-Dateien. Bitte versuchen Sie Folgendes:\n1. Überprüfen Sie Ihre Internetverbindung.\n2. Starten Sie die Software und den Update-Prozess erneut.\n3. Starten Sie Ihren Computer neu und versuchen Sie das Update erneut.\n4. Stellen Sie sicher, dass Sie Administratorrechte haben.\n5. Wenn das Problem weiterhin besteht, wenden Sie sich an den Support.",
+        "needed_info": ["Softwareversion", "Fehlermeldung (falls vorhanden)", "Betriebssystem", "Update-Protokoll (falls vorhanden)"],
+        "common_variants": ["Update funktioniert nicht", "Installation bricht ab", "Fehler beim Aktualisieren"],
+        "tags": ["Update", "Installation", "Fehler", "Software"],
+        "priority": "high"
+      },
+      {
+        "faq_id": "compatibility_problems",
+        "title": "Kompatibilitätsprobleme",
+        "canonical_question": "Was tun bei Inkompatibilitäten?",
+        "answer": "Inkompatibilitäten können auftreten, wenn Software nicht mit Ihrem Betriebssystem, Dateiformaten oder anderen Anwendungen kompatibel ist.  Überprüfen Sie die Systemanforderungen der Software und stellen Sie sicher, dass Ihr System diese erfüllt.  Versuchen Sie, die Software im Kompatibilitätsmodus auszuführen (Rechtsklick auf die ausführbare Datei -> Eigenschaften -> Kompatibilität).  Aktualisieren Sie Ihre Treiber und das Betriebssystem. Wenden Sie sich an den Support, falls das Problem weiterhin besteht.",
+        "needed_info": ["Softwareversion", "Betriebssystem", "Dateiformat", "Beschreibung der Inkompatibilität", "Ausführungsversuche (Kompatibilitätsmodus etc.)"],
+        "common_variants": ["Software läuft nicht unter Windows 11", "Datei kann nicht geöffnet werden", "Format wird nicht unterstützt"],
+        "tags": ["Kompatibilität", "Inkompatibilität", "Dateiformat", "Betriebssystem"],
+        "priority": "normal"
+      },
+      {
+        "faq_id": "dxf_import_failure",
+        "title": "DXF-Importprobleme",
+        "canonical_question": "Warum kann ich DXF-Dateien nicht importieren?",
+        "answer": "Probleme beim Importieren von DXF-Dateien können durch beschädigte Dateien, inkompatible DXF-Versionen oder Fehler in der Software verursacht werden.  Überprüfen Sie, ob die DXF-Datei nicht beschädigt ist (versuchen Sie, sie in einer anderen Anwendung zu öffnen).  Stellen Sie sicher, dass Ihre Software die verwendete DXF-Version unterstützt.  Aktualisieren Sie Ihre Software auf die neueste Version. Kontaktieren Sie den Support, wenn das Problem weiterhin besteht.",
+        "needed_info": ["Softwareversion", "DXF-Version", "Dateigröße", "Fehlermeldung (falls vorhanden)", "Beispieldatei (optional)"],
+        "common_variants": ["DXF-Datei lässt sich nicht öffnen", "Import schlägt fehl", "Fehler beim DXF-Import"],
+        "tags": ["DXF", "Import", "Dateiformat", "Software"],
+        "priority": "normal"
+      },
+      {
+        "faq_id": "error_message_analysis",
+        "title": "Interpretation von Fehlermeldungen",
+        "canonical_question": "Wie interpretiere ich Fehlermeldungen?",
+        "answer": "Fehlermeldungen geben Hinweise auf die Ursache eines Problems. Notieren Sie sich die genaue Fehlermeldung und suchen Sie online nach der Fehlermeldung (z.B. in der Software-Dokumentation oder in Foren).  Wenn Sie die Fehlermeldung nicht verstehen, wenden Sie sich an den Support und geben Sie die genaue Fehlermeldung und den Kontext an (was Sie gerade getan haben, als die Fehlermeldung aufgetreten ist).",
+        "needed_info": ["Softwareversion", "Fehlermeldung (vollständig)", "Beschreibung der Situation, als der Fehler aufgetreten ist", "Screenshot (optional)"],
+        "common_variants": ["Was bedeutet diese Fehlermeldung?", "Hilfe bei Fehlermeldung", "Fehlercode verstehen"],
+        "tags": ["Fehlermeldung", "Fehler", "Analyse", "Software"],
+        "priority": "normal"
+      }
+    ]
+  },
+  {
+    "themes": "Ersatzteile & Technik",
+    "faqs": [
+      {
+        "faq_id": "ersatzteil_benoetigte_info",
+        "title": "Benötigte Informationen für Ersatzteilbestellungen",
+        "canonical_question": "Welche Informationen werden für eine Ersatzteilbestellung benötigt?",
+        "answer": "Um Ihre Ersatzteilbestellung schnellstmöglich bearbeiten zu können, benötigen wir präzise Informationen. Bitte halten Sie folgende Angaben bereit:",
+        "needed_info": ["Bestellnummer", "Seriennummer des Geräts", "Bezeichnung des benötigten Ersatzteils (ggf. Artikelnummer)", "Anzahl des benötigten Ersatzteils"],
+        "common_variants": ["Welche Daten brauche ich für eine Ersatzteilanfrage?", "Was muss ich wissen, um ein Ersatzteil zu bestellen?", "Informationen für Ersatzteilauftrag"],
+        "tags": ["Ersatzteile", "Bestellung", "Informationen", "Benötigte Daten"],
+        "priority": "high"
+      },
+      {
+        "faq_id": "fehleranalyse_hilfe",
+        "title": "Hilfe bei der Interpretation von Fehlermeldungen",
+        "canonical_question": "Wie kann ich eine Fehlermeldung interpretieren?",
+        "answer": "Fehlermeldungen können Hinweise auf die Ursache eines Problems geben. Bitte notieren Sie sich die vollständige Fehlermeldung und geben Sie uns folgende Informationen, damit wir Ihnen weiterhelfen können:",
+        "needed_info": ["Vollständige Fehlermeldung", "Softwareversion", "Betriebssystem", "Durchgeführte Aktionen vor Auftreten der Fehlermeldung", "Seriennummer des Geräts"],
+        "common_variants": ["Was bedeutet diese Fehlermeldung?", "Ich verstehe die Fehlermeldung nicht.", "Hilfe zur Fehlermeldungsanalyse"],
+        "tags": ["Fehlermeldung", "Analyse", "Interpretation", "Software", "Hardware"],
+        "priority": "high"
+      },
+      {
+        "faq_id": "handbuch_fehlerbehebung",
+        "title": "Wo finde ich Anleitungen zur Fehlerbehebung?",
+        "canonical_question": "Wo finde ich Anleitungen zur Fehlerbehebung?",
+        "answer": "In den meisten Fällen bietet das Handbuch Ihres Geräts umfassende Informationen zur Fehlerbehebung. Sie finden das Handbuch in der Regel auf unserer Webseite im Support-Bereich oder als PDF-Download.  Bitte geben Sie uns Ihre Seriennummer, damit wir Ihnen den passenden Link zum Handbuch zukommen lassen können.",
+        "needed_info": ["Seriennummer des Geräts", "Modellbezeichnung"],
+        "common_variants": ["Wo ist das Handbuch?", "Wie behebe ich Fehler?", "Anleitung zur Fehlerbehebung"],
+        "tags": ["Handbuch", "Fehlerbehebung", "Anleitung", "Support"],
+        "priority": "normal"
+      },
+      {
+        "faq_id": "reparatur_fachkenntnisse",
+        "title": "Reparaturen und Fachkenntnisse",
+        "canonical_question": "Benötige ich spezielle Kenntnisse für Reparaturen?",
+        "answer": "Einige Reparaturen erfordern Fachkenntnisse und sollten nur von qualifiziertem Personal durchgeführt werden. Unsachgemäße Reparaturen können zu weiteren Schäden am Gerät oder zu Sicherheitsrisiken führen. Wir empfehlen, sich an unseren autorisierten Servicepartner zu wenden.",
+        "needed_info": ["Modellbezeichnung", "Beschreibung des Problems"],
+        "common_variants": ["Kann ich das selbst reparieren?", "Brauche ich einen Fachmann?", "Reparatur selbst durchführen"],
+        "tags": ["Reparatur", "Fachkenntnisse", "Sicherheit", "Service"],
+        "priority": "normal"
+      },
+      {
+        "faq_id": "ersatzteil_lieferzeit",
+        "title": "Lieferzeit von Ersatzteilen",
+        "canonical_question": "Wie lange dauert die Lieferung von Ersatzteilen?",
+        "answer": "Die Lieferzeit von Ersatzteilen hängt von der Verfügbarkeit des Teils und dem Versandort ab. Sobald Ihre Bestellung eingegangen ist, teilen wir Ihnen eine voraussichtliche Lieferzeit mit. Bitte beachten Sie, dass dies eine Schätzung ist und sich die tatsächliche Lieferzeit ändern kann.",
+        "needed_info": ["Bestellnummer", "Bezeichnung des Ersatzteils"],
+        "common_variants": ["Wann bekomme ich das Ersatzteil?", "Wie lange dauert der Versand?", "Liefertermin Ersatzteil"],
+        "tags": ["Ersatzteile", "Lieferzeit", "Versand", "Bestellung"],
+        "priority": "normal"
+      }
+    ]
+  },
+  {
+    "themes": "Wartung & Service",
+    "faqs": [
+      {
+        "faq_id": "wartungsplan_finden",
+        "title": "Zugriff auf den Wartungsplan",
+        "canonical_question": "Wo finde ich den Wartungsplan für mein Produkt?",
+        "answer": "Den Wartungsplan für Ihr Produkt finden Sie in der Regel im mitgelieferten Handbuch oder auf unserer Webseite im Support-Bereich.  Bitte geben Sie uns Ihre Produktseriennummer an, damit wir den passenden Plan für Sie finden können.",
+        "needed_info": ["Seriennummer", "Produktbezeichnung"],
+        "common_variants": ["Ich habe meinen Wartungsplan verloren.", "Wo kann ich den Wartungsplan herunterladen?", "Gibt es einen digitalen Wartungsplan?"],
+        "tags": ["Wartungsplan", "Dokumentation", "Support"],
+        "priority": "high"
+      },
+      {
+        "faq_id": "spezialwerkzeug_info",
+        "title": "Benötigte Spezialwerkzeuge",
+        "canonical_question": "Welche Spezialwerkzeuge benötige ich für die Wartung?",
+        "answer": "Für bestimmte Wartungsarbeiten sind möglicherweise Spezialwerkzeuge erforderlich.  Die benötigten Werkzeuge sind im Wartungsplan oder im Handbuch Ihres Produkts aufgeführt. Bitte geben Sie uns Ihre Produktseriennummer und die durchzuführende Wartungsarbeit an, damit wir Ihnen genauere Informationen geben können.",
+        "needed_info": ["Seriennummer", "Produktbezeichnung", "Wartungsarbeit"],
+        "common_variants": ["Wo kann ich das Spezialwerkzeug kaufen?", "Welches Werkzeug brauche ich für den Austausch von [Teil]?", "Gibt es alternative Werkzeuge?"],
+        "tags": ["Spezialwerkzeug", "Wartung", "Reparatur"],
+        "priority": "normal"
+      },
+      {
+        "faq_id": "wartungsintervalle",
+        "title": "Wartungsintervalle",
+        "canonical_question": "Wie oft muss ich mein Produkt warten lassen?",
+        "answer": "Die Wartungsintervalle hängen vom jeweiligen Produkt und dessen Nutzung ab.  Die genauen Intervalle finden Sie im Wartungsplan Ihres Produkts. Bitte geben Sie uns Ihre Produktseriennummer an, damit wir Ihnen die korrekten Informationen zukommen lassen können.",
+        "needed_info": ["Seriennummer", "Produktbezeichnung"],
+        "common_variants": ["Was passiert, wenn ich die Wartung versäume?", "Gibt es unterschiedliche Intervalle für verschiedene Einsatzbereiche?", "Kann ich die Intervalle anpassen?"],
+        "tags": ["Wartungsintervalle", "Wartungsplan", "Lebensdauer"],
+        "priority": "high"
+      },
+      {
+        "faq_id": "handbuch_zugriff",
+        "title": "Zugriff auf das Handbuch",
+        "canonical_question": "Wo finde ich das Handbuch für mein Produkt?",
+        "answer": "Das Handbuch für Ihr Produkt finden Sie in der Regel auf unserer Webseite im Support-Bereich.  Sie können das Handbuch dort herunterladen oder online einsehen. Bitte geben Sie uns Ihre Produktseriennummer an, um das passende Handbuch zu finden.",
+        "needed_info": ["Seriennummer", "Produktbezeichnung"],
+        "common_variants": ["Ich habe mein Handbuch verloren.", "Gibt es ein digitales Handbuch?", "Kann ich das Handbuch in einer anderen Sprache herunterladen?"],
+        "tags": ["Handbuch", "Dokumentation", "Support"],
+        "priority": "normal"
+      },
+      {
+        "faq_id": "bestellstatus_wartung",
+        "title": "Bestellstatus von Wartungsteilen",
+        "canonical_question": "Wo finde ich den Status meiner Bestellung (Wartungsteile)?",
+        "answer": "Sie können den Status Ihrer Bestellung über unsere Webseite im Kundenbereich einsehen.  Alternativ können Sie uns Ihre Bestellnummer mitteilen, und wir prüfen den Status für Sie. Bitte beachten Sie, dass die Lieferzeit für Wartungsteile variieren kann.",
+        "needed_info": ["Bestellnummer", "E-Mail-Adresse (für Kontoverknüpfung)"],
+        "common_variants": ["Wann werden meine Wartungsteile geliefert?", "Meine Bestellung ist noch nicht angekommen.", "Ich möchte meine Bestellung stornieren."],
+        "tags": ["Bestellung", "Wartung", "Lieferung", "Bestellstatus"],
+        "priority": "normal"
+      }
+    ]
+  },
+  {
+    "themes": "Garantie & Reklamation",
+    "faqs": [
+      {
+        "faq_id": "garantie_abdeckung_pruefen",
+        "title": "Garantieabdeckung prüfen",
+        "canonical_question": "Ist mein Defekt durch die Garantie abgedeckt?",
+        "answer": "Ob ein Defekt durch die Garantie abgedeckt ist, hängt von den Garantiebedingungen ab. Bitte stellen Sie uns alle relevanten Informationen zur Verfügung, damit wir Ihren Fall prüfen können.",
+        "needed_info": ["Bestellnummer", "Seriennummer", "genaue Fehlerbeschreibung", "Kaufdatum"],
+        "common_variants": ["Deckt die Garantie das?", "Garantieanspruch prüfen", "Was ist durch die Garantie gedeckt?"],
+        "tags": ["Garantie", "Abdeckung", "Defekt", "Prüfung"],
+        "priority": "high"
+      },
+      {
+        "faq_id": "garantieabwicklung_ablauf",
+        "title": "Ablauf der Garantieabwicklung",
+        "canonical_question": "Wie läuft die Garantieabwicklung ab?",
+        "answer": "Die Garantieabwicklung beginnt mit der Annahme Ihrer Anfrage und der Prüfung der Garantiebedingungen. Anschließend können wir, je nach Defekt, eine Reparatur, einen Austausch oder eine andere Lösung anbieten. Wir halten Sie über den Fortschritt auf dem Laufenden.",
+        "needed_info": ["Bestellnummer", "Seriennummer", "Fehlerbeschreibung"],
+        "common_variants": ["Wie geht es nach meiner Anfrage weiter?", "Was passiert nach der Meldung?", "Garantieabwicklung Schritte"],
+        "tags": ["Garantie", "Ablauf", "Prozess", "Reparatur", "Austausch"],
+        "priority": "high"
+      },
+      {
+        "faq_id": "benoetigte_informationen_garantie",
+        "title": "Benötigte Informationen für Garantieansprüche",
+        "canonical_question": "Welche Informationen werden für die Prüfung meines Garantieanspruchs benötigt?",
+        "answer": "Für die Prüfung Ihres Garantieanspruchs benötigen wir Ihre Bestellnummer, die Seriennummer des Produkts, eine detaillierte Fehlerbeschreibung und einen Kaufbeleg.",
+        "needed_info": ["Bestellnummer", "Seriennummer", "Kaufbeleg (als Scan oder Foto)", "genaue Fehlerbeschreibung"],
+        "common_variants": ["Welche Unterlagen brauche ich?", "Was muss ich für die Garantieabwicklung schicken?", "Informationen für Garantie"],
+        "tags": ["Garantie", "Informationen", "Unterlagen", "Benötigte Daten"],
+        "priority": "high"
+      },
+      {
+        "faq_id": "kaufbeleg_erforderlich",
+        "title": "Kaufbeleg als Nachweis",
+        "canonical_question": "Warum wird ein Kaufbeleg für die Garantie benötigt?",
+        "answer": "Der Kaufbeleg dient als Nachweis Ihres Kaufdatums und ist somit wichtig, um die Gültigkeit der Garantie zu prüfen.",
+        "needed_info": ["Kaufbeleg (als Scan oder Foto)", "Bestellnummer"],
+        "common_variants": ["Brauche ich unbedingt den Beleg?", "Was passiert ohne Kaufbeleg?", "Garantie ohne Beleg"],
+        "tags": ["Garantie", "Kaufbeleg", "Nachweis", "Gültigkeit"],
+        "priority": "normal"
+      },
+      {
+        "faq_id": "fehlerbeschreibung_verbessern",
+        "title": "Detaillierte Fehlerbeschreibung",
+        "canonical_question": "Wie kann ich den Defekt am besten beschreiben?",
+        "answer": "Bitte beschreiben Sie den Defekt so detailliert wie möglich. Nennen Sie die genaue Fehlermeldung (falls vorhanden), wann der Fehler auftritt und welche Schritte zum Fehler führen. Je genauer Ihre Beschreibung, desto schneller können wir Ihnen helfen.",
+        "needed_info": ["genaue Fehlerbeschreibung", "Fehlermeldung (falls vorhanden)", "Schritte zur Reproduktion des Fehlers"],
+        "common_variants": ["Wie beschreibe ich einen Fehler?", "Was muss ich bei der Fehlerbeschreibung beachten?"],
+        "tags": ["Defekt", "Fehlerbeschreibung", "Detaillierung", "Hilfe"],
+        "priority": "normal"
+      }
+    ]
+  },
+  {
+    "themes": "Schulung & Inbetriebnahme",
+    "faqs": [
+      {
+        "faq_id": "schulungsangebot_allgemein",
+        "title": "Verfügbare Schulungen",
+        "canonical_question": "Welche Schulungen werden angeboten?",
+        "answer": "Informationen zu unseren aktuellen Schulungsangeboten finden Sie auf unserer Website unter [Link zur Schulungsseite]. Dort können Sie sich über verschiedene Themen und Formate informieren.",
+        "needed_info": [],
+        "common_variants": ["Wo finde ich Informationen zu Schulungen?", "Welche Weiterbildungen gibt es?"],
+        "tags": ["Schulung", "Angebot", "Weiterbildung", "Website"],
+        "priority": "high"
+      },
+      {
+        "faq_id": "schulung_inbetriebnahme",
+        "title": "Schulung für Inbetriebnahme",
+        "canonical_question": "Bieten Sie Schulungen speziell für die Inbetriebnahme an?",
+        "answer": "Ja, wir bieten spezielle Schulungen für die Inbetriebnahme unserer Maschinen an. Diese Schulungen vermitteln das notwendige Wissen für eine sichere und korrekte Inbetriebnahme. Bitte teilen Sie uns Ihre Bestellnummer und Seriennummer mit, damit wir die passende Schulung für Ihre Maschine ermitteln können.",
+        "needed_info": ["Bestellnummer", "Seriennummer", "Maschinenmodell"],
+        "common_variants": ["Ich benötige eine Schulung, um die Maschine in Betrieb zu nehmen.", "Gibt es eine spezielle Schulung für die erste Inbetriebnahme?"],
+        "tags": ["Schulung", "Inbetriebnahme", "Maschine", "Start"],
+        "priority": "high"
+      },
+      {
+        "faq_id": "schulungsort_optionen",
+        "title": "Schulungsorte",
+        "canonical_question": "Wo finden die Schulungen statt?",
+        "answer": "Wir bieten Schulungen in verschiedenen Formaten an: Vor Ort bei Ihnen, in unseren Schulungszentren oder online. Bitte geben Sie bei Ihrer Anfrage an, welche Option Sie bevorzugen.",
+        "needed_info": [],
+        "common_variants": ["Gibt es Schulungen vor Ort?", "Werden Online-Schulungen angeboten?"],
+        "tags": ["Schulung", "Ort", "Vor Ort", "Online", "Schulungszentrum"],
+        "priority": "normal"
+      },
+      {
+        "faq_id": "schulungstermine",
+        "title": "Aktuelle Schulungstermine",
+        "canonical_question": "Wo finde ich aktuelle Schulungstermine?",
+        "answer": "Aktuelle Schulungstermine finden Sie auf unserer Website unter [Link zur Schulungsseite/Terminübersicht]. Dort können Sie sich auch direkt für einen Termin anmelden.",
+        "needed_info": [],
+        "common_variants": ["Wann gibt es die nächste Schulung?", "Gibt es einen Terminkalender für Schulungen?"],
+        "tags": ["Schulung", "Termin", "Kalender", "Anmeldung", "Website"],
+        "priority": "normal"
+      },
+      {
+        "faq_id": "schulungskosten",
+        "title": "Kosten für Schulungen",
+        "canonical_question": "Was kostet eine Schulung?",
+        "answer": "Die Kosten für eine Schulung variieren je nach Thema, Dauer und Format. Bitte teilen Sie uns Ihr Interesse an einer bestimmten Schulung mit, damit wir Ihnen ein individuelles Angebot erstellen können.",
+        "needed_info": ["Schulungsthema", "Maschinenmodell", "Anzahl der Teilnehmer"],
+        "common_variants": ["Wie hoch sind die Schulungsgebühren?", "Was kostet die Inbetriebnahme-Schulung?"],
+        "tags": ["Schulung", "Kosten", "Gebühren", "Angebot", "Preis"],
+        "priority": "normal"
+      }
+    ]
+  },
+  {
+    "themes": "Sonstiges",
+    "faqs": [
+      {
+        "faq_id": "uebertemperatur_warnung_allgemein",
+        "title": "Übertemperaturwarnung – Allgemeine Informationen",
+        "canonical_question": "Meine Maschine zeigt eine Übertemperaturwarnung an. Was bedeutet das und was soll ich tun?",
+        "answer": "Eine Übertemperaturwarnung deutet darauf hin, dass ein oder mehrere Komponenten Ihrer Maschine zu heiß laufen. Dies kann verschiedene Ursachen haben, wie z.B. unzureichende Kühlung, verstopfte Lüftungsöffnungen oder ein niedriger Kühlmittelstand. Bitte führen Sie die folgenden Schritte durch, um das Problem zu beheben:\n\n1.  **Kühlmittelstand prüfen:** Stellen Sie sicher, dass der Kühlmittelstand ausreichend ist.\n2.  **Lüftung prüfen:** Stellen Sie sicher, dass die Lüftungsöffnungen der Maschine frei von Staub und Verstopfungen sind.\n3.  **Umgebungstemperatur prüfen:** Stellen Sie sicher, dass die Maschine in einer Umgebung betrieben wird, die innerhalb der zulässigen Betriebstemperatur liegt.\n4.  **Handbuch konsultieren:** Sehen Sie im Handbuch Ihrer Maschine nach spezifischen Anweisungen zur Fehlerbehebung für Übertemperaturwarnungen.",
+        "needed_info": ["Maschinennummer", "Softwareversion", "Genaue Fehlermeldung", "Umgebungstemperatur"],
+        "common_variants": ["Maschine wird zu heiß", "Warnung hoher Temperatur", "Überhitzungsproblem", "Temperaturwarnung"],
+        "tags": ["Temperatur", "Überhitzung", "Warnung", "Kühlung", "Fehlerbehebung"],
+        "priority": "high"
+      },
+      {
+        "faq_id": "handbuch_verweis_fehlerbehebung",
+        "title": "Verweis auf das Handbuch zur Fehlerbehebung",
+        "canonical_question": "Der Support hat mich aufgefordert, das Handbuch zur Fehlerbehebung zu konsultieren. Wo finde ich das und wie kann es mir helfen?",
+        "answer": "Das Handbuch Ihrer Maschine enthält detaillierte Anweisungen zur Fehlerbehebung für verschiedene Probleme, einschließlich Übertemperaturwarnungen.  Sie können das Handbuch in der Regel auf der Hersteller-Website unter dem Abschnitt 'Support' oder 'Downloads' finden.  Suchen Sie nach Ihrem spezifischen Modell, um das richtige Handbuch herunterzuladen.  Das Handbuch enthält schrittweise Anleitungen und Diagramme, die Ihnen bei der Diagnose und Behebung des Problems helfen können.",
+        "needed_info": ["Maschinennummer", "Modellnummer"],
+        "common_variants": ["Wo finde ich das Handbuch?", "Wie lese ich das Handbuch?", "Handbuch hilft nicht"],
+        "tags": ["Handbuch", "Fehlerbehebung", "Dokumentation", "Support"],
+        "priority": "normal"
+      },
+      {
+        "faq_id": "fehlermeldung_dokumentation",
+        "title": "Dokumentation von Fehlermeldungen",
+        "canonical_question": "Warum wird mir geraten, die genaue Fehlermeldung zu dokumentieren?",
+        "answer": "Die genaue Fehlermeldung ist für die Diagnose des Problems von entscheidender Bedeutung.  Sie enthält spezifische Informationen, die uns helfen, die Ursache der Übertemperaturwarnung zu identifizieren und Ihnen eine gezielte Lösung anzubieten.  Bitte notieren Sie sich die vollständige Fehlermeldung, einschließlich aller Fehlercodes oder zusätzlichen Informationen, die auf dem Bildschirm angezeigt werden.",
+        "needed_info": ["Genaue Fehlermeldung", "Fehlercode"],
+        "common_variants": ["Was ist ein Fehlercode?", "Wie finde ich die Fehlermeldung?", "Bedeutung der Fehlermeldung"],
+        "tags": ["Fehlermeldung", "Fehlercode", "Diagnose", "Dokumentation"],
+        "priority": "normal"
+      }
+    ]
+  }
+]
