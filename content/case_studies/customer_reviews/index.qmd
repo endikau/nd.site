@@ -655,6 +655,7 @@ Die Kategorie *Telefonzubehör* sticht positiv hervor: Sie weist nicht nur den h
 
 ```{r}
 #| fig-height: 3.505128
+#| warning: false
 
 # Sys.setlocale("LC_ALL", "de_DE.UTF-8")
 
@@ -1062,7 +1063,25 @@ Die Themen treten insgesamt relativ ausgeglichen auf, mit leicht höheren Anteil
 
 
 ```{r}
-topic_assignments <- as_tibble(stm_model$theta) |>
+#| warning: false
+
+# topic_assignments <- as_tibble(stm_model$theta) |>
+#   mutate(ID = out$meta$ID) |>
+#   pivot_longer(
+#     cols = starts_with("V"),
+#     names_to = "topic",
+#     names_prefix = "V",
+#     names_transform = list(topic = as.integer),
+#     values_to = "gamma"
+#   ) |>
+#   group_by(ID) |>
+#   slice_max(order_by = gamma, n = 1) |>
+#   ungroup()
+
+theta <- stm_model$theta
+colnames(theta) <- paste0("V", seq_len(ncol(theta)))
+
+topic_assignments <- as_tibble(theta) |>
   mutate(ID = out$meta$ID) |>
   pivot_longer(
     cols = starts_with("V"),
@@ -1129,7 +1148,26 @@ Nachdem wir die Häufigkeit der Themen im Gesamtkorpus betrachtet haben, wenden 
 ```{r}
 #| fig-height: 2.317425
 
-doc_gamma <- as_tibble(stm_model$theta) |>
+# doc_gamma <- as_tibble(stm_model$theta) |>
+#   mutate(
+#     ID = as.character(out$meta$ID),
+#     Datum = out$meta$Datum
+#   ) |>
+#   pivot_longer(
+#     starts_with("V"),
+#     names_to = "topic",
+#     names_prefix = "V",
+#     names_transform = list(topic = as.integer),
+#     values_to = "gamma"
+#   ) |>
+#   left_join(topic_labels, by = "topic") |>
+#   filter(!is.na(Datum)) |>
+#   mutate(
+#     Datum = lubridate::ymd(Datum),
+#     Quartal = lubridate::floor_date(Datum, "quarter")
+#   )
+
+doc_gamma <- as_tibble(theta) |>
   mutate(
     ID = as.character(out$meta$ID),
     Datum = out$meta$Datum
@@ -1175,7 +1213,6 @@ if (interactive()) {
 
 
 stacked_topics_plot
-
 ```
 
 Die zeitliche Entwicklung der Themenanteile zeigt deutliche Verschiebungen in den Rezensionen: 2017 dominierten noch *Passform* und *Verarbeitung*, die in den ersten Monaten besonders häufig genannt wurden. Im Zeitverlauf rückten dagegen *Sound*, *Preis‑Leistung* und *Langlebigkeit* in den Vordergrund und lösten die zuvor dominierenden Themen ab. Das deutet darauf hin, dass sich die Kundenerwartungen von der anfänglichen Produktanpassung hin zu langfristiger Qualität zu einem fairen Preis verlagert haben. Positiv anzumerken ist, dass damit das Thema mit der negativsten Stimmung deutlich zurückgegangen ist.
