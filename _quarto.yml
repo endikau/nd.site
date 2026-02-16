@@ -1,6 +1,7 @@
 project:
   type: hugo
   output-dir: _hugo
+  pre-render: npm update --include=dev
   post-render: /bin/sh -c "cd _hugo && hugo --cleanDestinationDir --minify"
 format:
   hugo-md:

@@ -1,46 +1,40 @@
-condaenv_name <- "nd.site.condaenv"
-
 install.packages(
-  pkgs = setdiff("renv", rownames(installed.packages())),
+  pkgs = setdiff(
+    c("renv", "callr", "reticulate", "cli"), 
+    rownames(installed.packages())
+  ),
   repos = "https://cloud.r-project.org"
 )
 
-# install.packages(
-#   pkgs = setdiff("pak", rownames(installed.packages())),
-#   repos = "https://cloud.r-project.org"
-# )
-# options(renv.config.pak.enabled = TRUE)
+# options(renv.config.ppm.enabled = TRUE)
 
-renv::activate()
+callr::r(\(...){renv::activate()})
 
-renv::install("cli", prompt = FALSE)
-cli::cli_alert_success("renv activated")
+callr::r(\(...){renv::restore()})
 
-options(
-  # renv.config.repos.override = c(
-  #   "https://cran.rstudio.com/"
-  # ),
-  renv.config.ppm.enabled = TRUE
-)
-renv::install("yaml", prompt = FALSE)
+callr::r(\(...){
+  renv::install(c("yaml", "reticulate"), prompt = FALSE)
+})
 
-renv::restore()
+cli::cli_alert_success("renv finished")
 
-cli::cli_alert_success("renv restored")
+callr::r(\(...){
 
-renv::install("reticulate", prompt = FALSE)
-python_path <- local({
-  .conda_list <- reticulate::conda_list()
+})
 
-  if (condaenv_name %in% .conda_list$name) {
-    .python_path <- .conda_list$python[.conda_list$name == condaenv_name]
-  } else {
-    .python_path <- reticulate::conda_create(
-      envname = condaenv_name,
-      environment = "environment.yml"
+callr::r(\(...){
+  .python_pyenv_path <- reticulate::install_python("3.12:latest", force = FALSE)
+  if (!reticulate::virtualenv_exists("./venv")) { 
+    reticulate::virtualenv_create(
+      envname = "./venv",
+      python = python_pyenv_path,
+      requiremens = (if (fs::file_exists("requirements.txt")) {
+        "requirements.txt"
+      } else {
+        NULL
+      })
     )
   }
-  return(.python_path)
 })
 
 cli::cli_alert_success("conda environment created")
@@ -53,8 +47,6 @@ helprrr::setenv_persist(
   RENV_PYTHON = python_path
 )
 
-renv::snapshot(prompt = FALSE)
+renv::install("callr", prompt = FALSE)
+callr::r(\(...){renv::snapshot(prompt = FALSE)})
 
-yaml::read_yaml("environment.yml") |>
-  purrr::discard_at("prefix") |>
-  yaml::write_yaml("environment.yml")

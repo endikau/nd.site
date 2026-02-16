@@ -17,10 +17,9 @@ execute:
 #| message: false
 #| warning: false
 
-library(showtext)
-font_add_google("Open Sans")
-showtext_auto()
-
+# library(showtext)
+# font_add_google("Open Sans")
+# showtext_auto()
 
 # Setup
 set.seed(123)
@@ -361,16 +360,16 @@ transformation_beispiele |>
     `Generalisiertes Issue` = "Generalisierte Anfrage",
     Theme = "Thema"
   ) |>
-#   gt::cols_width(
-#     `Konkrete Kundenanfrage` ~ gt::pct(55),
-#     `Generalisiertes Issue` ~ gt::pct(25),
-#     Theme ~ gt::pct(20)
-#   ) |>
+  #   gt::cols_width(
+  #     `Konkrete Kundenanfrage` ~ gt::pct(55),
+  #     `Generalisiertes Issue` ~ gt::pct(25),
+  #     Theme ~ gt::pct(20)
+  #   ) |>
   gt::tab_options(
     table.width = gt::pct(100)
   ) |>
-   nd.util::nd_gt_tab_options() |>
-   nd.util::nd_gt_to_html()
+  nd.util::nd_gt_tab_options() |>
+  nd.util::nd_gt_to_html()
 ```
 
 
@@ -392,7 +391,7 @@ Die folgende Übersicht zeigt, wie viele strukturierte FAQ-Einträge pro Thema a
 #| warning: false
 
 topic_labels |>
- select(theme, n_faqs) |>
+  select(theme, n_faqs) |>
   arrange(desc(n_faqs)) |>
   gt::gt() |>
   gt::cols_label(
@@ -424,8 +423,12 @@ faqs_tbl |>
     Titel = title,
     Frage = canonical_question,
     Antwort = answer,
-    `Benötigte Infos` = purrr::map_chr(needed_info, \(x) paste(x, collapse = ", ")),
-    Varianten = purrr::map_chr(common_variants, \(x) paste(x, collapse = " | ")),
+    `Benötigte Infos` = purrr::map_chr(needed_info, \(x) {
+      paste(x, collapse = ", ")
+    }),
+    Varianten = purrr::map_chr(common_variants, \(x) {
+      paste(x, collapse = " | ")
+    }),
     Tags = purrr::map_chr(tags, \(x) paste(x, collapse = ", ")),
     .keep = "none"
   ) |>
