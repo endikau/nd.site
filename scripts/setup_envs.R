@@ -1,6 +1,6 @@
 install.packages(
   pkgs = setdiff(
-    c("renv", "callr", "cli", "pak"),
+    c("renv", "callr", "cli", "pak", "withr"),
     rownames(installed.packages())
   ),
   repos = "https://cloud.r-project.org"
@@ -15,22 +15,25 @@ callr::r(
 
 callr::r(
   \(...) {
-    renv::restore()
-  },
-  show = TRUE
-)
-
-callr::r(
-  \(...) {
-    renv::install(
-      c("yaml", "reticulate", "m-pilarski/helprrr"),
-      prompt = FALSE
+    withr::with_envvar(
+      c(RENV_CONFIG_PYTHON_ENABLED = "FALSE"),
+      renv::restore()
     )
   },
   show = TRUE
 )
 
 cli::cli_alert_success("renv")
+
+callr::r(
+  \(...) {
+    renv::install(
+      c("yaml", "fs", "reticulate", "m-pilarski/helprrr"),
+      prompt = FALSE
+    )
+  },
+  show = TRUE
+)
 
 callr::r(
   \(...) {
