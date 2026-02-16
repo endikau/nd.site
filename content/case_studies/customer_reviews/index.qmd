@@ -5,7 +5,7 @@ figtitle: "⭐"
 date: "2024-11-25T14:25:49+01:00"
 draft: false
 toc_show: true
-execute: 
+execute:
   echo: false
   message: false
   cache: false
@@ -73,9 +73,9 @@ data_dir <- here::here("content", "case_studies", "customer_reviews", "data")
 Kundenrezensionen bieten wertvolle Einblicke in die Nutzung und Bewertung von Produkten, oft jedoch in unstrukturierter Form. Mittels Methoden der Textanalyse lassen sich diese Informationen systematisch aufbereiten und helfen, Nutzerbedürfnisse gezielt zu erkennen. Ziel dieser Case Study ist es, ein differenziertes Bild der Kundenerfahrungen mit verschiedenen technischen Produktgruppen zu zeichnen und daraus Verbesserungspotenziale abzuleiten.
 
 
-### Laden des Datensatzes 
+### Laden des Datensatzes
 
-Die Analyse basiert auf 3.413 deutschsprachigen Amazon-Rezensionen, die jeweils das Datum, die Sternebewertung und den Link der Rezension enthalten. Ein Ausschnitt der ersten Beobachtungen ist in der folgenden Tabelle dargestellt. 
+Die Analyse basiert auf 3.413 deutschsprachigen Amazon-Rezensionen, die jeweils das Datum, die Sternebewertung und den Link der Rezension enthalten. Ein Ausschnitt der ersten Beobachtungen ist in der folgenden Tabelle dargestellt.
 
 ```{r}
 reviews <-
@@ -333,9 +333,9 @@ reviews |>
 
 
 
-### Analyse 
+### Analyse
 
-#### Erste Einblicke: Vergleich der Produktkategorien 
+#### Erste Einblicke: Vergleich der Produktkategorien
 
 Wir beginnen mit einer rein **explorativen Betrachtung:** Gibt es Unterschiede in der durchschnittlichen Bewertung zwischen den Produktkategorien?
 
@@ -371,7 +371,7 @@ Ein Blick auf den Durchschnitt der Bewertungen nach Produktkategorie zeigt zusä
 
 
 
-#### Worthäufigkeiten 
+#### Worthäufigkeiten
 
 Um ein erstes Gefühl für den Inhalt der Kundenrezensionen zu erhalten, bietet sich eine einfache **Häufigkeitsanalyse** der verwendeten Begriffe an. Die erste Grafik zeigt die häufigsten Wörter über alle Produktkategorien hinweg. Begriffe wie "super", "funktioniert" und "zufrieden" lassen bereits darauf schließen, dass Kund:innen grundsätzlich positive Erfahrungen mit den Produkten machen. Sie liefern jedoch wenig tiefergehende Erkenntnisse, da sie sehr allgemein sind.
 
@@ -480,9 +480,9 @@ Dadurch lassen sich erste Hinweise auf die zentralen Themen und Probleme pro Pro
 
 
 
-#### Sentimentanalyse 
+#### Sentimentanalyse
 
-Um über reine Sternebewertungen hinauszugehen, analysieren wir den Textinhalt der Rezensionen mithilfe einer {{{< crossref path="/methods/sentiment#lexikonbasierte-sentimentanalyse" label="lexikonbasierten Sentimentanalyse" >}}}. Dabei wird jeder Rezension einen numerischen Sentimentwert zugewiesen, der positive und negative Begriffe entsprechend abbildet. 
+Um über reine Sternebewertungen hinauszugehen, analysieren wir den Textinhalt der Rezensionen mithilfe einer {{{< crossref path="/methods/sentiment#lexikonbasierte-sentimentanalyse" label="lexikonbasierten Sentimentanalyse" >}}}. Dabei wird jeder Rezension einen numerischen Sentimentwert zugewiesen, der positive und negative Begriffe entsprechend abbildet.
 
 
 ```{r}
@@ -655,6 +655,7 @@ Die Kategorie *Telefonzubehör* sticht positiv hervor: Sie weist nicht nur den h
 
 ```{r}
 #| fig-height: 3.505128
+#| warning: false
 
 # Sys.setlocale("LC_ALL", "de_DE.UTF-8")
 
@@ -670,7 +671,8 @@ sent_time_q <- review_summary |>
     avg_sent = mean(sentiment_score, na.rm = TRUE),
     n_rev = n(),
     .groups = "drop"
-  )
+  ) |>
+  filter(Quartal >= as.Date("2016-01-01"), Quartal < as.Date("2021-01-01"))
 
 sent_time <-
   ggplot(sent_time_q, aes(Quartal, avg_sent, color = Produkttyp)) +
@@ -793,7 +795,7 @@ Die Sentimentanalysen zeigen, dass insbesondere in der Kategorie *Kopfhörer* ei
 Um die Ursachen dieser negativen Bewertungen besser zu verstehen, wird im Folgenden die Analyse gezielt auf diese Produktkategorie fokussiert. Ziel ist, herauszufinden, welche konkreten Probleme Kund:innen in Verbindung mit Kopfhörern am häufigsten nennen.
 
 
-#### Analyse der Bigramme 
+#### Analyse der Bigramme
 
 Da die Sentimentanalyse bei Kopfhörern stark negativ ausfiel, lohnt es sich einen genaueren Blick auf wiederkehrende **Wortpaare** (Bigramme) zu werfen. Bigramme zeigen, welche Begriffe in den Rezensionen besonders häufig direkt aufeinander folgen und damit inhaltlich zusammengehören. So lassen sich typische Formulierungen und wiederkehrende Sprachmuster identifizieren, die bei der Analyse einzelner Wörter verborgen bleiben.
 
@@ -858,12 +860,12 @@ Die folgende Grafik zeigt für jedes Thema die repräsentativsten Begriffe. So w
 custom_stopwords_ext <- custom_stopwords |>
   # fmt: skip
   tibble::add_case(Wort = c(
-    "leider", "immer", "besser", "produkt", "amazon", "bestellt", "kunden", 
-    "gerät", "geräte", "artikel", "funktioniert", "super", "jbl", "sony", 
-    "gehen", "kaputt", "rechte", "linke", "köpfhörer", "absolut", "gutes", 
-    "gut", "schlechtes", "schlecht", "erwarten", "hören", "tag", "zweite", 
-    "richtig", "lange", "musik", "hörer", "gekauft", "kaufen", "produkt", 
-    "benutzung", "sterne", "größe", "jahren", "gegangen", "benutze", 
+    "leider", "immer", "besser", "produkt", "amazon", "bestellt", "kunden",
+    "gerät", "geräte", "artikel", "funktioniert", "super", "jbl", "sony",
+    "gehen", "kaputt", "rechte", "linke", "köpfhörer", "absolut", "gutes",
+    "gut", "schlechtes", "schlecht", "erwarten", "hören", "tag", "zweite",
+    "richtig", "lange", "musik", "hörer", "gekauft", "kaufen", "produkt",
+    "benutzung", "sterne", "größe", "jahren", "gegangen", "benutze",
     "kopfhörern", "stern", "preis", "sound", "klang"
   )) |>
   distinct() |>
@@ -913,8 +915,8 @@ meta_worst <- reviews |>
   filter(Produkttyp == "Kopfhörer", ID %in% docs_worst$ID) |>
   mutate(
     Bewertung = as.factor(Bewertung),
-    # Datum = lubridate::dmy(Datum, locale = "de_DE.UTF-8")
-    Datum = 1
+    Datum = lubridate::dmy(Datum, locale = "de_DE.UTF-8")
+    # Datum = 1
   ) |>
   arrange(match(ID, docs_worst$ID))
 
@@ -1061,7 +1063,25 @@ Die Themen treten insgesamt relativ ausgeglichen auf, mit leicht höheren Anteil
 
 
 ```{r}
-topic_assignments <- as_tibble(stm_model$theta) |>
+#| warning: false
+
+# topic_assignments <- as_tibble(stm_model$theta) |>
+#   mutate(ID = out$meta$ID) |>
+#   pivot_longer(
+#     cols = starts_with("V"),
+#     names_to = "topic",
+#     names_prefix = "V",
+#     names_transform = list(topic = as.integer),
+#     values_to = "gamma"
+#   ) |>
+#   group_by(ID) |>
+#   slice_max(order_by = gamma, n = 1) |>
+#   ungroup()
+
+theta <- stm_model$theta
+colnames(theta) <- paste0("V", seq_len(ncol(theta)))
+
+topic_assignments <- as_tibble(theta) |>
   mutate(ID = out$meta$ID) |>
   pivot_longer(
     cols = starts_with("V"),
@@ -1122,13 +1142,32 @@ topic_summary_plot
 ```
 
 
-Nachdem wir die Häufigkeit der Themen im Gesamtkorpus betrachtet haben, wenden wir uns nun der Frage zu, wie positiv oder negativ diese jeweils bewertet werden. Die Analyse der Sentimentwerte pro Thema zeigt: Am stärksten negativ wird die *Verarbeitung* bewertet. Auch beim *Sound* äußern Kunden deutliche Kritik, vermutlich aufgrund auftretender Probleme bei hohen Tönen, wie aus der Worthäufigkeitsanalyse der Themen hervorgeht. Die Themen *Preis-Leistung*, *Passform* und *Langlebigkeit* schneiden im Vergleich etwas besser ab, weisen jedoch ebenfalls einen negativen Grundton auf. 
+Nachdem wir die Häufigkeit der Themen im Gesamtkorpus betrachtet haben, wenden wir uns nun der Frage zu, wie positiv oder negativ diese jeweils bewertet werden. Die Analyse der Sentimentwerte pro Thema zeigt: Am stärksten negativ wird die *Verarbeitung* bewertet. Auch beim *Sound* äußern Kunden deutliche Kritik, vermutlich aufgrund auftretender Probleme bei hohen Tönen, wie aus der Worthäufigkeitsanalyse der Themen hervorgeht. Die Themen *Preis-Leistung*, *Passform* und *Langlebigkeit* schneiden im Vergleich etwas besser ab, weisen jedoch ebenfalls einen negativen Grundton auf.
 
 
 ```{r}
 #| fig-height: 2.317425
 
-doc_gamma <- as_tibble(stm_model$theta) |>
+# doc_gamma <- as_tibble(stm_model$theta) |>
+#   mutate(
+#     ID = as.character(out$meta$ID),
+#     Datum = out$meta$Datum
+#   ) |>
+#   pivot_longer(
+#     starts_with("V"),
+#     names_to = "topic",
+#     names_prefix = "V",
+#     names_transform = list(topic = as.integer),
+#     values_to = "gamma"
+#   ) |>
+#   left_join(topic_labels, by = "topic") |>
+#   filter(!is.na(Datum)) |>
+#   mutate(
+#     Datum = lubridate::ymd(Datum),
+#     Quartal = lubridate::floor_date(Datum, "quarter")
+#   )
+
+doc_gamma <- as_tibble(theta) |>
   mutate(
     ID = as.character(out$meta$ID),
     Datum = out$meta$Datum
@@ -1143,7 +1182,7 @@ doc_gamma <- as_tibble(stm_model$theta) |>
   left_join(topic_labels, by = "topic") |>
   filter(!is.na(Datum)) |>
   mutate(
-    Datum = lubridate::dmy(Datum, locale = "de_DE.UTF-8"),
+    Datum = lubridate::ymd(Datum),
     Quartal = lubridate::floor_date(Datum, "quarter")
   )
 
@@ -1174,7 +1213,6 @@ if (interactive()) {
 
 
 stacked_topics_plot
-
 ```
 
 Die zeitliche Entwicklung der Themenanteile zeigt deutliche Verschiebungen in den Rezensionen: 2017 dominierten noch *Passform* und *Verarbeitung*, die in den ersten Monaten besonders häufig genannt wurden. Im Zeitverlauf rückten dagegen *Sound*, *Preis‑Leistung* und *Langlebigkeit* in den Vordergrund und lösten die zuvor dominierenden Themen ab. Das deutet darauf hin, dass sich die Kundenerwartungen von der anfänglichen Produktanpassung hin zu langfristiger Qualität zu einem fairen Preis verlagert haben. Positiv anzumerken ist, dass damit das Thema mit der negativsten Stimmung deutlich zurückgegangen ist.
