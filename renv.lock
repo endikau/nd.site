@@ -6977,10 +6977,10 @@
     },
     "tm": {
       "Package": "tm",
-      "Version": "0.7-16",
+      "Version": "0.7-17",
       "Source": "Repository",
       "Title": "Text Mining Package",
-      "Date": "2025-02-19",
+      "Date": "2025-12-10",
       "Authors@R": "c(person(\"Ingo\", \"Feinerer\", role = \"aut\", email = \"feinerer@logic.at\", comment = c(ORCID = \"0000-0001-7656-8338\")), person(\"Kurt\", \"Hornik\", role = c(\"aut\", \"cre\"), email = \"Kurt.Hornik@R-project.org\", comment = c(ORCID = \"0000-0003-4198-9911\")), person(\"Artifex Software, Inc.\", role = c(\"ctb\", \"cph\"), comment = \"pdf_info.ps taken from GPL Ghostscript\"))",
       "Depends": [
         "R (>= 3.4.0)",
@@ -7017,7 +7017,7 @@
       "URL": "https://tm.r-forge.r-project.org/",
       "Additional_repositories": "https://datacube.wu.ac.at",
       "NeedsCompilation": "yes",
-      "Author": "Ingo Feinerer [aut] (<https://orcid.org/0000-0001-7656-8338>), Kurt Hornik [aut, cre] (<https://orcid.org/0000-0003-4198-9911>), Artifex Software, Inc. [ctb, cph] (pdf_info.ps taken from GPL Ghostscript)",
+      "Author": "Ingo Feinerer [aut] (ORCID: <https://orcid.org/0000-0001-7656-8338>), Kurt Hornik [aut, cre] (ORCID: <https://orcid.org/0000-0003-4198-9911>), Artifex Software, Inc. [ctb, cph] (pdf_info.ps taken from GPL Ghostscript)",
       "Maintainer": "Kurt Hornik <Kurt.Hornik@R-project.org>",
       "Repository": "CRAN"
     },
@@ -7584,35 +7584,6 @@
       "NeedsCompilation": "no",
       "Author": "Jim Hester [aut], Lionel Henry [aut, cre], Kirill Müller [aut], Kevin Ushey [aut], Hadley Wickham [aut], Winston Chang [aut], Jennifer Bryan [ctb], Richard Cotton [ctb], Posit Software, PBC [cph, fnd]",
       "Maintainer": "Lionel Henry <lionel@posit.co>",
-      "Repository": "CRAN"
-    },
-    "wordcloud": {
-      "Package": "wordcloud",
-      "Version": "2.6",
-      "Source": "Repository",
-      "Type": "Package",
-      "Title": "Word Clouds",
-      "Author": "Ian Fellows",
-      "Maintainer": "Ian Fellows <ian@fellstat.com>",
-      "Description": "Functionality to create pretty word clouds, visualize differences and similarity between documents, and avoid over-plotting in scatter plots with text.",
-      "License": "LGPL-2.1",
-      "LazyLoad": "yes",
-      "Depends": [
-        "methods",
-        "RColorBrewer"
-      ],
-      "Imports": [
-        "Rcpp (>= 0.9.4)"
-      ],
-      "Suggests": [
-        "tm (>= 0.6)",
-        "slam"
-      ],
-      "URL": "http://blog.fellstat.com/?cat=11 http://www.fellstat.com",
-      "LinkingTo": [
-        "Rcpp"
-      ],
-      "NeedsCompilation": "yes",
       "Repository": "CRAN"
     },
     "xfun": {

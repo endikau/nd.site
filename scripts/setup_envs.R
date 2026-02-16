@@ -6,11 +6,23 @@ install.packages(
   repos = "https://cloud.r-project.org"
 )
 
-# options(renv.config.ppm.enabled = TRUE)
+callr::r(\(...){
+  options(
+    renv.config.ppm.enabled = TRUE,
+    renv.config.ppm.default = TRUE,
+    renv.config.ppm.url = "https://packagemanager.posit.co/cran/latest"
+  )
+  renv::activate()
+})
 
-callr::r(\(...){renv::activate()})
-
-callr::r(\(...){renv::restore()})
+callr::r(\(...){
+  options(
+    renv.config.ppm.enabled = TRUE,
+    renv.config.ppm.default = TRUE,
+    renv.config.ppm.url = "https://packagemanager.posit.co/cran/latest"
+  )
+  renv::restore()
+})
 
 callr::r(\(...){
   renv::install(c("yaml", "reticulate", "m-pilarski/helprrr"), prompt = FALSE)
