@@ -1,6 +1,6 @@
 install.packages(
   pkgs = setdiff(
-    c("renv", "callr", "reticulate", "cli"), 
+    c("renv", "callr", "cli"), 
     rownames(installed.packages())
   ),
   repos = "https://cloud.r-project.org"
@@ -13,21 +13,17 @@ callr::r(\(...){renv::activate()})
 callr::r(\(...){renv::restore()})
 
 callr::r(\(...){
-  renv::install(c("yaml", "reticulate"), prompt = FALSE)
+  renv::install(c("yaml", "reticulate", "m-pilarski/helprrr"), prompt = FALSE)
 })
 
-cli::cli_alert_success("renv finished")
-
-callr::r(\(...){
-
-})
+cli::cli_alert_success("renv")
 
 callr::r(\(...){
   .python_pyenv_path <- reticulate::install_python("3.12:latest", force = FALSE)
   if (!reticulate::virtualenv_exists("./venv")) { 
     reticulate::virtualenv_create(
       envname = "./venv",
-      python = python_pyenv_path,
+      python = .python_pyenv_path,
       requiremens = (if (fs::file_exists("requirements.txt")) {
         "requirements.txt"
       } else {
@@ -35,18 +31,16 @@ callr::r(\(...){
       })
     )
   }
+  .python_venv_path <- reticulate::virtualenv_python("./venv")
+  renv::use_python(.python_venv_path, type = "virtualenv")
+  helprrr::setenv_persist(
+    RETICULATE_PYTHON = .python_venv_path,
+    RENV_PYTHON = .python_venv_path
+  )
 })
 
-cli::cli_alert_success("conda environment created")
+cli::cli_alert_success("venv")
 
-renv::use_python(python_path, type = "conda", name = condaenv_name)
-
-renv::install("m-pilarski/helprrr", prompt = FALSE)
-helprrr::setenv_persist(
-  RETICULATE_PYTHON = python_path,
-  RENV_PYTHON = python_path
-)
-
-renv::install("callr", prompt = FALSE)
 callr::r(\(...){renv::snapshot(prompt = FALSE)})
 
+cli::cli_alert_success("snapshot")
