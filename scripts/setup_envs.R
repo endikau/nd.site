@@ -1,38 +1,9 @@
 install.packages(
   pkgs = setdiff(
-    c("renv", "callr", "cli", "pak", "withr"),
+    c("renv", "callr", "cli", "pak", "fs", "reticulate"),
     rownames(installed.packages())
   ),
   repos = "https://cloud.r-project.org"
-)
-
-callr::r(
-  \(...) {
-    renv::activate()
-  },
-  show = TRUE
-)
-
-callr::r(
-  \(...) {
-    withr::with_envvar(
-      c(RENV_CONFIG_PYTHON_ENABLED = "FALSE"),
-      renv::restore()
-    )
-  },
-  show = TRUE
-)
-
-cli::cli_alert_success("renv")
-
-callr::r(
-  \(...) {
-    renv::install(
-      c("yaml", "fs", "reticulate", "m-pilarski/helprrr"),
-      prompt = FALSE
-    )
-  },
-  show = TRUE
 )
 
 callr::r(
@@ -52,6 +23,38 @@ callr::r(
         })
       )
     }
+  }, 
+  show = TRUE
+)
+
+callr::r(
+  \(...) {
+    renv::activate()
+  },
+  show = TRUE
+)
+
+callr::r(
+  \(...) {
+    renv::restore()
+  },
+  show = TRUE
+)
+
+callr::r(
+  \(...) {
+    renv::install(
+      c("yaml", "reticulate", "m-pilarski/helprrr"),
+      prompt = FALSE
+    )
+  },
+  show = TRUE
+)
+
+cli::cli_alert_success("renv")
+
+callr::r(
+  \(...) {
     .python_venv_path <- reticulate::virtualenv_python("./venv")
     renv::use_python(.python_venv_path, type = "virtualenv")
     helprrr::setenv_persist(
