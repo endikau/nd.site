@@ -12,17 +12,16 @@ callr::r(
       "3.12:latest",
       force = FALSE
     )
-    if (!reticulate::virtualenv_exists("./venv")) {
+    if (reticulate::virtualenv_exists("./venv")) {
       reticulate::virtualenv_create(
         envname = "./venv",
-        python = .python_pyenv_path,
-        requiremens = (if (fs::file_exists("requirements.txt")) {
-          "requirements.txt"
-        } else {
-          NULL
-        })
+        python = .python_pyenv_path
       )
     }
+    reticulate::virtualenv_create(
+      envname = "./venv",
+      python = .python_pyenv_path
+    )
   }, 
   show = TRUE
 )

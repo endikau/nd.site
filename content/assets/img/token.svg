@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="201.487mm"
+   height="37.384998mm"
+   viewBox="0 0 201.487 37.384999"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="token.svg"
+   inkscape:version="1.4 (e7c3feb100, 2024-10-09)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="0.7869471"
+     inkscape:cx="298.62236"
+     inkscape:cy="141.68678"
+     inkscape:window-width="1251"
+     inkscape:window-height="1011"
+     inkscape:window-x="50"
+     inkscape:window-y="32"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg1" />
+  <defs
+     id="defs1">
+    <marker
+       style="overflow:visible"
+       id="marker5"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       markerWidth="1"
+       markerHeight="1"
+       viewBox="0 0 1 1"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.7)"
+         d="M -2,-4 9,0 -2,4 c 2,-2.33 2,-5.66 0,-8 z"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:none"
+         id="path5" />
+    </marker>
+  </defs>
+  <g
+     id="layer1"
+     transform="translate(-0.54931771,-0.15734221)">
+    <text
+       xml:space="preserve"
+       style="font-weight:600;font-size:5.64444px;line-height:1.5;font-family:'Open Sans';-inkscape-font-specification:'Open Sans Semi-Bold';text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#000000;fill-rule:evenodd;stroke-width:0.264583"
+       x="95.482613"
+       y="5.2108212"
+       id="text1"><tspan
+         id="tspan1"
+         style="font-size:5.64444px;stroke-width:0.264583"
+         x="96.215729"
+         y="5.2108212">Die Tokenisierung zerlegt Sätze in einzelne Elemente. </tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-weight:600;font-size:5.64444px;line-height:1.5;font-family:'Open Sans';-inkscape-font-specification:'Open Sans Semi-Bold';text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#000000;fill-rule:evenodd;stroke-width:0.264583"
+       x="100.3026"
+       y="35.951042"
+       id="text2"><tspan
+         id="tspan2"
+         style="stroke-width:0.264583"
+         x="101.03571"
+         y="35.951042">[&quot;Die&quot;, &quot;Tokenisierung&quot;, &quot;zerlegt&quot;, &quot;Sätze&quot;, &quot;in&quot;, &quot;einzelne&quot;, &quot;Elemente&quot;, &quot;.&quot;] </tspan></text>
+    <path
+       style="fill:#000000;fill-rule:evenodd;stroke:#000000;stroke-width:0.665;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#marker5)"
+       d="m 97.141678,22.897826 0.054,-13.5418474"
+       id="path4" />
+  </g>
+</svg>
