@@ -13,10 +13,7 @@ callr::r(
       force = FALSE
     )
     if (reticulate::virtualenv_exists("./venv")) {
-      reticulate::virtualenv_create(
-        envname = "./venv",
-        python = .python_pyenv_path
-      )
+      reticulate::virtualenv_remove(envname = "./venv")
     }
     reticulate::virtualenv_create(
       envname = "./venv",
