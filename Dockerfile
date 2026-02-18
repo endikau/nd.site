@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.6
-# FROM ghcr.io/endikau/nd_docker-static_serve:latest
-FROM nd_docker-static_serve:local
+FROM ghcr.io/endikau/nd_docker-static_serve:latest
+# FROM nd_docker-static_serve:local
 
 WORKDIR /project
 
