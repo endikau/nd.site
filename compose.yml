@@ -1,12 +1,11 @@
 services:
   static_serve:
     container_name: nd_site-static_serve
-    image: ghcr.io/endikau/nd_site-static_serve:latest
+    # image: ghcr.io/endikau/nd_site-static_serve:latest
+    image: nd_site-static_serve:local
     ports:
       - 12348:8080
-    command: sleep infinity
     
-    # image: nd_site-static_serve:local
     # For live-mount development, uncomment the volume below.
     # volumes:
     #   - .:/project
