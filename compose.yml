@@ -1,8 +1,8 @@
 services:
   static_serve:
     container_name: nd_site-static_serve
-    # image: ghcr.io/endikau/nd_site-static_serve:latest
-    image: nd_site-static_serve:local
+    image: ghcr.io/endikau/nd_site-static_serve:latest
+    # image: nd_site-static_serve:local
     ports:
       - 12348:8080
     

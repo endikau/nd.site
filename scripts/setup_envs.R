@@ -1,6 +1,6 @@
 install.packages(
   pkgs = setdiff(
-    c("renv", "callr", "cli", "pak", "fs", "reticulate"),
+    c("renv", "callr", "cli", "reticulate"),
     rownames(installed.packages())
   ),
   repos = "https://p3m.dev/cran/__linux__/noble/latest"
@@ -32,7 +32,7 @@ callr::r(
 
 callr::r(
   \(...) {
-    renv::restore()
+    renv::restore(clean = TRUE)
   },
   show = TRUE
 )
@@ -40,7 +40,10 @@ callr::r(
 callr::r(
   \(...) {
     renv::install(
-      c("yaml", "reticulate", "m-pilarski/helprrr"),
+      packages = setdiff(
+        c("yaml", "reticulate", "m-pilarski/helprrr", "reticulate"),
+        rownames(installed.packages())
+      ),
       prompt = FALSE
     )
   },
