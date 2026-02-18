@@ -11,9 +11,16 @@ RUN --mount=type=secret,id=npmrc,target=/root/.npmrc npm update
 
 RUN Rscript --vanilla scripts/setup_envs.R
 
-# Render the site on container startup, then fall back to the base image CMD.
-RUN printf '#!/bin/sh\nset -e\ncd /project\nquarto render\nexec \"$@\"\n' \
-    > /usr/local/bin/entrypoint.sh \
+# Render on startup, then hand off to the base image init.
+RUN cat <<'ENTRYPOINT' > /usr/local/bin/entrypoint.sh \
     && chmod +x /usr/local/bin/entrypoint.sh
+#!/bin/sh
+set -e
+
+cd /project
+quarto render
+
+exec /init "$@"
+ENTRYPOINT
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
