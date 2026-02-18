@@ -3,6 +3,8 @@ install.packages(
   repos = c("https://p3m.dev/cran/__linux__/manylinux_2_28/latest")
 )
 
+Sys.sleep(5)
+
 pak::pak(c("renv", "callr", "cli", "fs", "reticulate"))
 
 callr::r(
