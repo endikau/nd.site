@@ -1,11 +1,10 @@
 install.packages(
-  pkgs = setdiff("pak", rownames(installed.packages())),
-  repos = c("https://p3m.dev/cran/__linux__/manylinux_2_28/latest")
+  pkgs = setdiff(
+    c("renv", "callr", "cli", "pak", "fs", "reticulate"),
+    rownames(installed.packages())
+  ),
+  repos = "https://p3m.dev/cran/__linux__/noble/latest"
 )
-
-Sys.sleep(5)
-
-pak::pak(c("renv", "callr", "cli", "fs", "reticulate"))
 
 callr::r(
   \(...) {
