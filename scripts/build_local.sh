@@ -35,6 +35,6 @@ build_tracked() {
   )
 }
 
-build_tracked "$ROOT_DIR/Dockerfile" nd_site-static_render:local
+build_tracked "$ROOT_DIR/Dockerfile" nd_site-static_serve:local
 
-echo "Done. Image tagged as nd_site-static_render:local"
+echo "Done. Image tagged as nd_site-static_serve:local"

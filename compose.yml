@@ -1,13 +1,17 @@
 services:
   static_serve:
-    container_name: nd_site-static_render
-    # image: ghcr.io/endikau/nd_site-static_render:latest
-    image: nd_site-static_render:local
+    container_name: nd_site-static_serve
+    image: ghcr.io/endikau/nd_site-static_serve:latest
+    ports:
+      - 12348:8080
+    command: sleep infinity
+    
+    # image: nd_site-static_serve:local
     # For live-mount development, uncomment the volume below.
     # volumes:
     #   - .:/project
-    command: |
-      quarto render && exit 0
+    # command: |
+    #   quarto render && exit 0
   # static_serve:
   #   container_name: static_serve
   #   image: joseluisq/static-web-server:2-alpine

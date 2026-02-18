@@ -4,7 +4,7 @@ For LLM/automation agents working in this repo.
 
 ## Build & render
 - **Local build** (tracked files only): `./scripts/build_local.sh` — requires Docker BuildKit/buildx and an `.npmrc` (override with `NPMRC_PATH`).
-- **Render locally**: `docker run --rm -v "$(pwd)/_public:/project/_public" nd_site-static_render:local`.
+- **Render locally**: `docker run --rm -v "$(pwd)/_public:/project/_public" nd_site-static_serve:local`.
 - **CI**: `.github/workflows/build.yml` streams `git ls-files | tar | docker buildx build --push`; needs secret `NPMRC_FILE` containing the `.npmrc` content.
 
 ## Dockerfile expectations
@@ -19,7 +19,7 @@ For LLM/automation agents working in this repo.
 - `Dockerfile` — main image.
 - `scripts/build_local.sh` — tracked-files BuildKit build.
 - `scripts/setup_envs.R` — env/bootstrap.
-- `compose.yml` — local render helper (uses `nd_site-static_render:local`).
+- `compose.yml` — local render helper (uses `nd_site-static_serve:local`).
 
 ## Quick checklist for changes
 1) Use `git ls-files`-based contexts; avoid `docker build .`.
