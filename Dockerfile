@@ -1,5 +1,6 @@
 # syntax=docker/dockerfile:1.6
-FROM ghcr.io/endikau/nd_docker-static_serve:latest
+# FROM ghcr.io/endikau/nd_docker-static_serve:latest
+FROM nd_docker-static_serve:local
 
 WORKDIR /project
 
@@ -11,16 +12,5 @@ RUN --mount=type=secret,id=npmrc,target=/root/.npmrc npm update
 
 RUN Rscript --vanilla scripts/setup_envs.R
 
-# Render on startup, then hand off to the base image init.
-RUN cat <<'ENTRYPOINT' > /usr/local/bin/entrypoint.sh \
-    && chmod +x /usr/local/bin/entrypoint.sh
-#!/bin/sh
-set -e
-
-cd /project
-quarto render
-
-exec /init "$@"
-ENTRYPOINT
-
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+# Render the site
+RUN quarto render
