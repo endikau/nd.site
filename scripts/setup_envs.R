@@ -1,10 +1,9 @@
 install.packages(
-  pkgs = setdiff(
-    c("renv", "callr", "cli", "pak", "fs", "reticulate"),
-    rownames(installed.packages())
-  ),
+  pkgs = setdiff("pak", rownames(installed.packages())),
   repos = "https://cloud.r-project.org"
 )
+
+pak::pak(c("renv", "callr", "cli", , "fs", "reticulate"))
 
 callr::r(
   \(...) {
