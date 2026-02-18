@@ -3,7 +3,7 @@ install.packages(
   repos = "https://cloud.r-project.org"
 )
 
-pak::pak(c("renv", "callr", "cli", , "fs", "reticulate"))
+pak::pak(c("renv", "callr", "cli", "fs", "reticulate"))
 
 callr::r(
   \(...) {
