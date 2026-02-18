@@ -1,6 +1,6 @@
 install.packages(
   pkgs = setdiff("pak", rownames(installed.packages())),
-  repos = "https://cloud.r-project.org"
+  repos = c("https://p3m.dev/cran/__linux__/manylinux_2_28/latest")
 )
 
 pak::pak(c("renv", "callr", "cli", "fs", "reticulate"))
