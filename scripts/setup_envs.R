@@ -27,7 +27,7 @@ set_install_opts <- function() {
 
 set_install_opts()
 
-install.packages("pak", "callr")
+install.packages(c("pak", "callr"))
 
 pak::pak(pkg = c("cli", "renv", "reticulate", "rlang"))
 
@@ -49,9 +49,6 @@ run_in_callr <- function(.expr) {
     )
   )
 }
-
-
-as.list(environment())
 
 run_in_callr({
   .python_pyenv_path <- reticulate::install_python(
