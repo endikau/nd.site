@@ -60,7 +60,7 @@ knitr::include_graphics(here::here(
 ```{r}
 #| output: asis
 nd.util:::nd_iframe_app(
-  .url = "https://shiny.dsjlu.wirtschaft.uni-giessen.de/senti_dict/",
+  .url = "https://nd_apps.dsjlu.wirtschaft.uni-giessen.de/apps/senti_dict/",
   .height = "4rem"
 )
 ```
@@ -100,7 +100,7 @@ knitr::include_graphics(here::here(
 ```{r}
 #| output: asis
 nd.util:::nd_iframe_app(
-  .url = "https://shiny.dsjlu.wirtschaft.uni-giessen.de/senti_trans/",
+  .url = "https://nd_apps.dsjlu.wirtschaft.uni-giessen.de/apps/senti_trans/",
   .height = "4rem"
 )
 ```

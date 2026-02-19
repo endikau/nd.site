@@ -44,7 +44,7 @@ Die Antworten basieren **ausschließlich** auf den bereitgestellten Dokumenten u
 ```{r}
 #| output: asis
 nd.util::nd_iframe_app(
-  .url = "https://shiny.dsjlu.wirtschaft.uni-giessen.de/rag_system/"
+  .url = "https://nd_apps.dsjlu.wirtschaft.uni-giessen.de/apps/rag_system/"
 )
 ```
 

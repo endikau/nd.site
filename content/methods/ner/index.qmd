@@ -133,7 +133,7 @@ Klicken Sie auf **Zufälliger Google News Artikel**, um einen Artikel mit farbli
 
 ```{r}
 nd.util:::nd_iframe_app(
-  .url = "https://shiny.dsjlu.wirtschaft.uni-giessen.de/ner_demo/",
+  .url = "https://nd_apps.dsjlu.wirtschaft.uni-giessen.de/apps/ner_demo/",
   .height = "4rem"
 )
 ```

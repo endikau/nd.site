@@ -14,7 +14,7 @@ Sehen Sie sich im folgenden Beispiel an, wie diese Analyse in der Praxis funktio
 
 ```{r}
 nd.util:::nd_iframe_app(
-  .url="https://shiny.dsjlu.wirtschaft.uni-giessen.de/case_study-1/", 
+  .url="https://nd_apps.dsjlu.wirtschaft.uni-giessen.de/apps/case_study-1/", 
   .height="4rem"
 )
 ```

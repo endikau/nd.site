@@ -112,7 +112,7 @@ Die interaktive Demo zeigt, wie sich **gängige Vorverarbeitungsschritte** auf T
 
 ```{r}
 nd.util:::nd_iframe_app(
-  .url = "https://shiny.dsjlu.wirtschaft.uni-giessen.de/preprocessing_demo/",
+  .url = "https://nd_apps.dsjlu.wirtschaft.uni-giessen.de/apps/preprocessing_demo/",
   .height = "4rem"
 )
 ```
