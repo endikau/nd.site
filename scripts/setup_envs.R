@@ -1,6 +1,6 @@
 # scripts/setup_envs.R
-# Goal: build an arch-aware PPM binary CRAN repo and ensure the same options
-# are applied in the parent AND every callr child process.
+# Goal: arch-aware PPM binaries + ensure the same options are applied
+# in parent AND every callr child process.
 
 `%||%` <- function(x, y) if (is.null(x) || length(x) == 0 || identical(x, "")) y else x
 
@@ -12,6 +12,10 @@ detect_ubuntu_codename <- function(os_release_path = "/etc/os-release") {
 }
 
 detect_linux_arch <- function() {
+  # Priority:
+  # 1) dpkg (Ubuntu/Debian containers; respects target arch under buildx/QEMU)
+  # 2) uname -m
+  # 3) R fallbacks
   arch <- tryCatch(system("dpkg --print-architecture", intern = TRUE), error = function(e) character())
   if (!length(arch) || !nzchar(arch[1])) {
     arch <- tryCatch(system("uname -m", intern = TRUE), error = function(e) character())
@@ -57,7 +61,7 @@ make_global_options <- function(target_codename = "noble") {
     renv.config.ppm.url = ppm_src,
     renv.config.repos.override = c(CRAN = ppm_src),
 
-    # Docker build stability: avoid pak's subprocess integration
+    # Docker-build stability: avoid pak subprocess integration
     renv.config.pak.enabled = FALSE
   )
 }
@@ -86,6 +90,7 @@ if (length(GLOBAL_R_OPTIONS)) {
 print_install_opts(GLOBAL_R_OPTIONS)
 
 # ---- callr helper: apply GLOBAL_R_OPTIONS to all children -------------------
+# NOTE: we do NOT pass `options=` into callr::r(); some callr versions don't support it.
 
 run_in_callr <- function(expr, child_options = GLOBAL_R_OPTIONS) {
   expr_text <- paste(deparse(substitute(expr), width.cutoff = 500L), collapse = "\n")
@@ -96,9 +101,6 @@ run_in_callr <- function(expr, child_options = GLOBAL_R_OPTIONS) {
       eval(parse(text = expr_text), envir = .GlobalEnv)
     },
     args = list(expr_text = expr_text, child_options = child_options),
-
-    # Apply options at child startup as well (earliest possible)
-    options = child_options,
     show = TRUE
   )
 }
@@ -160,6 +162,7 @@ run_in_callr({
 })
 
 cli::cli_alert_success("snapshot")
+
 
 
 
