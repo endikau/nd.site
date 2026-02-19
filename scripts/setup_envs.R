@@ -1,21 +1,35 @@
 set_install_opts <- function() {
-  if (any(readLines("/etc/os-release") == "VERSION_CODENAME=noble")) {
-    p3m_repo <- "https://p3m.dev/cran/__linux__/noble/latest"
+  # robust check for Ubuntu 24.04 codename
+  os_release <- readLines("/etc/os-release", warn = FALSE)
+  codename <- sub("^VERSION_CODENAME=", "", os_release[grepl("^VERSION_CODENAME=", os_release)])
+  if (length(codename) == 1 && codename == "noble") {
+
+    # Use the *source* P3M endpoint; renv/PPM integration will map to Linux binaries.
+    ppm_src <- "https://packagemanager.posit.co/cran/latest"
+
     options(
-      repos = c(CRAN = p3m_repo),
+      repos = c(CRAN = ppm_src),
+
+      # renv: prefer PPM/P3M integration (rspm.* is deprecated)
       renv.config.ppm.enabled = TRUE,
       renv.config.ppm.default = TRUE,
-      renv.config.rspm.enabled = TRUE,
-      renv.config.repos.override = p3m_repo,
+      renv.config.ppm.url = ppm_src,
+
+      # only if you really want to force this repo during restore()
+      renv.config.repos.override = paste0("CRAN=", ppm_src),
+
+      # pak integration (optional)
       renv.config.pak.enabled = TRUE
     )
   }
 }
 
+
 set_install_opts()
 
 install.packages("pak")
 
+pak:::restart_remote_if_needed()
 pak::pak(pkg = c("callr", "cli", "renv", "reticulate", "rlang"))
 
 run_in_callr <- function(.expr) {
