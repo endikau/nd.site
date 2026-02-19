@@ -16,7 +16,7 @@ set_install_opts()
 
 install.packages("pak")
 
-pak::pak(pkg = c("callr", "cli", "pak", "renv", "reticulate", "rlang"))
+pak::pak(pkg = c("callr", "cli", "renv", "reticulate", "rlang"))
 
 run_in_callr <- function(.expr) {
   expr_quo <- rlang::enquo(.expr)
