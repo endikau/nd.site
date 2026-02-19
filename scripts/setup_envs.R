@@ -1,5 +1,6 @@
 # scripts/setup_envs.R
-# Docker-build friendly: maximize binaries + deterministic callr subprocesses
+# Goal: build an arch-aware PPM binary CRAN repo and ensure the same options
+# are applied in the parent AND every callr child process.
 
 `%||%` <- function(x, y) if (is.null(x) || length(x) == 0 || identical(x, "")) y else x
 
@@ -11,10 +12,6 @@ detect_ubuntu_codename <- function(os_release_path = "/etc/os-release") {
 }
 
 detect_linux_arch <- function() {
-  # Priority:
-  # 1) dpkg (Ubuntu/Debian containers; respects target arch under buildx/QEMU)
-  # 2) uname -m
-  # 3) R fallbacks
   arch <- tryCatch(system("dpkg --print-architecture", intern = TRUE), error = function(e) character())
   if (!length(arch) || !nzchar(arch[1])) {
     arch <- tryCatch(system("uname -m", intern = TRUE), error = function(e) character())
@@ -36,83 +33,77 @@ detect_r_minor <- function() {
 }
 
 ppm_binary_repo <- function(codename = "noble") {
-  arch <- detect_linux_arch()
-  rver <- detect_r_minor()
   sprintf(
     "https://packagemanager.posit.co/cran/latest/bin/linux/%s-%s/%s",
-    codename, arch, rver
+    codename,
+    detect_linux_arch(),
+    detect_r_minor()
   )
 }
 
-set_install_opts <- function(target_codename = "noble", verbose = TRUE) {
+make_global_options <- function(target_codename = "noble") {
   codename <- detect_ubuntu_codename()
+  if (!identical(codename, target_codename)) return(list())
 
-  if (!identical(codename, target_codename)) {
-    if (verbose) message("set_install_opts(): codename=", codename, " (no changes)")
-    return(invisible(FALSE))
-  }
-
-  # Base R -> use Linux binaries directly
   cran_bin <- ppm_binary_repo(codename = target_codename)
+  ppm_src  <- "https://packagemanager.posit.co/cran/latest"
 
-  # renv -> source-style PPM URL (renv transforms internally)
-  ppm_src <- "https://packagemanager.posit.co/cran/latest"
-
-  options(
+  list(
+    # Base R installs (install.packages): point straight at Linux binaries
     repos = c(CRAN = cran_bin),
 
+    # renv: enable PPM integration (uses source-style URL; renv transforms internally)
     renv.config.ppm.enabled = TRUE,
     renv.config.ppm.url = ppm_src,
     renv.config.repos.override = c(CRAN = ppm_src),
 
-    # Docker build stability: avoid pak subprocess integration
+    # Docker build stability: avoid pak's subprocess integration
     renv.config.pak.enabled = FALSE
   )
-
-  if (verbose) {
-    message("set_install_opts():")
-    message("  Ubuntu codename: ", codename)
-    message("  Arch:           ", detect_linux_arch())
-    message("  R:              ", detect_r_minor())
-    message("  CRAN (binary):  ", cran_bin)
-    message("  PPM (source):   ", ppm_src)
-  }
-
-  invisible(TRUE)
 }
 
-# ---- callr wrapper that sources THIS script in the child --------------------
-
-run_in_callr <- function(expr, script_path = NULL) {
-  if (is.null(script_path)) {
-    # When running via `Rscript scripts/setup_envs.R`, this points to that file.
-    script_path <- normalizePath(commandArgs(trailingOnly = FALSE)[
-      grep("^--file=", commandArgs(trailingOnly = FALSE))
-    ])
-    script_path <- sub("^--file=", "", script_path)
-    script_path <- normalizePath(script_path, mustWork = TRUE)
-  } else {
-    script_path <- normalizePath(script_path, mustWork = TRUE)
+print_install_opts <- function(opts) {
+  codename <- detect_ubuntu_codename()
+  message("install opts:")
+  message("  Ubuntu codename: ", codename)
+  if (!length(opts)) {
+    message("  (no options set)")
+    return(invisible(NULL))
   }
+  message("  Arch:           ", detect_linux_arch())
+  message("  R:              ", detect_r_minor())
+  message("  CRAN (binary):  ", unname(opts$repos[["CRAN"]]))
+  message("  PPM (source):   ", opts$renv.config.ppm.url)
+  invisible(NULL)
+}
 
-  # Capture expression as text so we can eval it after sourcing in the child
+# ---- Global options (parent + children) -------------------------------------
+
+GLOBAL_R_OPTIONS <- make_global_options(target_codename = "noble")
+if (length(GLOBAL_R_OPTIONS)) {
+  do.call(options, GLOBAL_R_OPTIONS)
+}
+print_install_opts(GLOBAL_R_OPTIONS)
+
+# ---- callr helper: apply GLOBAL_R_OPTIONS to all children -------------------
+
+run_in_callr <- function(expr, child_options = GLOBAL_R_OPTIONS) {
   expr_text <- paste(deparse(substitute(expr), width.cutoff = 500L), collapse = "\n")
 
   callr::r(
-    func = function(script_path, expr_text) {
-      source(script_path, local = TRUE)
-      # Do NOT print options every time unless you want it noisy:
-      set_install_opts(verbose = FALSE)
-      eval(parse(text = expr_text), envir = environment())
+    func = function(expr_text, child_options) {
+      if (length(child_options)) do.call(options, child_options)
+      eval(parse(text = expr_text), envir = .GlobalEnv)
     },
-    args = list(script_path = script_path, expr_text = expr_text),
+    args = list(expr_text = expr_text, child_options = child_options),
+
+    # Apply options at child startup as well (earliest possible)
+    options = child_options,
     show = TRUE
   )
 }
 
 # ---- Main -------------------------------------------------------------------
-
-set_install_opts(verbose = TRUE)
 
 # Install core packages via install.packages() (binaries via PPM repo)
 install.packages(
