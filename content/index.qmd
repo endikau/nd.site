@@ -51,41 +51,79 @@ readr::read_rds(here::here("content", "data", "wordcloud_data.rds")) |>
   {{{< /div >}}}
 {{{< /div >}}}
 
+{{{< div class="d-flex justify-content-center" >}}}
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll('[data-bs-toggle="popover"]').forEach(el => {
+    new bootstrap.Popover(el);
+  });
+});
+</script>
+
+<a tabindex="0" class="btn btn-lg btn-danger" role="button" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-title="Dismissible popover" data-bs-content="And here’s some amazing content. It’s very engaging. Right?">Dismissible popover</a>
+
+<script>
+
+
+const popover = new bootstrap.Popover('.popover-dismiss', {
+  trigger: 'focus'
+})
+
+</script>
+
+{{{< /div >}}}
+
+
 {{{< div class="container-fluid" style="background: #fefffc !important;" >}}}
-  {{{< div class="container-xxl py-4 nd-article" >}}} 
-    {{{< div class="grid py-2" >}}} 
-      {{{< div class="g-col-12 g-col-md-6 g-col-xl-4 pe-md-4 pb-md-4" >}}} 
-        {{{< span class="h2" >}}} Methoden {{{< /span >}}}
-        {{{< p class="nd-article pt-2 pb-0" >}}} Von Stimmungsanalysen bis hin zu Themenerkennung – moderne Analysemethoden ermöglichen es, versteckte Botschaften in großen Textmengen aufzudecken. Wählen Sie eine Methode, um zu erfahren, wie sie funktioniert und welche Erkenntnisse sie liefern kann. {{{< /p >}}}
-      {{{< /div >}}} 
-      {{{< div class="g-col-12 g-col-md-6 g-col-xl-4" >}}} 
+  {{{< div class="container-xxl py-4 nd-article" >}}}
+    {{{< div class="masonry py-2" >}}}
+      {{{< div class="m-col-12 m-col-md-6 m-col-xl-4 pe-md-4 pb-md-2" >}}}
+        {{{< div class="nd-card-item pe-md-4" >}}}
+          {{{< span class="h2" >}}} Methoden {{{< /span >}}}
+          {{{< p class="nd-article pt-2 pb-0" >}}}
+            Von Stimmungsanalysen bis hin zu Themenerkennung – moderne Analysemethoden ermöglichen es, versteckte Botschaften in großen Textmengen aufzudecken. Wählen Sie eine Methode, um zu erfahren, wie sie funktioniert und welche Erkenntnisse sie liefern kann.
+          {{{< /p >}}}
+        {{{< /div >}}}
+      {{{< /div >}}}
+      {{{< div class="m-col-12 m-col-md-6 m-col-xl-4 pe-md-4 pb-md-2" >}}}
         {{{< bs_card card_img_src="/assets/img/sentiment_cover.svg" card_img_bg="#9c9c9c" card_title="Sentimentanalyse" card_text="Sentimentanalyse ist ein Verfahren der Data Science, das darauf abzielt, Meinungen, Emotionen und Einstellungen in Textdaten automatisch zu identifizieren und zu klassifizieren." card_href="/methods/sentiment" >}}}
-      {{{< /div >}}} 
-      {{{< div class="g-col-12 g-col-md-6 g-col-xl-4" >}}} 
+      {{{< /div >}}}
+      {{{< div class="m-col-12 m-col-md-6 m-col-xl-4 pe-md-4 pb-md-2" >}}}
         {{{< bs_card card_img_src="/assets/img/topic_cover.svg" card_img_bg="#9c9c9c" card_title="Themenmodellierung" card_text="Die Themenmodellierung extrahiert automatisiert Hauptthemen aus Texten. Dies ermöglicht die Extraktion semantisch verwandter Begriffe, sowie die Gruppierung thematisch ähnlicher Dokumente." card_href="/methods/topic" >}}}
-      {{{< /div >}}} 
-      {{{< div class="g-col-12 g-col-md-6 g-col-xl-4" >}}} 
+      {{{< /div >}}}
+      {{{< div class="m-col-12 m-col-md-6 m-col-xl-4 pe-md-4 pb-md-2" >}}}
         {{{< bs_card card_img_src="/assets/img/ner_cover.svg" card_img_bg="#9c9c9c" card_title="Entitätsanalyse" card_text="Automatisierte Identifikation und Klassifikation von Entitäten und Eigennamen. …" card_href="/methods/ner" >}}}
-      {{{< /div >}}} 
-    {{{< /div >}}} 
+      {{{< /div >}}}
+    {{{< /div >}}}
   {{{< /div >}}}
-{{{< /div >}}} 
+{{{< /div >}}}
+
 
 {{{< div class="container-fluid" >}}} 
   {{{< div class="container-xxl py-4 nd-article" >}}}
-    {{{< div class="grid py-2" >}}} 
-      {{{< div class="g-col-12 g-col-md-6 g-col-xl-4 pe-md-4 pb-md-4" >}}} 
+    {{{< div class="masonry py-2" >}}} 
+      {{{< div class="m-col-12 m-col-md-6 m-col-xl-4 pe-md-4 pb-md-2" >}}} 
         {{{< span class="h2" >}}} Fallstudien {{{< /span >}}}
         {{{< p class="nd-article pt-2 pb-0" >}}} Unsere Fallstudien veranschaulichen, wie Technologien der Textanalyse auf reale Daten angewendet werden. Entdecken Sie konkrete Beispiele für den Einsatz von Sentimentanalyse, Themenmodellierung und weiteren Methoden. {{{< /p >}}}
       {{{< /div >}}} 
-      {{{< div class="g-col-12 g-col-md-6 g-col-xl-4" >}}} 
+      {{{< div class="m-col-12 m-col-md-6 m-col-xl-4" >}}} 
         {{{< bs_card card_img_src="/assets/img/customer_reviews_cover.svg" card_img_bg="#9c9c9c" card_title="Kundenrezensionen" card_text="In dieser Case Study zeigen wir, wie unstrukturierte Kundenrezensionen mithilfe von Textanalyse systematisch ausgewertet werden können, um differenzierte Einblicke in die Nutzung technischer Produkte zu gewinnen und gezielt Verbesserungspotenziale zu identifizieren." card_href="/case_studies/customer_reviews" >}}}
       {{{< /div >}}} 
-      {{{< div class="g-col-12 g-col-md-6 g-col-xl-4" >}}} 
+      {{{< div class="m-col-12 m-col-md-6 m-col-xl-4" >}}} 
         {{{< bs_card card_img_src="/assets/img/support_tickets_cover.svg" card_img_bg="#9c9c9c" card_title="Support-Tickets" card_text="Dieses Fallbeispiel zeigt, wie sich Support-Anfragen allein anhand der Texte automatisiert nach Dringlichkeit klassifizieren lassen. Durch den gezielten Einsatz von Textanalyse und Machine Learning werden besonders kritische Anliegen frühzeitig erkannt, um den Kundenservice effizienter zu gestalten." card_href="/case_studies/support_tickets" >}}}
       {{{< /div >}}} 
-      {{{< div class="g-col-12 g-col-md-6 g-col-xl-4" >}}} 
+      {{{< div class="m-col-12 m-col-md-6 m-col-xl-4" >}}} 
         {{{< bs_card card_img_src="/assets/img/network_analysis_cover.svg" card_img_bg="#9c9c9c" card_title="Netzwerkanalyse" card_text="Eine Netzwerkanalyse basierend auf der ORG-Entität: Justus Liebig Universität. …" card_href="/case_studies/network_analysis" >}}} 
+      {{{< /div >}}}
+      {{{< div class="m-col-12 m-col-md-6 m-col-xl-4 pb-md-2" >}}}
+        {{{< bs_card card_img_src="/assets/img/ner_cover.svg" card_img_bg="#9c9c9c" card_title="RAG-System" card_text="Dies ist ein Typoblindtext. An ihm kann man sehen, ob alle Buchstaben da sind und wie sie aussehen. Manchmal benutzt man Worte wie Hamburgefonts, Rafgenduks oder Handgloves, um Schriften zu testen." card_href="/case_studies/rag_system" >}}}
+      {{{< /div >}}} 
+      {{{< div class="m-col-12 m-col-md-6 m-col-xl-4 pb-md-2" >}}}
+        {{{< bs_card card_img_src="/assets/img/ner_cover.svg" card_img_bg="#9c9c9c" card_title="RAG-System" card_text="Dies ist ein Typoblindtext. An ihm kann man sehen, ob alle Buchstaben da sind und wie sie aussehen. Manchmal benutzt man Worte wie Hamburgefonts, Rafgenduks oder Handgloves, um Schriften zu testen." card_href="/case_studies/rag_system" >}}}
+      {{{< /div >}}} 
+      {{{< div class="m-col-12 m-col-md-6 m-col-xl-4 pb-md-2" >}}}
+        {{{< bs_card card_img_src="/assets/img/ner_cover.svg" card_img_bg="#9c9c9c" card_title="RAG-System" card_text="Dies ist ein Typoblindtext. An ihm kann man sehen, ob alle Buchstaben da sind und wie sie aussehen. Manchmal benutzt man Worte wie Hamburgefonts, Rafgenduks oder Handgloves, um Schriften zu testen." card_href="/case_studies/rag_system" >}}}
       {{{< /div >}}} 
     {{{< /div >}}}
   {{{< /div >}}}
@@ -144,4 +182,3 @@ readr::read_rds(here::here("content", "data", "wordcloud_data.rds")) |>
 
 
 <!-- {{{< /div >}}} {{{< /div >}}} -->
-

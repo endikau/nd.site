@@ -1,8 +1,4 @@
 {
-  "scripts": {
-    "copy-assets": "node scripts/copy_assets.cjs",
-    "postinstall": "npm run copy-assets"
-  },
   "dependencies": {
     "@endikau/nd_assets": "^0.0.2-build.14.0"
   }

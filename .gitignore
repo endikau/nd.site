@@ -24,3 +24,4 @@ _hugo/resources/_gen/
 _public/
 .npmrc
 venv/
+_hugo/themes/endikau_theme/assets.back/
