@@ -27,10 +27,9 @@ set_install_opts <- function() {
 
 set_install_opts()
 
-install.packages("pak")
+install.packages("pak", "callr")
 
-pak:::restart_remote_if_needed()
-pak::pak(pkg = c("callr", "cli", "renv", "reticulate", "rlang"))
+pak::pak(pkg = c("cli", "renv", "reticulate", "rlang"))
 
 run_in_callr <- function(.expr) {
   expr_quo <- rlang::enquo(.expr)
