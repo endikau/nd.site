@@ -1,3 +1,13 @@
+if (any(readLines("/etc/os-release") == "VERSION_CODENAME=noble")) {
+  options(
+    repos = c(CRAN = "https://p3m.dev/cran/__linux__/noble/latest"),
+    renv.config.ppm.enabled = TRUE,
+    renv.config.ppm.default = TRUE,
+    renv.config.rspm.enabled = TRUE,
+    renv.config.repos.override = "https://packagemanager.posit.co/cran/__linux__/noble/latest"
+  )
+}
+
 install.packages(
   pkgs = setdiff(
     c("renv", "callr", "cli", "reticulate"),
