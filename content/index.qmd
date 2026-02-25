@@ -53,23 +53,72 @@ readr::read_rds(here::here("content", "data", "wordcloud_data.rds")) |>
 
 {{{< div class="d-flex justify-content-center" >}}}
 
+<a tabindex="0" class="btn btn-sm btn-primary text-light" role="button" data-bs-toggle="popover" data-bs-template-id="tip-methoden" data-bs-title="Mehr Informationen">
+<i class="fa-solid fa-circle-info"></i>
+</a>
+
+<template id="tip-methoden">
+<p class="mb-2">Langer Text. Du kannst auch <a href="/methods/sentiment">Links</a> verwenden.</p>
+<ul class="mb-0"><li>Punkt 1</li><li>Punkt 2</li></ul>
+</template>
+
+<style>
+.popover{max-width:min(520px,90vw);}
+.ap-popover .popover-body{max-height:min(60vh,520px);overflow:auto;}
+.ap-popover .popover-header{display:flex;align-items:center;justify-content:space-between;gap:.75rem;}
+.ap-popover .ap-close{flex:0 0 auto;}
+</style>
+
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-  document.querySelectorAll('[data-bs-toggle="popover"]').forEach(el => {
-    new bootstrap.Popover(el);
-  });
+document.addEventListener("DOMContentLoaded",function(){
+let openTrigger=null;
+const popTemplate='<div class="popover ap-popover" role="tooltip"><div class="popover-arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>';
+function ensureHeaderCloseButton(popEl){
+const header=popEl.querySelector(".popover-header");
+if(!header)return;
+if(header.querySelector(".ap-close"))return;
+const btn=document.createElement("button");
+btn.type="button";
+btn.className="btn-close ap-close";
+btn.setAttribute("aria-label","Close");
+header.appendChild(btn);
+}
+document.querySelectorAll('[data-bs-toggle="popover"]').forEach(function(el){
+bootstrap.Popover.getInstance(el)?.dispose();
+const tplId=el.getAttribute("data-bs-template-id");
+const tpl=tplId?document.getElementById(tplId):null;
+const pop=new bootstrap.Popover(el,{trigger:"manual",html:true,sanitize:false,container:"body",template:popTemplate,title:el.getAttribute("data-bs-title")||"",content:function(){return tpl?tpl.innerHTML:"";}});
+el.addEventListener("click",function(e){
+e.preventDefault();
+e.stopPropagation();
+if(openTrigger&&openTrigger!==el){bootstrap.Popover.getInstance(openTrigger)?.hide();}
+if(openTrigger===el){pop.hide();openTrigger=null;return;}
+pop.show();
+openTrigger=el;
+const popId=el.getAttribute("aria-describedby");
+if(popId){
+const popEl=document.getElementById(popId);
+if(popEl)ensureHeaderCloseButton(popEl);
+}
 });
-</script>
-
-<a tabindex="0" class="btn btn-lg btn-danger" role="button" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-title="Dismissible popover" data-bs-content="And here’s some amazing content. It’s very engaging. Right?">Dismissible popover</a>
-
-<script>
-
-
-const popover = new bootstrap.Popover('.popover-dismiss', {
-  trigger: 'focus'
-})
-
+});
+document.addEventListener("click",function(e){
+const closeBtn=e.target.closest(".ap-close");
+if(closeBtn){
+const popEl=closeBtn.closest(".popover");
+const trigger=document.querySelector('[aria-describedby="'+popEl.id+'"]');
+bootstrap.Popover.getInstance(trigger)?.hide();
+openTrigger=null;
+return;
+}
+if(e.target.closest(".ap-popover"))return;
+if(e.target.closest('[data-bs-toggle="popover"]'))return;
+if(openTrigger){bootstrap.Popover.getInstance(openTrigger)?.hide();openTrigger=null;}
+});
+document.addEventListener("keydown",function(e){
+if(e.key==="Escape"&&openTrigger){bootstrap.Popover.getInstance(openTrigger)?.hide();openTrigger=null;}
+});
+});
 </script>
 
 {{{< /div >}}}
