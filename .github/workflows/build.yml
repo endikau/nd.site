@@ -40,7 +40,7 @@ jobs:
           set -euo pipefail
           git ls-files -z | tar --null -T - -cf - | docker buildx build \
             --secret id=npmrc,src=/tmp/.npmrc \
-            # --secret id=github_pat,env=GITHUB_PAT \
+            --secret id=github_pat,env=GITHUB_PAT \
             --cache-from type=gha \
             --cache-to type=gha,mode=max \
             -f Dockerfile \
