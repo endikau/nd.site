@@ -36,11 +36,19 @@ jobs:
         shell: bash
 
       - name: Build and push image (tracked files only)
+        env:
+          GITHUB_PAT: ${{ secrets.GITHUB_PAT }}
         run: |
           set -euo pipefail
+
+          secret_args=()
+          if [ -n "${GITHUB_PAT:-}" ]; then
+            secret_args+=(--secret id=github_pat,env=GITHUB_PAT)
+          fi
+
           git ls-files -z | tar --null -T - -cf - | docker buildx build \
             --secret id=npmrc,src=/tmp/.npmrc \
-            --secret id=github_pat,env=GITHUB_PAT \
+            "${secret_args[@]}" \
             --cache-from type=gha \
             --cache-to type=gha,mode=max \
             -f Dockerfile \
