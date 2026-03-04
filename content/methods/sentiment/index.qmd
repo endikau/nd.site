@@ -104,3 +104,33 @@ nd.util:::nd_iframe_app(
   .height = "4rem"
 )
 ```
+
+
+### LLM-basierte Sentimentanalyse
+
+Große Sprachmodelle (LLMs) können Stimmung nicht nur auf Wortebene, sondern im gesamten Kontext einer Aussage erkennen. Sie kombinieren semantisches Verständnis, Weltwissen und Anweisungen aus dem Prompt, um auch implizite Hinweise wie Ironie, Tonfall oder gemischte Sprachen zu berücksichtigen.
+
+#### Funktionsweise
+
+LLMs folgen klar formulierten Prompts und lassen sich mit kurzen Beispielen (Few-Shot) oder spezifischen Instruktionen schnell an neue Domänen anpassen. So können sie neben einer Sentiment-Bewertung auch Begründungen liefern oder Ausgabeformate einhalten (z. B. Label, Score und kurzer Kommentar in einem Schritt).
+
+#### Vor- und Nachteile
+
+{{{< fa-ul >}}}
+    {{{< fa-solid-li icon="thumbs-up" color="#39b185" >}}} Sehr gute Kontextsensitivität: LLMs erfassen nuancierte Stimmungen, Ironie und domain-spezifische Formulierungen zuverlässiger als klassische Modelle. {{{< /fa-solid-li >}}}
+    {{{< fa-solid-li icon="thumbs-up" color="#39b185" >}}} Flexibel durch Prompting: Ausgabeformat, Sprache und Detailtiefe lassen sich ohne erneutes Training steuern (z. B. Score + Begründung in Deutsch oder Englisch). {{{< /fa-solid-li >}}}
+    {{{< fa-solid-li icon="thumbs-down" color="#cf597e" >}}} Höhere Kosten und Latenz: API- oder Inferenzkosten fallen pro Anfrage an; Verarbeitung größerer Datenmengen kann teuer und langsamer sein. {{{< /fa-solid-li >}}}
+    {{{< fa-solid-li icon="thumbs-down" color="#cf597e" >}}} Datenschutz und Prompt-Sensitivität: Bei externen APIs sind Datenrichtlinien zu prüfen; Ergebnisse können sich je nach Prompt-Formulierung oder Modellversion ändern. {{{< /fa-solid-li >}}}
+{{{< /fa-ul >}}}
+
+#### Ausprobieren
+
+Geben Sie einen eigenen Text ein und lassen Sie das LLM die Stimmung bestimmen.
+
+```{r}
+#| output: asis
+nd.util:::nd_iframe_app(
+  .url = "https://shiny.dsjlu.wirtschaft.uni-giessen.de/senti_llm/",
+  .height = "4rem"
+)
+```
