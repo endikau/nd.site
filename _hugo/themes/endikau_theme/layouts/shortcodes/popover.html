@@ -1,0 +1,16 @@
+{{- $id := printf "tip-%d" .Ordinal -}}
+{{- $title := .Get "title" | default "Mehr Informationen" -}}
+
+<a tabindex="0"
+   class="btn btn-sm btn-primary text-light"
+   role="button"
+   aria-label="{{ $title }}"
+   data-bs-toggle="popover"
+   data-bs-template-id="{{ $id }}"
+   data-bs-title="{{ $title }}">
+  <i class="fa-solid fa-circle-info"></i>
+</a>
+
+<template id="{{ $id }}">
+  {{ .Inner | safeHTML }}
+</template>
