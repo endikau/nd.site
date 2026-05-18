@@ -130,7 +130,7 @@ Geben Sie einen eigenen Text ein und lassen Sie das LLM die Stimmung bestimmen.
 ```{r}
 #| output: asis
 nd.util:::nd_iframe_app(
-  .url = "https://shiny.dsjlu.wirtschaft.uni-giessen.de/senti_llm/",
+  .url = "https://nd_apps.dsjlu.wirtschaft.uni-giessen.de/apps/senti_llm/",
   .height = "4rem"
 )
 ```
