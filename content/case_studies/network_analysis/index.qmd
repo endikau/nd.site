@@ -30,7 +30,6 @@ ggplot2::theme_set(`+`(
 ```
 
 <!-- ## 🎯 Motivation der Fallstudie -->
-## Motivation der Fallstudie
 
 Unternehmen, Organisationen, Personen und mit ihnen verbundende Orte stehen heute in einem **dichten Geflecht öffentlicher Kommunikation**. Täglich erscheinen Hunderte von Nachrichtenartikel, die über sie berichten und sie in Zusammenhang mit verschiedenen Akteuren nennen.
 
@@ -41,9 +40,11 @@ Für kleine und mittlere Unternehmen (KMUs) wie auch für andere Organisationen 
   {{{< fa-solid-li icon="diagram-project" >}}} Gleichzeitig ist es entscheidend zu verstehen, **mit wem** man in den Nachrichten in Verbindung gebracht wird.{{{< /fa-solid-li >}}}
 {{{< /fa-ul >}}}
 
-Hierfür eignet sich die Anwendung einer Netzwerkanalyse!
+Genau diese zweite Frage lässt sich mit einer **Netzwerkanalyse** beantworten. In dieser Fallstudie zeigen wir das am Beispiel der JLU: von einem einzelnen Nachrichtenartikel über die erkannten Akteure bis zu einem Netzwerk, das das mediale Umfeld der Universität sichtbar macht.
 
+Was hier am Beispiel der JLU gezeigt wird, lässt sich auf jede Organisation anwenden — auch auf ein KMU, das wissen möchte, in welchem öffentlichen Umfeld es wahrgenommen wird. An die Stelle der „JLU" tritt dann der eigene Firmenname, während an die Stelle regionaler Politiker oder Partneruniversitäten mögliche Geschäftspartner, Lieferanten oder Wettbewerber treten.
 
+<!--
 ## Warum Netzwerkanalyse?
 
 Eine **Netzwerkanalyse** hilft dabei, genau dieses Beziehungsgeflecht sichtbar zu machen:
@@ -55,7 +56,7 @@ sichtbar.{{{< /fa-solid-li >}}}
 {{{< /fa-ul >}}}
 
 
-## Vorteile einer Netzwerkanalyse
+### Vorteile einer Netzwerkanalyse
 
 Eine Netzwerkanalyse bietet eine Reihe von Vorteilen:
 
@@ -63,10 +64,10 @@ Eine Netzwerkanalyse bietet eine Reihe von Vorteilen:
   {{{< fa-solid-li icon="magnifying-glass" >}}} **Durchblick gewinnen:** eine Netzwerkanalyse verdichtet viele Einzelinformationen und macht **Zusammenhänge und Beziehungen** sichtbar. {{{< /fa-solid-li >}}}
   {{{< fa-solid-li icon="person" >}}} **Wichtige Akteure erkennen:** man sieht sofort, **welche Personen, Organisationen und Orte im Mittelpunkt stehen** und welche Verbindungen besonders stark sind. {{{< /fa-solid-li >}}}
   {{{< fa-solid-li icon="chart-simple" >}}} **Einfach verständlich darstellen:** komplexe Beziehungen werden in **anschaulichen Grafiken** sichtbar und leicht kommunizierbar. {{{< /fa-solid-li >}}}
-{{{< /fa-ul >}}}
+{{{< /fa-ul >}}} -->
 
 
-## Anwendungsbeispiel
+### Die Ausgangslage: Die JLU in der Berichterstattung
 
 Am Beispiel der ORG-Entität **"Justus-Liebig-Universität"** wird ein exemplarisches Netzwerk aufgebaut. Grundlage sind **100 aktuelle Nachrichtenartikel**, die über die Justus-Liebig-Universität in **lokaler und überregionaler Berichterstattung** erschienen sind und im Google-News-Feed gelistet wurden. Diese Artikel werden automatisiert extrahiert und mithilfe eines **Eigennamenerkennungsmodells** analysiert. Das Modell identifiziert in den Texten **Personennamen (PER)**, **Ortsnamen (LOC)** und **Organisationsnamen (ORG)**. Auf dieser Basis lassen sich zentrale Akteure bestimmen und ihre Beziehungen sichtbar machen.
 
@@ -99,7 +100,21 @@ Nach dem großen Erfolg der beiden Universitäten, die im Mai insgesamt vier Exz
 »Wir blicken auf eine lange gemeinsame Geschichte zurück, die insbesondere in den letzten Jahrzehnten von einem sehr partnerschaftlichen Geist getragen ist.«(...)
 :::
 
-In diesem Beispiel werden der Ort **„Hessen“**, die Person **„Katharina Lorenz“** sowie die Organisationen **„UMR“** und **„JLU“** als Entitäten erkannt. Wendet man dieses Verfahren systematisch auf alle JLU-bezogenen Nachrichtenartikel an, lassen sich die identifizierten Entitäten in einer **Häufigkeitstabelle** zusammenfassen. Auf diese Weise treten die wichtigsten Akteure deutlicher hervor.
+In diesem Beispiel werden der Ort **„Hessen“**, die Person **„Katharina Lorenz“** sowie die Organisationen **„UMR“** und **„JLU“** als Entitäten erkannt.
+
+### Analyse
+
+Aus solchen erkannten Entitäten entsteht das Netzwerk nach einem einfachen Prinzip:
+
+{{{< fa-ul >}}}
+  {{{< fa-solid-li icon="circle" >}}} **Knoten** sind die **Entitäten** — also Personen (PER), Organisationen (ORG) und Orte (LOC), die in den Nachrichten erwähnt werden. {{{< /fa-solid-li >}}}
+  {{{< fa-solid-li icon="arrows-left-right" >}}} **Kanten** entstehen, wenn zwei Entitäten **gemeinsam in einem Artikel** auftauchen. {{{< /fa-solid-li >}}}
+  {{{< fa-solid-li icon="diagram-project" >}}} Aus vielen Artikeln entsteht so ein **Netzwerk**, das zeigt, wer mit wem in Verbindung gebracht wird und welche Akteure besonders zentral sind. {{{< /fa-solid-li >}}}
+{{{< /fa-ul >}}}
+
+#### Häufigkeiten von Entitäten
+
+Wendet man dieses Verfahren systematisch auf alle JLU-bezogenen Nachrichtenartikel an, lassen sich die identifizierten Entitäten in einer **Häufigkeitstabelle** zusammenfassen. Auf diese Weise treten die wichtigsten Akteure deutlicher hervor.
 
 Die folgende Tabelle zeigt die Häufigkeiten ausgewählter Entitäten:
 
@@ -139,6 +154,8 @@ entity_freq_data |>
   nd.util::nd_gt_tab_options() |>
   nd.util::nd_gt_to_html()
 ```
+
+#### Erstellen des Netwerks
 
 Auf Basis dieser Tabelle lässt sich ein erstes Netzwerk aufbauen: Die **JLU** steht im Zentrum, alle weiteren Entitäten werden als Knoten mit ihrem **Typ (Farbe)** visualisiert. Kanten verbinden die JLU mit den wichtigsten, häufig genannten Akteuren in der aktuellen Berichterstattung.
 
@@ -194,6 +211,9 @@ ggraph(graph, layout = "kk") +
   scale_fill_manual(values = color_typ) +
   theme_void()
 ```
+
+
+#### Erweitertes Netwerk
 
 Bisher wurde das Netzwerk nur ausgehend von der JLU betrachtet. Doch ein vollständigeres Bild entsteht, wenn man auch die **Verbindungen der angrenzenden Akteure** untersucht. Werden die Nachrichtenartikel zu diesen Entitäten ebenfalls auf ihre zentralen Personen, Orte und Organisationen hin analysiert, wächst das Netz Schritt für Schritt weiter. So lässt sich nachvollziehen, **wie sich das Umfeld der JLU über die zweite Ebene hinweg verzweigt und verdichtet**.
 
@@ -403,7 +423,50 @@ Durch die Erweiterung des Netzwerks entsteht ein viel dichteres Beziehungsnetz. 
 
 *Das Netzwerk kann prinzipiell um beliebig viele weitere Ebenen erweitert werden. Für die Zwecke dieser Fallstudie belassen wir es jedoch bei der aktuellen Darstellung, um die Übersichtlichkeit zu wahren.*
 
-## Fazit
 
-Die Fallstudie zeigt exemplarisch, wie sich aus Nachrichtenartikeln mit Bezug zur Justus-Liebig-Universität ein Netzwerk aus Personen, Organisationen und Orten ableiten lässt. Netzwerkanalysen sind wichtig, um **Beziehungen sichtbar zu machen und zentrale Akteure aufzudecken**. Sie lassen sich ausgehend von jeder beliebigen Entität – sei es eine Organisation, ein Ort oder eine Person – aufbauen und Schritt für Schritt erweitern.
+#### Zentrale Akteure erkennen
 
+Das Netzwerk zeigt, **wer mit wem** genannt wird. Für eine Einschätzung fehlt noch der Schritt von der Struktur zur **Bedeutung einzelner Akteure**. Eine einfache, gut verständliche Kennzahl hilft hier: die **Anzahl der direkten Verbindungen** eines Knotens. Je mehr Verbindungen ein Akteur hat, desto stärker ist er im öffentlichen Bild der JLU verankert.
+
+```{r}
+#| message: false
+#| warning: false
+zentralitaet <- graph |>
+  activate(nodes) |>
+  mutate(Verbindungen = centrality_degree()) |>
+  as_tibble() |>
+  arrange(desc(Verbindungen)) |>
+  slice_head(n = 8)
+
+zentralitaet |>
+  transmute(Akteur = name, Typ, Verbindungen) |>
+  gt::gt() |>
+  gt::tab_caption("Zentrale Akteure nach Anzahl direkter Verbindungen") |>
+  gt::tab_options(table.width = gt::pct(100)) |>
+  nd.util::nd_gt_tab_options() |>
+  nd.util::nd_gt_to_html()
+```
+
+Erwartungsgemäß steht die JLU selbst im Zentrum. Liest man das übrige Netzwerk jedoch **inhaltlich**, treten zwei Muster hervor, die über eine reine Aufzählung hinausgehen:
+
+{{{< fa-ul >}}}
+  {{{< fa-solid-li icon="building-columns" >}}} **Eine regionale Hochschullandschaft:** Die JLU erscheint gehäuft gemeinsam mit der **Philipps-Universität Marburg** und der **THM** sowie den Orten **Gießen** und **Hessen**. Die Berichterstattung verortet die Universität also vor allem im Kontext eines **regionalen Hochschulverbunds**. {{{< /fa-solid-li >}}}
+  {{{< fa-solid-li icon="landmark" >}}} **Eine (hochschul-)politische Einbettung:** Über Akteure wie **Timon Gremmels (SPD)** sowie **Berlin** und **Wiesbaden** wird die JLU regelmäßig in einen **förder- und wissenschaftspolitischen** Zusammenhang gestellt. {{{< /fa-solid-li >}}}
+{{{< /fa-ul >}}}
+
+Das ist der Mehrwert gegenüber einer bloßen Häufigkeitsliste: Das Netzwerk zeigt nicht nur, *dass* bestimmte Akteure oft vorkommen, sondern *in welchem Zusammenhang* sie zueinander stehen.
+
+### Fazit
+
+<!-- Die Fallstudie zeigt exemplarisch, wie sich aus Nachrichtenartikeln mit Bezug zur Justus-Liebig-Universität ein Netzwerk aus Personen, Organisationen und Orten ableiten lässt. Netzwerkanalysen sind wichtig, um **Beziehungen sichtbar zu machen und zentrale Akteure aufzudecken**. Sie lassen sich ausgehend von jeder beliebigen Entität – sei es eine Organisation, ein Ort oder eine Person – aufbauen und Schritt für Schritt erweitern. -->
+
+Für ein Unternehmen ist ein solches Netzwerk weit mehr als eine schöne Grafik, denn sie ermöglicht konkrete strategische Fragen zu beantworten, die sich aus öffentlich verfügbaren Texten sonst nur mühsam herauslesen lassen:
+
+{{{< fa-ul >}}}
+  {{{< fa-solid-li icon="eye" >}}} **Reputationsmonitoring:** Mit wem werde ich öffentlich genannt und ist diese Verbindung erwünscht? Unerwartete oder unerwünschte Assoziationen lassen sich so früh erkennen. {{{< /fa-solid-li >}}}
+  {{{< fa-solid-li icon="chart-line" >}}} **Wettbewerbsbeobachtung:** Tauchen Mitbewerber im selben Kontext auf? Das Netzwerk zeigt, ob man gemeinsam mit oder getrennt von der Konkurrenz wahrgenommen wird. {{{< /fa-solid-li >}}}
+  {{{< fa-solid-li icon="handshake" >}}} **Partner- und Netzwerkpflege:** Welche Akteure verbinden mich mit neuen Zielgruppen, Förderern oder Märkten? Zentrale Knoten sind oft die wertvollsten Kontaktpunkte. {{{< /fa-solid-li >}}}
+  {{{< fa-solid-li icon="clock" >}}} **Früherkennung:** Wiederholt man die Analyse regelmäßig, wird sichtbar, **über welche Personen, Orte oder Themen man neuerdings gehäuft genannt wird** — ein Frühindikator für Chancen und Risiken. {{{< /fa-solid-li >}}}
+{{{< /fa-ul >}}}
+
+Der entscheidende Punkt: **Das Vorgehen ist nicht an die JLU gebunden.** Es funktioniert ausgehend von jeder beliebigen Entität — einer Organisation, einem Ort oder einer Person — und mit jeder Textquelle, die regelmäßig über sie berichtet (Nachrichten, Branchenmedien, soziale Netzwerke). Aus frei verfügbaren Texten entsteht so ein **strukturiertes Bild des eigenen Umfelds**, das sich Schritt für Schritt erweitern und über die Zeit beobachten lässt.
