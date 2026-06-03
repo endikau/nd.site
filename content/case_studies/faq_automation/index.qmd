@@ -16,7 +16,6 @@ execute:
 #| echo: false
 #| message: false
 #| warning: false
-
 # library(showtext)
 # font_add_google("Open Sans")
 # showtext_auto()
@@ -25,22 +24,30 @@ execute:
 set.seed(123)
 
 library(tidyverse)
-library(here)
 library(tidytext)
-library(ggrepel)
+library(textdata)
+library(lubridate)
+library(topicmodels)
 library(stopwords)
-library(SnowballC)
-library(uwot)
-library(dbscan)
-library(jsonlite)
-library(umap)
-library(htmltools)
-library(plotly)
-library(DT)
-library(igraph)
-library(Matrix)
-library(text2vec)
+library(ggplot2)
+library(gt)
 
+# library(tidyverse)
+# library(here)
+# library(tidytext)
+# library(ggrepel)
+# library(stopwords)
+# library(SnowballC)
+# library(uwot)
+# library(dbscan)
+# library(jsonlite)
+# library(umap)
+# library(htmltools)
+# library(plotly)
+# library(DT)
+# library(igraph)
+# library(Matrix)
+# library(text2vec)
 
 calc_panel_margin_y_in <- function(.plot_obj) {
   .plot_obj <<- .plot_obj
@@ -74,12 +81,41 @@ ggplot2::theme_set(`+`(
 theme_gg <- ggplot2::theme_get()
 ```
 
-### Motivation der Fallstudie
+<!-- ### Motivation der Fallstudie
 
 Diese Fallstudie zeigt, wie unstrukturierte Kundenanfragen mithilfe moderner Textanalyse und Large Language Models (LLMs) systematisch ausgewertet und in nutzbares Support-Wissen überführt werden können. Im Fokus steht dabei nicht einzelne KI-Funktionalität, sondern der praktische Mehrwert für den Kundenservice.
 
-Ausgangspunkt ist ein Datensatz mit 947 Kundenanfragen eines fiktiven mittelständischen Maschinenbauunternehmens aus dem B2B-Umfeld. Die Anfragen stammen aus dem laufenden Supportbetrieb und decken typische Themen wie Lieferung, Ersatzteile, Wartung, Software und Garantie ab.
+Ausgangspunkt ist ein Datensatz mit 947 Kundenanfragen eines fiktiven mittelständischen Maschinenbauunternehmens aus dem B2B-Umfeld. Die Anfragen stammen aus dem laufenden Supportbetrieb und decken typische Themen wie Lieferung, Ersatzteile, Wartung, Software und Garantie ab. -->
 
+Kundenanfragen gehören zum Tagesgeschäft jedes Unternehmens. In der Praxis werden ähnliche Fragen jedoch immer wieder neu beantwortet: Antworten unterscheiden sich je nach Bearbeiter:in, Wissen bleibt im Kopf einzelner Personen, und bei steigendem Volumen wachsen Bearbeitungszeiten und Kosten. **Dabei liegen in den bestehenden Supportdaten bereits alle Informationen, um diese Muster sichtbar zu machen**.
+
+In dieser Fallstudie zeigen wir anhand realistischer Kundenanfragen eines fiktiven Maschinenbauunternehmens, wie sich wiederkehrende Anliegen automatisch erkennen, quantifizieren und in nutzbares Support-Wissen überführen lassen — vom Rohdatensatz über die thematische Bündelung bis zur Frage, welche wenigen Themen den größten Teil des Aufwands verursachen.
+
+```{r}
+#| include: false
+data_path <- here::here(data_dir, "faq_tickets_classified.csv")
+
+messages <- readr::read_csv(data_path, show_col_types = FALSE) |>
+  mutate(date = as.Date(date), month = floor_date(date, "month"))
+
+faq_order <- messages |> count(intent, sort = TRUE) |> pull(intent)
+messages <- messages |> mutate(intent = factor(intent, levels = faq_order))
+
+pal <- tibble::tribble(
+  ~color, ~palette,
+  "#cf597e","diverging","#e88471","diverging","#eeb479","diverging",
+  "#e9e29c","diverging","#9ccb86","diverging","#39b185","diverging","#009392","diverging",
+  "#46aea0","sequential","#089099","sequential","#045275","sequential"
+)
+
+diverging <- pal |> dplyr::filter(palette == "diverging") |> dplyr::pull(color)
+
+non_sonst <- setdiff(faq_order, "Sonstiges")
+theme_colors <- setNames(diverging[seq_along(non_sonst)], non_sonst)
+theme_colors["Sonstiges"] <- "grey70"
+```
+
+<!--
 **Zentrale Ergebnisse auf einen Blick**
 
 Auf Basis dieser Anfragen wurden:
@@ -110,10 +146,209 @@ Diese Fallstudie zeigt praxisnah:
 - wie bestehende Kundenkommunikation als Datenbasis genutzt werden kann,
 - wie wiederkehrende Anfragen automatisch erkannt und thematisch gebündelt werden,
 - wie daraus strukturierte, konsistente FAQs entstehen,
-- und wie sich Nutzung und Relevanz dieser Themen über die Zeit entwickeln.
+- und wie sich Nutzung und Relevanz dieser Themen über die Zeit entwickeln. -->
+
+
+
+### Die Ausgangslage: unstrukturierte Kundenanfragen
+
+Supportanfragen erreichen Unternehmen als E-Mails, Tickets oder Chatnachrichten. Sie folgen keinem festen Schema, sind unterschiedlich ausführlich, enthalten Tippfehler, Abkürzungen oder gleich mehrere Anliegen in einer Nachricht. Für einzelne Anfragen ist das kein Problem — über hunderte Nachrichten hinweg bleibt jedoch unsichtbar, welche Anliegen immer wieder auftauchen.
+
+Die folgenden Beispiele zeigen typische Rohanfragen aus dem Datensatz:
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+messages |>
+  slice_sample(n = 10) |>
+  mutate(
+    Datum = date,
+    Anfrage = customer_request,
+    Antwort = agent_reply,
+    .keep = "none"
+  ) |>
+  as.list() |>
+  list_transpose() |>
+  map(\(.row_list) {
+    tags$div(
+      class = "card",
+      style = "width: 100%;",
+      tags$ul(
+        class = "list-group list-group-flush",
+        !!!unname(imap(.row_list, \(.value, .key) {
+          tags$li(
+            class = "list-group-item",
+            tags$div(
+              style = stringi::stri_c(
+                "overflow: hidden; width: 100%; display: -webkit-box; ",
+                "-webkit-line-clamp: 8; -webkit-box-orient: vertical;"
+              ),
+              tags$code(stringi::stri_c(.key, ":")),
+              .value
+            )
+          )
+        }))
+      )
+    )
+  }) |>
+  nd.util::nd_carousel(.title = "Beispielbeobachtungen aus dem Rohdatensatz")
+```
+
+Ziel ist es, aus dieser Vielzahl einzelner Anfragen die wiederkehrenden Themen herauszuarbeiten und so sichtbar zu machen, womit der Support tatsächlich am häufigsten befasst ist.
+
 
 ### Analyse
 
+Statt jede Anfrage einzeln zu betrachten, gehen wir in drei Schritten vor:
+
+1. **Themen vorschlagen:** Ein lokal betriebenes Sprachmodell (hier: Gemma 4) liest eine Stichprobe der Anfragen und leitet davon wiederkehrende Themen ab.
+2. **Liste festlegen:** Der Support prüft den Vorschlag und legt daraus eine verbindliche FAQ-Liste fest. Dieser Schritt bleibt bewusst in menschlicher Hand — so behält das Unternehmen die Kontrolle über seine Kategorien.
+3. **Anfragen zuordnen:** Jede der 720 Anfragen wird anschließend genau einem Thema der festen Liste zugeordnet.
+
+Das Ergebnis dieser Zuordnung lässt sich direkt einsehen. Anders als bei einer manuellen Sichtung ist hier für jede Anfrage nachvollziehbar, welchem Thema sie zugeordnet wurde und wie sicher das Modell dabei war:
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+set.seed(123)
+messages |>
+  filter(intent != "Sonstiges") |>
+  group_by(intent) |>
+  slice_max(confidence, n = 1, with_ties = FALSE) |>
+  ungroup() |>
+  slice_head(n = 6) |>
+  transmute(
+    `Konkrete Kundenanfrage` = str_trunc(customer_request, 140),
+    `Zugeordnetes Thema` = as.character(intent),
+    Konfidenz = scales::number(confidence, accuracy = 0.01)
+  ) |>
+  gt::gt() |>
+  gt::tab_options(table.width = gt::pct(100)) |>
+  nd.util::nd_gt_tab_options() |>
+  nd.util::nd_gt_to_html()
+```
+
+## Die wichtigsten Themen
+
+Zählt man, wie viele Anfragen auf jedes Thema entfallen, zeigt sich das zentrale Ergebnis: **Ein kleiner Teil der Themen verursacht den Großteil des Supportaufwands.** Die folgende Darstellung sortiert die Themen nach Häufigkeit.
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-height: 4.2
+coverage <- messages |>
+  count(intent, name = "n") |>
+  arrange(desc(n)) |>
+  mutate(share = n / sum(n), cum_share = cumsum(share), rank = row_number())
+
+ggplot(coverage, aes(x = share, y = fct_reorder(intent, share))) +
+  geom_col(fill = "#00718b") +
+  geom_text(
+    aes(label = scales::percent(share, accuracy = 1)),
+    hjust = -0.15,
+    size = 3.5
+  ) +
+  scale_x_continuous(
+    labels = scales::percent_format(),
+    expand = expansion(mult = c(0, 0.12))
+  ) +
+  labs(x = "Anteil am gesamten Anfragevolumen", y = NULL) +
+  theme_minimal(base_size = 12) +
+  theme(panel.grid.major.y = element_blank())
+```
+
+Die vier häufigsten Themen — „Lieferstatus", „Software-Probleme", „Ersatzteil-Anfragen" und „technische Fehlermeldungen" — machen zusammen bereits rund drei Viertel aller Anfragen aus. Für ein Unternehmen heißt das: Schon einige wenige, gut aufbereitete FAQ-Einträge decken einen Großteil des täglichen Anfragevolumens ab. Genau diese Themen lohnt es sich, zuerst zu standardisieren — etwa als Self-Service-Hilfe oder als Bausteine für einen Support-Chatbot.
+
+## Themen über die Zeit
+
+Eine reine Häufigkeitsliste zeigt nur den Gesamtstand. Betrachtet man die Themen jedoch **über die Zeit**, wird sichtbar, welche Anliegen den Support in einzelnen Monaten besonders beschäftigen — und ob neue Probleme hinzukommen.
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-height: 4.2
+messages |>
+  count(month, intent) |>
+  ggplot(aes(month, n, colour = intent)) +
+  geom_line(linewidth = 0.8) +
+  scale_x_date(date_breaks = "1 month", date_labels = "%b") +
+  scale_colour_manual(values = theme_colors) +
+  labs(x = NULL, y = "Anfragen pro Monat", colour = NULL) +
+  theme_minimal(base_size = 12) +
+  theme(legend.position = "bottom", panel.grid.minor = element_blank())
+```
+
+Eine feste FAQ-Liste hat dabei einen blinden Fleck: Sie kennt nur, was bei ihrer Erstellung bereits da war. Ein **neues** Anliegen kann sich auf zwei Arten zeigen:
+
+- **„Sonstiges" beobachten:** Wächst dieser Anteil, taucht ein Anliegen auf, das zu *keiner* bestehenden Kategorie passt — ein Kandidat für eine neue FAQ.
+- **Kategorie-Volumen beobachten:** Wächst eine bestehende Kategorie auffällig, kann sich dahinter ein neues Teilproblem verbergen, das eine eigene FAQ verdient.
+
+In unserem Datensatz tritt gegen Jahresende ein neues Anliegen auf: Probleme bei der **Software-Lizenzaktivierung** nach einer Systemumstellung. Da dieses Thema der bestehenden Kategorie *Software-Probleme* sehr ähnlich ist, ordnet das Modell die neuen Anfragen genau dorthin zu. Das neue Problem bleibt also nicht unsichtbar — es zeigt sich als **Anstieg innerhalb einer bestehenden Kategorie** in der zweiten Jahreshälfte. Wie sich ein solches verstecktes Teilproblem gezielt wieder sichtbar machen lässt, zeigt der nächste Schritt.
+
+## Von Themen zu FAQ-Einträgen
+
+Aus den identifizierten Themen lassen sich nun standardisierte FAQ-Einträge erzeugen: je eine kanonische Frage, eine sachliche Antwort und typische Rückfragen (z. B. fehlende Bestell- oder Seriennummern). So entsteht aus unterschiedlich formulierten Anfragen eine konsistente, support-taugliche Antwort.
+
+Das Sprachmodell erkennt, dass „Wo bleibt meine Bestellung?", „Noch keine Versandbestätigung erhalten" und „Ist die Ware schon raus?" dasselbe Anliegen ausdrücken — trotz völlig unterschiedlicher Formulierung. Genau das unterscheidet den Ansatz von einer einfachen Stichwortsuche, die an abweichenden Formulierungen scheitert.
+
+Weil die Themenliste anschließend fest ist, wird jede Anfrage gegen dieselben Kategorien geprüft. Das macht die Auswertung wiederholbar: Eine erneute Analyse im nächsten Monat ist direkt vergleichbar. Zu jeder Zuordnung gibt das Modell zudem an, wie sicher es ist — Anfragen mit niedriger Konfidenz eignen sich besonders für eine kurze manuelle Kontrolle.
+
+Ein Thema umfasst dabei oft **mehrere konkrete Fragen**. Für die volumenstärksten Themen wird daher in einem zweiten Schritt geprüft, welche wiederkehrenden Einzelfragen sich darin verbergen — so entsteht statt einer pauschalen Antwort eine differenzierte, nach Themen gegliederte FAQ-Sammlung.
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+faq_path <- file.path(data_dir, "final_faqs.csv")
+
+if (file.exists(faq_path)) {
+  readr::read_csv(faq_path, show_col_types = FALSE) |>
+    transmute(
+      Thema = intent,
+      Titel = titel,
+      Frage = frage,
+      Antwort = antwort,
+      Tags = tags
+    ) |>
+    as.list() |>
+    list_transpose() |>
+    purrr::map(\(.row_list) {
+      tags$div(
+        class = "card",
+        style = "width: 100%;",
+        tags$ul(
+          class = "list-group list-group-flush",
+          !!!unname(purrr::imap(.row_list, \(.value, .key) {
+            tags$li(
+              class = "list-group-item",
+              tags$div(
+                style = stringi::stri_c(
+                  "overflow: hidden; width: 100%; display: -webkit-box; ",
+                  "-webkit-line-clamp: 10; -webkit-box-orient: vertical;"
+                ),
+                tags$code(stringi::stri_c(.key, ": ")),
+                .value
+              )
+            )
+          }))
+        )
+      )
+    }) |>
+    nd.util::nd_carousel(.title = "Automatisch generierte FAQ-Einträge")
+} else {
+  htmltools::tags$em(
+    "Die FAQ-Antworten werden im Schritt „Antwort-Generierung\" (faq_answers.R) erzeugt."
+  )
+}
+```
+
+Unter den Software-Problemen taucht eine eigene Frage zur **Lizenzaktivierung** auf — genau jenes neue Anliegen, das in der Zeitreihe noch in der Kategorie *Software-Probleme* verborgen blieb. Die feinere Aufteilung macht das Teilproblem also sichtbar, das die reine Themenzuordnung überdeckt hatte.
+
+<!--
 #### Datengrundlage
 
 Die Analyse basiert auf einem synthetisch erzeugten Datensatz mit insgesamt 947 Kundenanfragen und zugehörigen Antworten. Die Daten decken einen Zeitraum von zwölf Monaten ab und spiegeln typische Fragestellungen aus dem B2B-Umfeld des Maschinen- und Anlagenbaus wider.
@@ -130,7 +365,6 @@ Die Anfragen umfassen unter anderem:
 #| echo: false
 #| message: false
 #| warning: false
-
 messages <- read_csv("data/messages_with_topics.csv") |>
   mutate(
     date = as.Date(date),
@@ -202,7 +436,6 @@ messages <- messages |>
 
 
 ```{r}
-
 messages |>
   slice_sample(n = 10) |>
   mutate(
@@ -249,7 +482,6 @@ Im Ergebnis wird jede Kundenanfrage einem Thema zugeordnet, sowie einer Konfiden
 #| message: false
 #| warning: false
 #| fig-height: 2.096222
-
 # theme_overview <- messages |>
 #   filter(topic != -1) |>
 #   count(theme, name = "n") |>
@@ -292,7 +524,6 @@ topic_overview_plot <-
   scale_fill_manual(values = theme_colors)
 
 topic_overview_plot
-
 ```
 
 #### Identifikation von generalisierbaren Frage-Antwort-Paaren
@@ -313,7 +544,6 @@ Nicht jede Anfrage eignet sich für eine FAQ. Ziel ist daher nicht alle Anfragen
 #| echo: false
 #| message: false
 #| warning: false
-
 bestellung_beispiel <- messages |>
   filter(theme == "Lieferung & Bestellung") |>
   filter(str_detect(
@@ -389,7 +619,6 @@ Die folgende Übersicht zeigt, wie viele strukturierte FAQ-Einträge pro Thema a
 #| echo: false
 #| message: false
 #| warning: false
-
 topic_labels |>
   select(theme, n_faqs) |>
   arrange(desc(n_faqs)) |>
@@ -415,7 +644,6 @@ Im Folgenden sind die FAQ-Einträge dargestellt. Sie zeigen, wie aus unterschied
 #| echo: false
 #| message: false
 #| warning: false
-
 faqs_tbl |>
   #slice_sample(n = min(20, nrow(faqs_tbl))) |>
   mutate(
@@ -465,7 +693,6 @@ faqs_tbl |>
 #| message: false
 #| warning: false
 #| fig-height: 4.227567
-
 monthly_theme_counts <- messages |>
   filter(topic != -1, theme %in% topic_labels$theme) |>
   mutate(month = floor_date(date, "month")) |>
@@ -517,4 +744,18 @@ Die Fallstudie verdeutlicht, dass sich wiederkehrende Kundenanfragen mit übersc
 - **Automatisierung:** Die generierten FAQs bilden eine belastbare Wissensbasis für Chatbots und Assistenzsysteme
 - **Trend-Erkennung:** Zeitliche Auswertungen machen saisonale Muster und neu entstehende Problemfelder sichtbar
 
-Insgesamt zeigt die Analyse, dass ein vergleichsweise kleiner Satz wiederkehrender Fragestellungen einen erheblichen Teil des Anfragevolumens abdeckt und damit einen besonders geeigneten Einstiegspunkt für den Einsatz von KI im Kundenservice darstellt.
+Insgesamt zeigt die Analyse, dass ein vergleichsweise kleiner Satz wiederkehrender Fragestellungen einen erheblichen Teil des Anfragevolumens abdeckt und damit einen besonders geeigneten Einstiegspunkt für den Einsatz von KI im Kundenservice darstellt. -->
+
+
+### Fazit
+
+Die Analyse zeigt, dass sich wiederkehrende Kundenanfragen mit überschaubarem Aufwand systematisch auswerten und in nutzbares Support-Wissen überführen lassen. Für ein Unternehmen ergeben sich daraus mehrere konkrete Ansatzpunkte:
+
+- **Priorisierung:** Häufige und hochrelevante FAQs können gezielt hervorgehoben werden.
+- **Self-Service:** Kund:innen finden Antworten schneller, ohne den Support zu kontaktieren.
+- **Konsistenz:** Wiederkehrende Fragen werden einheitlich und nachvollziehbar beantwortet.
+- **Onboarding:** Neue Mitarbeitende erhalten einen strukturierten Überblick über typische Anliegen.
+- **Automatisierung:** Die FAQs bilden eine belastbare Wissensbasis für Chatbots und Assistenzsysteme.
+- **Trend-Erkennung:** Zeitliche Auswertungen machen neu entstehende Problemfelder sichtbar.
+
+**Derselbe Workflow funktioniert über Supportanfragen hinaus.** Sobald Kommunikation als Text vorliegt — ob Reklamationen, E-Mails, Chatverläufe oder Bewertungen — lässt sich daraus mit demselben Prinzip eine strukturierte, wiederkehrende Themenlandschaft gewinnen. Diese Fallstudie zeigt damit weniger eine einzelne Lösung als ein **übertragbares Muster** für den Umgang mit unstrukturierten Textdaten im Unternehmen.
