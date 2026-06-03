@@ -220,12 +220,6 @@ Bisher wurde das Netzwerk nur ausgehend von der JLU betrachtet. Doch ein vollst√
 Das folgende Schaubild zeigt die erweiterte Netzwerkstruktur:
 
 ```{r}
-library(tidygraph)
-library(ggraph)
-
-# --- Nodes ---
-# cat(datapasta::tribble_construct(nodes))
-
 nodes <- data.frame(
   name = c(
     "JLU",

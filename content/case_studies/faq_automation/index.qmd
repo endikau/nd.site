@@ -93,9 +93,12 @@ In dieser Fallstudie zeigen wir anhand realistischer Kundenanfragen eines fiktiv
 
 ```{r}
 #| include: false
-data_path <- here::here(data_dir, "faq_tickets_classified.csv")
+data_path <- here::here("content", "case_studies", "faq_automation", "data")
 
-messages <- readr::read_csv(data_path, show_col_types = FALSE) |>
+messages <- readr::read_csv(
+  here::here(data_path, "faq_tickets_classified.csv"),
+  show_col_types = FALSE
+) |>
   mutate(date = as.Date(date), month = floor_date(date, "month"))
 
 faq_order <- messages |> count(intent, sort = TRUE) |> pull(intent)
@@ -303,47 +306,42 @@ Ein Thema umfasst dabei oft **mehrere konkrete Fragen**. Für die volumenstärks
 #| echo: false
 #| message: false
 #| warning: false
-faq_path <- file.path(data_dir, "final_faqs.csv")
-
-if (file.exists(faq_path)) {
-  readr::read_csv(faq_path, show_col_types = FALSE) |>
-    transmute(
-      Thema = intent,
-      Titel = titel,
-      Frage = frage,
-      Antwort = antwort,
-      Tags = tags
-    ) |>
-    as.list() |>
-    list_transpose() |>
-    purrr::map(\(.row_list) {
-      tags$div(
-        class = "card",
-        style = "width: 100%;",
-        tags$ul(
-          class = "list-group list-group-flush",
-          !!!unname(purrr::imap(.row_list, \(.value, .key) {
-            tags$li(
-              class = "list-group-item",
-              tags$div(
-                style = stringi::stri_c(
-                  "overflow: hidden; width: 100%; display: -webkit-box; ",
-                  "-webkit-line-clamp: 10; -webkit-box-orient: vertical;"
-                ),
-                tags$code(stringi::stri_c(.key, ": ")),
-                .value
-              )
+readr::read_csv(
+  here::here(data_path, "final_faqs.csv"),
+  show_col_types = FALSE
+) |>
+  transmute(
+    Thema = intent,
+    Titel = titel,
+    Frage = frage,
+    Antwort = antwort,
+    Tags = tags
+  ) |>
+  as.list() |>
+  list_transpose() |>
+  purrr::map(\(.row_list) {
+    tags$div(
+      class = "card",
+      style = "width: 100%;",
+      tags$ul(
+        class = "list-group list-group-flush",
+        !!!unname(purrr::imap(.row_list, \(.value, .key) {
+          tags$li(
+            class = "list-group-item",
+            tags$div(
+              style = stringi::stri_c(
+                "overflow: hidden; width: 100%; display: -webkit-box; ",
+                "-webkit-line-clamp: 10; -webkit-box-orient: vertical;"
+              ),
+              tags$code(stringi::stri_c(.key, ": ")),
+              .value
             )
-          }))
-        )
+          )
+        }))
       )
-    }) |>
-    nd.util::nd_carousel(.title = "Automatisch generierte FAQ-Einträge")
-} else {
-  htmltools::tags$em(
-    "Die FAQ-Antworten werden im Schritt „Antwort-Generierung\" (faq_answers.R) erzeugt."
-  )
-}
+    )
+  }) |>
+  nd.util::nd_carousel(.title = "Automatisch generierte FAQ-Einträge")
 ```
 
 Unter den Software-Problemen taucht eine eigene Frage zur **Lizenzaktivierung** auf — genau jenes neue Anliegen, das in der Zeitreihe noch in der Kategorie *Software-Probleme* verborgen blieb. Die feinere Aufteilung macht das Teilproblem also sichtbar, das die reine Themenzuordnung überdeckt hatte.
