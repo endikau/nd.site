@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+@page { size: A4; margin: 0; }
+* { box-sizing: border-box; }
+body { margin:0; font-family:'Segoe UI',Arial,sans-serif; color:#1a2a3f; background:#e7f2ff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.page { page-break-after: always; background:#e7f2ff; min-height: 297mm; position: relative; }
+.page:last-child { page-break-after: auto; }
+.header { background:#e7f2ff; border-bottom:6px solid #1e73be; position:relative; padding:14mm 10mm 6mm 10mm; }
+.header::after { content:''; position:absolute; left:0; right:0; bottom:-6px; height:6px; background:#18a7a0; }
+.brand { font-size:11pt; font-weight:700; color:#1a3f63; }
+.h1 { margin:.1rem 0 .25rem; font-size:22pt; font-weight:800; color:#1a3f63; }
+.h2 { margin:0 0 .2rem; font-size:15pt; font-weight:800; color:#1e73be; }
+.sub { font-size:11pt; color:#1a2a3f; }
+.main { padding:7mm 10mm 22mm; }
+.grid2 { display:grid; grid-template-columns:1fr 1fr; gap:5mm; }
+.card { background:#fff; border:1px solid #d6e0ec; padding:4mm; }
+.card h3 { margin:0 0 3mm; font-size:11.5pt; color:#1a3f63; }
+p { margin:0 0 2.2mm; font-size:10.5pt; line-height:1.38; text-align:justify; }
+ul { margin:0; padding-left:4.2mm; }
+li { margin:0 0 1.2mm; font-size:10.5pt; line-height:1.32; }
+.heroimg { width:100%; height:100%; min-height:92mm; object-fit:cover; border:1px solid #d6e0ec; }
+.sp8 { height:4mm; }
+.table { width:100%; border-collapse:collapse; font-size:10pt; background:#fff; border:1px solid #d6e0ec; }
+.table th { text-align:left; background:#e2eefc; color:#1a3f63; border:1px solid #d6e0ec; padding:2.1mm 2.4mm; font-size:10pt; }
+.table td { border:1px solid #d6e0ec; padding:2mm 2.4mm; vertical-align:top; }
+.table tr:nth-child(odd) td { background:#f4f9ff; }
+.table tr:nth-child(even) td { background:#eef5ff; }
+.footer { position:absolute; left:10mm; right:10mm; bottom:8mm; border-top:1px solid #d6e0ec; padding-top:2.4mm; font-size:8.8pt; color:#5e6f86; display:flex; justify-content:space-between; }
+</style></head><body>
+<div class="page"> 
+  <div class="header"><div class="brand">ENDIKAU GMBH</div><div class="h1">Produktdatenblatt</div><div class="h2">KF ControlUnit CU-220</div><div class="sub">Steuerungs- und Diagnoseeinheit für Förderanlagen und periphere Automatisierungssysteme</div></div>
+  <div class="main">
+    <div class="grid2">
+      <div class="card"><h3>Überblick</h3><p>Die KF ControlUnit CU-220 wurde zur Steuerung, Überwachung und Diagnose moderner Förder- und Materialflusssysteme entwickelt. Das Modul dient der Anbindung von Förderstrecken, Sensorik, Scannertechnik und dezentralen Aktoren in Produktions- und Logistikumgebungen. Die CU-220 eignet sich für Neuanlagen ebenso wie für Retrofit-Projekte, bei denen bestehende Steuerungsstrukturen modernisiert, Störmeldungen zentralisiert und Anlagenzustände transparenter dargestellt werden sollen.</p><h3 style="margin-top:2mm">Funktionsprinzip</h3><p>Die CU-220 verarbeitet Signale aus Sensorik, Antrieben und Peripheriemodulen und stellt diese der Anlagensteuerung strukturiert bereit. Status- und Fehlermeldungen können lokal visualisiert, historisiert und für Servicezwecke ausgewertet werden.</p></div>
+      <div class="card"><img class="heroimg" src="file:///C:/Users/morit/Documents/UNI/Semester_6/Arbeit/Website_2/img/pexels-vladimirsrajber-18631424.jpg" alt="Produktbild"></div>
+    </div>
+    <div class="sp8"></div>
+    <div class="grid2">
+      <div class="card"><h3>Typische Einsatzbereiche</h3><ul><li>Förderanlagensteuerung</li>
+<li>Linienverkettung</li>
+<li>Retrofit bestehender Anlagen</li>
+<li>Anbindung von Sensorik</li>
+<li>Status- und Störmeldungsmanagement</li></ul></div>
+      <div class="card"><h3>Systemvorteile</h3><ul><li>kompakter Schaltschrankaufbau</li>
+<li>integrierte Diagnose</li>
+<li>modular erweiterbar</li>
+<li>Fernwartung optional</li>
+<li>Klartextmeldungen möglich</li></ul></div>
+    </div>
+    <div class="footer"><span>Endikau GmbH | Endikaustraße 12 | 48231 Endikaustadt | www.endikau.de</span><span>Seite 1</span></div>
+  </div>
+</div>
+
+<div class="page">
+  <div class="header"><div class="h2">KF ControlUnit CU-220 - Technische Daten</div></div>
+  <div class="main">
+    <table class="table"><thead><tr><th style="width:42%">Parameter</th><th>Wert</th></tr></thead><tbody><tr><td>Typ</td><td>CU-220</td></tr>
+<tr><td>Versorgungsspannung</td><td>24 V DC / 400 V Einspeisung</td></tr>
+<tr><td>Schutzart Schaltschrank</td><td>IP54</td></tr>
+<tr><td>Betriebstemperatur</td><td>0 °C bis +45 °C</td></tr>
+<tr><td>Bedienoberfläche</td><td>7 Zoll Touchpanel</td></tr>
+<tr><td>Schnittstellen</td><td>Profinet, Modbus TCP, digitale I/O</td></tr>
+<tr><td>Digitale Eingänge</td><td>bis 32, erweiterbar</td></tr>
+<tr><td>Digitale Ausgänge</td><td>bis 32, erweiterbar</td></tr>
+<tr><td>Fernwartung</td><td>optional via VPN</td></tr>
+<tr><td>Meldespeicher</td><td>bis 1.000 Ereignisse</td></tr>
+<tr><td>Visualisierung</td><td>Status- und Störmeldungen</td></tr>
+<tr><td>Montage</td><td>Wand- oder Gestellmontage</td></tr>
+<tr><td>Normen</td><td>CE-konforme Ausführung</td></tr></tbody></table>
+    <div class="sp8"></div>
+    <div class="grid2">
+      <div class="card"><h3>Mechanischer Aufbau</h3><p>Die CU-220 kombiniert Steuerungslogik, Diagnose und Schnittstellenmanagement in einem kompakten Schaltschrankkonzept. Die Bedienoberfläche zeigt Anlagenzustand, Störmeldungen und Servicehinweise strukturiert an. Softwarestände und Konfigurationsänderungen können dokumentiert werden.</p></div>
+      <div class="card"><h3>Steuerung und Schnittstellen</h3><p>Die Steuerungseinheit unterstuetzt standardisierte Kommunikationsprotokolle und kann an vorhandene SPS-Systeme angebunden werden. Optional ermöglicht ein Fernwartungsrouter den gesicherten Zugriff auf Diagnoseinformationen, wodurch Störungen vorbereitet und Serviceeinsätze gezielter geplant werden können.</p></div>
+    </div>
+    <div class="footer"><span>Endikau GmbH | Endikaustraße 12 | 48231 Endikaustadt | www.endikau.de</span><span>Seite 2</span></div>
+  </div>
+</div>
+
+<div class="page">
+  <div class="header"><div class="h2">Signale und Anlagenkommunikation</div></div>
+  <div class="main">
+    <table class="table"><thead><tr><th style="width:38%">Signal / Funktion</th><th>Beschreibung</th></tr></thead><tbody><tr><td>Anlagenstatus</td><td>Anzeige Betriebszustand einzelner Fördersegmente</td></tr>
+<tr><td>Störmeldung</td><td>Klartextmeldung mit Zuordnung zum Anlagenbereich</td></tr>
+<tr><td>Sensorstatus</td><td>Rückmeldung von Lichtschranken, Scannern und Endlagen</td></tr>
+<tr><td>Fernwartung</td><td>gesicherter Zugriff auf Diagnose- und Steuerungsdaten</td></tr>
+<tr><td>Ereignisspeicher</td><td>Historisierung relevanter Meldungen mit Zeitbezug</td></tr></tbody></table>
+    <div class="sp8"></div>
+    <div class="card"><h3>Wartung und Betrieb</h3><p>Die Wartung richtet sich nach Betriebsdauer, Umgebungseinfluessen und Fördergut. Die angegebenen Intervalle dienen als Richtwerte für typische industrielle Anwendungen. Bei hoher Staubbelastung, Schichtbetrieb oder häufigen Taktwechseln können kürzere Intervalle sinnvoll sein.</p></div>
+    <div class="sp8"></div>
+    <table class="table"><thead><tr><th style="width:26%">Komponente</th><th style="width:18%">Intervall</th><th>Hinweis</th></tr></thead><tbody><tr><td>Schaltschrank</td><td>halbjährlich</td><td>Kontrolle Verschmutzung und Beschädigung</td></tr>
+<tr><td>Lueftereinheiten</td><td>jährlich</td><td>Pruefung Luftdurchsatz und Reinigung</td></tr>
+<tr><td>Klemmverbindungen</td><td>jährlich</td><td>Kontrolle mechanischer Festigkeit</td></tr>
+<tr><td>Software-Backup</td><td>vierteljährlich</td><td>Dokumentation von Änderungen empfohlen</td></tr>
+<tr><td>VPN-Zugang</td><td>jährlich</td><td>Sicherheitspruefung und Passwortwechsel</td></tr></tbody></table>
+    <div class="footer"><span>Endikau GmbH | Endikaustraße 12 | 48231 Endikaustadt | www.endikau.de</span><span>Seite 3</span></div>
+  </div>
+</div>
+
+<div class="page">
+  <div class="header"><div class="h2">Optionale Ausstattung</div></div>
+  <div class="main">
+    <table class="table"><thead><tr><th style="width:38%">Option</th><th>Beschreibung</th></tr></thead><tbody><tr><td>Fernwartungsrouter</td><td>VPN-basierter Remote-Zugriff auf Diagnoseinformationen</td></tr>
+<tr><td>USV-Modul</td><td>Absicherung kritischer Steuerungsfunktionen bei Spannungsausfall</td></tr>
+<tr><td>Zusatz-I/O</td><td>Erweiterung digitaler Ein- und Ausgangskapazitäten</td></tr>
+<tr><td>Klartextmeldungen</td><td>individuelle Meldungstexte für Bedien- und Wartungspersonal</td></tr>
+<tr><td>Erweiterte Diagnose</td><td>detaillierte Status- und Ereignisprotokollierung</td></tr></tbody></table>
+    <div class="sp8"></div>
+    <div class="card"><h3>Projektierung und Integration</h3><p>Die Projektierung erfolgt auf Grundlage der jeweiligen Förderaufgabe sowie der räumlichen und technischen Anforderungen. Vor der Auslegung werden Fördergutabmessungen, Fördergutgewicht, Taktleistung, Übergabepunkte, vorhandene Schnittstellen und Sicherheitsanforderungen aufgenommen.</p><p>Auf Wunsch übernimmt Endikau Fördertechnik die mechanische und elektrische Integration in bestehende Anlagenstrukturen, die Inbetriebnahme sowie die Schulung des Bedien- und Wartungspersonals. Für Retrofit-Projekte können bestehende Rollenbahnen, Gurtförderer, Hubstationen oder Steuerungskomponenten weiterverwendet und gezielt ergänzt werden.</p></div>
+    <div class="sp8"></div>
+    <div style="font-size:10.5pt; line-height:1.36; color:#1a2a3f;"><strong>Endikau GmbH</strong><br>Endikaustraße 12 · 48231 Endikaustadt<br>Telefon: +49 (0)661 9482-0<br>E-Mail: info@endikau.de<br>www.endikau.de</div>
+    <div class="footer"><span>Endikau GmbH | Endikaustraße 12 | 48231 Endikaustadt | www.endikau.de</span><span>Seite 4</span></div>
+  </div>
+</div>
+</body></html>

@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+@page { size: A4; margin: 0; }
+* { box-sizing: border-box; }
+body { margin:0; font-family:'Segoe UI',Arial,sans-serif; color:#1a2a3f; background:#e7f2ff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.page { page-break-after: always; background:#e7f2ff; min-height: 297mm; position: relative; }
+.page:last-child { page-break-after: auto; }
+.header { background:#e7f2ff; border-bottom:6px solid #1e73be; position:relative; padding:14mm 10mm 6mm 10mm; }
+.header::after { content:''; position:absolute; left:0; right:0; bottom:-6px; height:6px; background:#18a7a0; }
+.brand { font-size:11pt; font-weight:700; color:#1a3f63; }
+.h1 { margin:.1rem 0 .25rem; font-size:22pt; font-weight:800; color:#1a3f63; }
+.h2 { margin:0 0 .2rem; font-size:15pt; font-weight:800; color:#1e73be; }
+.sub { font-size:11pt; color:#1a2a3f; }
+.main { padding:7mm 10mm 22mm; }
+.grid2 { display:grid; grid-template-columns:1fr 1fr; gap:5mm; }
+.card { background:#fff; border:1px solid #d6e0ec; padding:4mm; }
+.card h3 { margin:0 0 3mm; font-size:11.5pt; color:#1a3f63; }
+p { margin:0 0 2.2mm; font-size:10.5pt; line-height:1.38; text-align:justify; }
+ul { margin:0; padding-left:4.2mm; }
+li { margin:0 0 1.2mm; font-size:10.5pt; line-height:1.32; }
+.heroimg { width:100%; height:100%; min-height:92mm; object-fit:cover; border:1px solid #d6e0ec; }
+.sp8 { height:4mm; }
+.table { width:100%; border-collapse:collapse; font-size:10pt; background:#fff; border:1px solid #d6e0ec; }
+.table th { text-align:left; background:#e2eefc; color:#1a3f63; border:1px solid #d6e0ec; padding:2.1mm 2.4mm; font-size:10pt; }
+.table td { border:1px solid #d6e0ec; padding:2mm 2.4mm; vertical-align:top; }
+.table tr:nth-child(odd) td { background:#f4f9ff; }
+.table tr:nth-child(even) td { background:#eef5ff; }
+.footer { position:absolute; left:10mm; right:10mm; bottom:8mm; border-top:1px solid #d6e0ec; padding-top:2.4mm; font-size:8.8pt; color:#5e6f86; display:flex; justify-content:space-between; }
+</style></head><body>
+<div class="page"> 
+  <div class="header"><div class="brand">ENDIKAU GMBH</div><div class="h1">Produktdatenblatt</div><div class="h2">KF ScanUnit 4</div><div class="sub">Barcode- und Paketerkennungssystem für automatisierte Förderanlagen</div></div>
+  <div class="main">
+    <div class="grid2">
+      <div class="card"><h3>Überblick</h3><p>Die KF ScanUnit 4 dient der automatisierten Erfassung von Barcodes, Versandlabels und Identifikationsmerkmalen auf Kartonagen und Behältern. Das System wird in Sortier-, Versand- und Kommissionieranlagen eingesetzt, in denen Fördergut eindeutig erkannt und an nachgelagerte Prozesse übergeben werden muss. Die Einheit kombiniert Lesetechnik, Beleuchtung, Halterung und Schnittstellenmodul in einer kompakten Baugruppe. Je nach Layout kann die ScanUnit als Seitenmontage, Portalaufbau oder kombinierte Mehrseiten-Erfassung ausgeführt werden.</p><h3 style="margin-top:2mm">Funktionsprinzip</h3><p>Die ScanUnit 4 erfasst Codes während des Förderprozesses und übergibt die Daten an Steuerung, WMS oder Materialflussrechner. Bei nicht lesbaren Labels können definierte Fehler- oder Ausschleusignale ausgegeben werden. Beleuchtung und Montagewinkel werden projektspezifisch auf Fördergut und Labelposition abgestimmt.</p></div>
+      <div class="card"><img class="heroimg" src="file:///C:/Users/morit/Documents/UNI/Semester_6/Arbeit/Website_2/img/pexels-freek-wolsink-508219-34222005.jpg" alt="Produktbild"></div>
+    </div>
+    <div class="sp8"></div>
+    <div class="grid2">
+      <div class="card"><h3>Typische Einsatzbereiche</h3><ul><li>Versand- und Sortierzentren</li>
+<li>Kommissionierung</li>
+<li>Wareneingang und Warenausgang</li>
+<li>Produktverfolgung</li>
+<li>Anbindung an WMS und ERP</li></ul></div>
+      <div class="card"><h3>Systemvorteile</h3><ul><li>hohe Lesestabilität</li>
+<li>kompakte Bauform</li>
+<li>1D- und 2D-Code-Erfassung</li>
+<li>schnelle Integration</li>
+<li>optional mit Ausschleuslogik</li></ul></div>
+    </div>
+    <div class="footer"><span>Endikau GmbH | Endikaustraße 12 | 48231 Endikaustadt | www.endikau.de</span><span>Seite 1</span></div>
+  </div>
+</div>
+
+<div class="page">
+  <div class="header"><div class="h2">KF ScanUnit 4 - Technische Daten</div></div>
+  <div class="main">
+    <table class="table"><thead><tr><th style="width:42%">Parameter</th><th>Wert</th></tr></thead><tbody><tr><td>Typ</td><td>ScanUnit 4</td></tr>
+<tr><td>Lesetechnologie</td><td>1D- und 2D-Imager</td></tr>
+<tr><td>Lesereichweite</td><td>200-1.200 mm, abhängig von Codegrösse</td></tr>
+<tr><td>Objektgeschwindigkeit</td><td>bis 2,0 m/s</td></tr>
+<tr><td>Erfassungswinkel</td><td>seiten- oder portalbasiert</td></tr>
+<tr><td>Betriebsspannung</td><td>24 V DC</td></tr>
+<tr><td>Schutzart</td><td>IP65</td></tr>
+<tr><td>Schnittstellen</td><td>Ethernet TCP/IP, digitale I/O</td></tr>
+<tr><td>Beleuchtung</td><td>integrierte LED-Beleuchtung</td></tr>
+<tr><td>Montage</td><td>Portal-, Seiten- oder Gestellmontage</td></tr>
+<tr><td>Betriebstemperatur</td><td>0 °C bis +45 °C</td></tr>
+<tr><td>Diagnose</td><td>Statusanzeige und Webinterface</td></tr>
+<tr><td>Wartungsintervall</td><td>jährlich empfohlen</td></tr></tbody></table>
+    <div class="sp8"></div>
+    <div class="grid2">
+      <div class="card"><h3>Mechanischer Aufbau</h3><p>Die ScanUnit 4 ist für wechselnde Packstückgrössen und typische Versandlabel ausgelegt. Die mechanische Halterung erlaubt eine reproduzierbare Ausrichtung der Leseköpfe. Durch die integrierte Beleuchtung können auch wechselnde Umgebungslichtbedingungen ausgeglichen werden.</p></div>
+      <div class="card"><h3>Steuerung und Schnittstellen</h3><p>Die Datenübergabe erfolgt an SPS, Materialflussrechner oder Lagerverwaltungssysteme. Neben dem Codeinhalt können Lesestatus, Zeitstempel und Fehlercodes ausgegeben werden. Bei Bedarf wird eine Ausschleuslogik für nicht identifizierbare Packstücke angebunden.</p></div>
+    </div>
+    <div class="footer"><span>Endikau GmbH | Endikaustraße 12 | 48231 Endikaustadt | www.endikau.de</span><span>Seite 2</span></div>
+  </div>
+</div>
+
+<div class="page">
+  <div class="header"><div class="h2">Signale und Anlagenkommunikation</div></div>
+  <div class="main">
+    <table class="table"><thead><tr><th style="width:38%">Signal / Funktion</th><th>Beschreibung</th></tr></thead><tbody><tr><td>Code gelesen</td><td>erfolgreiche Identifikation des Förderguts</td></tr>
+<tr><td>No Read</td><td>kein verwertbarer Barcode erkannt</td></tr>
+<tr><td>Objekt erkannt</td><td>Trigger durch Lichtschranke oder Sensor</td></tr>
+<tr><td>Ausschleusfreigabe</td><td>Signal für nachgelagerten Sortierprozess</td></tr>
+<tr><td>Diagnosestatus</td><td>Rückmeldung von Lesekopf, Beleuchtung und Kommunikation</td></tr></tbody></table>
+    <div class="sp8"></div>
+    <div class="card"><h3>Wartung und Betrieb</h3><p>Die Wartung richtet sich nach Betriebsdauer, Umgebungseinfluessen und Fördergut. Die angegebenen Intervalle dienen als Richtwerte für typische industrielle Anwendungen. Bei hoher Staubbelastung, Schichtbetrieb oder häufigen Taktwechseln können kürzere Intervalle sinnvoll sein.</p></div>
+    <div class="sp8"></div>
+    <table class="table"><thead><tr><th style="width:26%">Komponente</th><th style="width:18%">Intervall</th><th>Hinweis</th></tr></thead><tbody><tr><td>Optikfenster</td><td>monatlich</td><td>Reinigung von Staub und Etikettenrückständen</td></tr>
+<tr><td>Beleuchtung</td><td>halbjährlich</td><td>Pruefung Lichtleistung und Funktion</td></tr>
+<tr><td>Halterung</td><td>halbjährlich</td><td>Kontrolle Ausrichtung und Befestigung</td></tr>
+<tr><td>Kommunikation</td><td>jährlich</td><td>Pruefung Netzwerkverbindung und</td></tr>
+<tr><td>Datenübergabe</td><td>Softwarekonfiguration</td><td>jährlich</td></tr></tbody></table>
+    <div class="footer"><span>Endikau GmbH | Endikaustraße 12 | 48231 Endikaustadt | www.endikau.de</span><span>Seite 3</span></div>
+  </div>
+</div>
+
+<div class="page">
+  <div class="header"><div class="h2">Optionale Ausstattung</div></div>
+  <div class="main">
+    <table class="table"><thead><tr><th style="width:38%">Option</th><th>Beschreibung</th></tr></thead><tbody><tr><td>Portalrahmen</td><td>stabile Aufnahme für Mehrseiten-Erfassung</td></tr>
+<tr><td>Zusätzlicher Lesekopf</td><td>Erweiterung für wechselnde Labelpositionen</td></tr>
+<tr><td>Ausschleuslogik</td><td>Ausgabe definierter Signale bei No-Read-Ereignissen</td></tr>
+<tr><td>Datenspeicherung</td><td>Zwischenspeicherung relevanter Scanereignisse</td></tr>
+<tr><td>WMS-Anbindung</td><td>projektspezifische Kommunikation mit Lagerverwaltungssystemen</td></tr></tbody></table>
+    <div class="sp8"></div>
+    <div class="card"><h3>Projektierung und Integration</h3><p>Die Projektierung erfolgt auf Grundlage der jeweiligen Förderaufgabe sowie der räumlichen und technischen Anforderungen. Vor der Auslegung werden Fördergutabmessungen, Fördergutgewicht, Taktleistung, Übergabepunkte, vorhandene Schnittstellen und Sicherheitsanforderungen aufgenommen.</p><p>Auf Wunsch übernimmt Endikau Fördertechnik die mechanische und elektrische Integration in bestehende Anlagenstrukturen, die Inbetriebnahme sowie die Schulung des Bedien- und Wartungspersonals. Für Retrofit-Projekte können bestehende Rollenbahnen, Gurtförderer, Hubstationen oder Steuerungskomponenten weiterverwendet und gezielt ergänzt werden.</p></div>
+    <div class="sp8"></div>
+    <div style="font-size:10.5pt; line-height:1.36; color:#1a2a3f;"><strong>Endikau GmbH</strong><br>Endikaustraße 12 · 48231 Endikaustadt<br>Telefon: +49 (0)661 9482-0<br>E-Mail: info@endikau.de<br>www.endikau.de</div>
+    <div class="footer"><span>Endikau GmbH | Endikaustraße 12 | 48231 Endikaustadt | www.endikau.de</span><span>Seite 4</span></div>
+  </div>
+</div>
+</body></html>
