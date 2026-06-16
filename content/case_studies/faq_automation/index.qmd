@@ -163,6 +163,7 @@ Die folgenden Beispiele zeigen typische Rohanfragen aus dem Datensatz:
 #| echo: false
 #| message: false
 #| warning: false
+tags <- htmltools::tags
 messages |>
   slice_sample(n = 10) |>
   mutate(
@@ -363,14 +364,14 @@ Die Anfragen umfassen unter anderem:
 #| echo: false
 #| message: false
 #| warning: false
-messages <- read_csv("data/messages_with_topics.csv") |>
+messages <- read_csv(fs::path(data_path, "messages_with_topics.csv")) |>
   mutate(
     date = as.Date(date),
     month = floor_date(date, "month"),
     topic_id = as.integer(topic)
   )
 
-faqs_by_topic <- read_json("data/faqs_by_themes.json")
+faqs_by_topic <- jsonlite::read_json(fs::path(data_path, "faqs_by_themes.json"))
 
 faqs_tbl <- map_dfr(faqs_by_topic, function(theme_obj) {
   theme_name <- theme_obj$themes
