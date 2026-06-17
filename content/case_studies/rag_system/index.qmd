@@ -29,98 +29,50 @@ ggplot2::theme_set(`+`(
 ))
 ```
 
-In vielen Organisationen steckt wichtiges Wissen in langen, formal formulierten Dokumenten. Diese Fallstudie zeigt anhand von **Prüfungsordnungen (PO)** und **Modulhandbüchern (MH)**, wie ein **Retrieval-Augmented-Generation (RAG)**-System solche Texte per Chat zugänglich macht: Nutzer stellen Fragen, das System sucht passende Textstellen und formuliert daraus eine Antwort **inklusive Quellen**.
+```{r}
+data_path <- here::here("content", "case_studies", "rag_system", "data")
 
-> **Warum Universitätsdokumente?**  
-> Prüfungsordnungen und Modulhandbücher sind strukturell vergleichbar mit Richtlinien und Prozessdokumenten in KMU (z. B. HR-Handbuch, Reisekostenrichtlinie, ISO-Verfahrensanweisung). Der Mehrwert entsteht durch die **Dokumentenlogik**, nicht durch die Domäne.
+rag_client <- nd.util::rag_client()
 
----
+# fs::path(data_path, "datenblaetter") |>
+#   fs::dir_ls() |>
+#   purrr::walk(\(.path) {
+#     rag_client$ingest_pdf_async(.pdf_paths = .path)
+#   })
 
-## Interaktive Demo
-
-Stelle eine Frage zu Fristen, Voraussetzungen, Ausnahmen oder Prüfungsformen.  
-Die Antworten basieren **ausschließlich** auf den bereitgestellten Dokumenten und enthalten Quellenangaben (z. B. §/Abschnitt/Modul).
+# rag_client$chat_stream("Worum geht es in dem Dokument?")
+```
 
 ```{r}
 #| output: asis
-nd.util::nd_iframe_app(
-  .url = "https://nd_apps.dsjlu.wirtschaft.uni-giessen.de/apps/rag_system/"
-)
+rag_client$system_prompt
 ```
 
 
-**Tipp:** Nutze konkrete Begriffe (z. B. „Rücktritt“, „Wiederholung“, „Attest“, „Modulname“), damit das System schneller die passende Stelle findet.
+```{r}
+#| output: asis
+rag_client$context_prompt
+```
 
----
 
-## Beispiel-Fragen (zum Ausprobieren)
+```{r}
+#| output: asis
+rag_client$condense_prompt
+```
 
-**Regeln & Ausnahmen (Prüfungsordnung)**
-- Welche Möglichkeiten habe ich, wenn ich eine Prüfung nicht bestehe?
-- Unter welchen Bedingungen kann ich von einer Prüfung zurücktreten?
-- Was gilt, wenn ich am Prüfungstag krank bin?
 
-**Modulbezogene Fragen (Modulhandbuch)**
-- Welche Prüfungsform hat das Modul **[Modulname]**?
-- Wie viele Leistungspunkte (ECTS) hat **[Modulname]**?
-- Welche Inhalte und Lernziele hat **[Modulname]**?
+```{r}
+#| output: asis
+rag_client$response_prompt
+```
 
-**Kombinationsfragen (PO + MH)**
-- Wie wird das Modul **[Modulname]** geprüft und was passiert bei Nichtbestehen?
-- Welche Voraussetzungen gelten für die Teilnahme an **[Modulname]**?
 
----
+```{r}
+#| output: asis
+rag_client$context_refine_prompt
+```
 
-## So funktioniert RAG in dieser Demo (kurz)
 
-1. **Dokumente bereitstellen**  
-   Prüfungsordnung(en) und Modulhandbuch/-handbücher werden als Text aufbereitet.
-2. **Semantische Suche (Retrieval)**  
-   Deine Frage wird genutzt, um passende Abschnitte in den Dokumenten zu finden.
-3. **Antwortgenerierung (Generation)**  
-   Ein Sprachmodell formuliert eine Antwort **auf Basis der gefundenen Textstellen**.
-4. **Quellenangaben**  
-   Die relevanten Dokumentstellen werden in der Antwort referenziert, damit du nachlesen kannst.
-
----
-
-## Dokumentbasis
-
-Diese Demo nutzt derzeit (Beispiele – bitte anpassen):
-- **Prüfungsordnung:** *[Titel / Version / Datum]*
-- **Modulhandbuch:** *[Titel / Version / Datum]*
-
-Weitere Dokumente können ergänzt werden, z. B. Merkblätter des Prüfungsamts, FAQs oder Studienordnungen.
-
----
-
-## Was diese Demo gut kann (und was nicht)
-
-**Gut geeignet für**
-- Regelbasierte Fragen mit Fristen, Voraussetzungen, Ausnahmen („unter welchen Bedingungen…“)
-- Modulbezogene Fakten (Prüfungsform, ECTS, Inhalte) aus dem Modulhandbuch
-- Kombinationen über mehrere Dokumente hinweg (PO + MH)
-
-**Grenzen**
-- Wenn in den bereitgestellten Dokumenten keine passende Stelle existiert, kann das System keine belastbare Antwort geben.
-- Die Demo ersetzt keine verbindliche Auskunft (maßgeblich ist der Wortlaut der Quelle).
-
----
-
-## Übertragbarkeit auf KMU
-
-In KMU finden sich ähnliche Dokumenttypen:
-- Arbeitszeit-, Urlaubs- und Krankheitsregelungen
-- Reisekosten- und Spesenrichtlinien
-- QM-/ISO-Dokumentation und Verfahrensanweisungen
-- IT-Sicherheitsrichtlinien, Onboarding-Handbücher
-
-Ein RAG-Assistent macht solche Dokumente per Chat durchsuchbar, reduziert Rückfragen an Fachabteilungen und beschleunigt Onboarding – **mit überprüfbaren Quellen statt „gefühlter“ Antworten**.
-
----
-
-## Datenschutz & verantwortungsvoller Einsatz (kurz)
-
-- Bitte keine personenbezogenen oder sensiblen Daten in die Demo eingeben.
-- Die Antworten sind nur so gut wie die zugrundeliegenden Dokumente und deren Aktualität.
-- Quellenangaben ermöglichen die schnelle Überprüfung im Originaldokument.
+```{r}
+nd.util::nd_popover("hallo", )
+```
