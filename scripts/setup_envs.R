@@ -1,12 +1,15 @@
 # scripts/setup_envs.R
-# dir.create(Sys.getenv("R_LIBS_USER"), recursive = TRUE)
-# .libPaths(new = Sys.getenv("R_LIBS_USER"))
+dir.create(Sys.getenv("R_LIBS_USER"), recursive = TRUE, showWarnings = FALSE)
+.libPaths(new = Sys.getenv("R_LIBS_USER"))
 
 install.packages(
   pkgs = c("renv", "reticulate"),
   repos = "https://packagemanager.posit.co/cran/latest",  
   Ncpus = parallel::detectCores()
 )
+
+renv_library <- renv::paths$library(project = getwd())
+dir.create(renv_library, recursive = TRUE, showWarnings = FALSE)
 
 lockfile <- renv::lockfile_read("renv.lock")
 
@@ -32,4 +35,8 @@ if(python_type == "virtualenv"){
   stop("not a virtualenv")
 }
 
-renv::restore(clean = TRUE, prompt = FALSE)
+renv::restore(
+  library = renv_library,
+  clean = TRUE,
+  prompt = FALSE
+)

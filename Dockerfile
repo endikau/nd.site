@@ -2,6 +2,9 @@
 FROM ghcr.io/endikau/nd_docker-static_serve:latest
 # FROM nd_docker-static_serve:local
 
+ENV R_LIBS_USER=/usr/local/lib/R/site-library
+ENV RENV_PATHS_LIBRARY=/usr/local/lib/R/site-library
+
 WORKDIR /project
 
 # Copy tracked repo contents (build context is streamed via git ls-files).
