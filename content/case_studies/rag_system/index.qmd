@@ -25,6 +25,8 @@ library(tibble)
 library(tidyr)
 library(xml2)
 
+tags <- htmltools::tags
+
 ggplot2::theme_set(`+`(
   ggplot2::theme_minimal(base_size = 14, base_family = "Open Sans"),
   ggplot2::theme(
@@ -134,7 +136,9 @@ Ein klassischer Chatbot wäre für solche Fragen riskant, weil er überzeugend f
   {{{< fa-solid-li icon="quote-left" >}}} **Antwort:** Das Modell formuliert eine Geschäftskundenantwort mit Quellenbezug und klaren Grenzen. {{{< /fa-solid-li >}}}
 {{{< /fa-ul >}}}
 
-### Schritt 1: Die Wissensbasis kuratieren
+## Ablauf der Umsetzung
+
+### Die Wissensbasis kuratieren
 
 Der erste technische Schritt ist unspektakulär, aber entscheidend: Nicht jede Datei im Ordner sollte automatisch Teil des Assistenten werden. Für einen Geschäftskunden-Assistenten sind Produktseiten, Leistungsseiten, Kontaktinformationen und Produktdatenblätter relevant. Pflichtseiten wie Impressum oder Datenschutz sowie Karriereseiten werden bewusst ausgeschlossen, weil sie beim Retrieval sonst irrelevante Treffer erzeugen können.
 
@@ -265,7 +269,7 @@ product_catalog |>
   nd.util::nd_gt_to_html()
 ```
 
-### Schritt 2: Dokumente in suchbare Abschnitte zerlegen
+### Dokumente in suchbare Abschnitte zerlegen
 
 Ein RAG-System schickt nicht komplette PDFs an das Sprachmodell. Stattdessen werden Dokumente in überlappende Abschnitte, sogenannte Chunks, zerlegt. Dadurch kann die Suche präzise einzelne Absätze oder Tabellenbereiche finden, ohne unnötigen Kontext mitzuschleppen.
 
@@ -322,7 +326,7 @@ chunk_summary |>
 
 Die eigentliche Produktivumgebung würde diese Chunks mit Embeddings in einer Vektordatenbank speichern. Für die Fallstudie reicht ein transparenter Blick auf die Logik: Eine Kundenfrage wird in Suchbegriffe bzw. semantische Signale übersetzt, dann werden passende Chunks priorisiert.
 
-### Schritt 3: Retrieval nachvollziehbar machen
+### Retrieval nachvollziehbar machen
 
 Als Beispiel nehmen wir eine Frage, wie sie in Vertrieb oder technischer Projektierung häufig vorkommt:
 
@@ -418,7 +422,7 @@ retrieval_demo |>
 
 Dieser Zwischenschritt ist für Unternehmen besonders wichtig. Ein RAG-Assistent sollte nicht als Blackbox betrieben werden. Wenn eine Antwort falsch oder unvollständig ist, muss klar sein, ob das Problem in der Datenbasis, im Retrieval oder im Antwortprompt liegt.
 
-### Schritt 4: Prompts als Leitplanken definieren
+### Prompts als Leitplanken definieren
 
 Die Prompts sind bei einem B2B-Wissensassistenten nicht nur Stilvorgaben. Sie sind fachliche Leitplanken: Der Assistent soll professionell beraten, aber keine technischen Werte erfinden, keine Lieferzeiten zusagen und keine rechtlich relevanten Aussagen improvisieren.
 
@@ -580,30 +584,80 @@ prompt_titles <- c(
   citation_refine_template = "Citation Refine Template"
 )
 
-for (.prompt_name in names(rag_prompts)) {
-  .prompt_html <- rag_prompts[[.prompt_name]] |>
-    htmltools::htmlEscape() |>
-    as.character() |>
-    stringr::str_replace_all("\n", "<br>")
+.accordion_id <- "rag-prompt-accordion"
 
-  cat("<details class='mb-3'>\n")
-  cat(
-    "<summary><strong>",
-    prompt_titles[[.prompt_name]],
-    "</strong></summary>\n",
-    sep = ""
-  )
-  cat(
-    "<pre><code>",
-    .prompt_html,
-    "</code></pre>\n",
-    sep = ""
-  )
-  cat("</details>\n")
+format_prompt <- function(.prompt) {
+  # .prompt <- rag_prompts[[2]]
+  .prompt |>
+    stringi::stri_split_fixed("\n") |>
+    purrr::flatten_chr() |>
+    (\(..x) {
+      unname(split(..x, cumsum(..x == "")))
+    })() |>
+    purrr::map(stringi::stri_omit_empty) |>
+    purrr::map(\(..x) {
+      purrr::modify_if(
+        .x = ..x,
+        .p = stringi::stri_detect_regex(..x, "^\\{.*\\}$"),
+        .f = \(...x) {
+          stringi::stri_c("<code>", ...x, "</code>")
+        }
+      )
+    }) |>
+    purrr::map_chr(stringi::stri_c, collapse = "\n") |>
+    stringi::stri_c(collapse = "\n\n") |>
+    commonmark::markdown_html() |>
+    htmltools::HTML()
 }
+
+.prompt_accordion <- tags$div(
+  class = "accordion py-0",
+  id = .accordion_id,
+  !!!purrr::imap(names(rag_prompts), function(.prompt_name, .index) {
+    .is_open <- .index == 1
+    .heading_id <- paste0("rag-prompt-heading-", .index)
+    .collapse_id <- paste0("rag-prompt-collapse-", .index)
+
+    tags$div(
+      class = "accordion-item",
+      tags$div(
+        class = "accordion-header",
+        id = .heading_id,
+        tags$button(
+          class = paste(
+            c("accordion-button", if (!.is_open) "collapsed"),
+            collapse = " "
+          ),
+          type = "button",
+          `data-bs-toggle` = "collapse",
+          `data-bs-target` = paste0("#", .collapse_id),
+          `aria-expanded` = tolower(as.character(.is_open)),
+          `aria-controls` = .collapse_id,
+          prompt_titles[[.prompt_name]]
+        )
+      ),
+      tags$div(
+        id = .collapse_id,
+        class = paste(
+          c("accordion-collapse collapse", if (.is_open) "show"),
+          collapse = " "
+        ),
+        `data-bs-parent` = paste0("#", .accordion_id),
+        `aria-labelledby` = .heading_id,
+        tags$div(
+          class = "accordion-body",
+          style = "min-width: 0; overflow-x: hidden;",
+          format_prompt(rag_prompts[[.prompt_name]])
+        )
+      )
+    )
+  })
+)
+
+nd.util::render_raw_html(as.character(.prompt_accordion))
 ```
 
-### Schritt 5: Den RAG-Client konfigurieren
+### Den RAG-Client konfigurieren
 
 Die technische Konfiguration bleibt bewusst schmal: Der Client erhält die kuratierte Prompt-Konfiguration. Die Befüllung der Wissensbasis ist als expliziter Schritt dokumentiert und wird beim Rendern der Fallstudie nicht automatisch ausgeführt. Das verhindert, dass ein Website-Build versehentlich den externen RAG-Service verändert.
 
@@ -661,7 +715,7 @@ ingest_knowledge_base <- function(
 # purrr::map(ingest_jobs$webseiten, rag_client$poll_ingest)
 ```
 
-### Schritt 6: Die Antwort aus Sicht des Geschäftskunden
+### Die Antwort aus Sicht des Geschäftskunden
 
 Aus den Retrieval-Treffern und den Prompt-Regeln entsteht eine Antwort, die fachlich hilft, aber nicht mehr verspricht, als die Quellen hergeben. Für die Beispielanfrage könnte der Assistent so antworten:
 
@@ -723,3 +777,16 @@ Gerade im B2B-Bereich ist diese Grenze wichtig: Ein guter Assistent soll Kunden 
 Die Fallstudie zeigt: Ein RAG-Wissensassistent entsteht nicht dadurch, dass man ein Sprachmodell „auf die Website loslässt“. Entscheidend sind die Zwischenschritte: relevante Quellen kuratieren, Dokumente sinnvoll zerlegen, Retrieval nachvollziehbar machen und Prompts als fachliche Leitplanken definieren.
 
 Für KMU im B2B-Sektor ist dieser Ansatz besonders interessant, weil er vorhandene Wissensbestände nutzbar macht, ohne sofort ein großes Datenprojekt zu starten. Schon eine sauber kuratierte Kombination aus Produktdatenblättern und Website-Inhalten kann ausreichen, um Vertrieb, Service und Projektierung im Tagesgeschäft spürbar zu entlasten.
+
+
+```{r}
+test_rag <- nd.util::rag_client()
+
+ingest_job_id <- test_rag$ingest_url_async(
+  "https://www.tagesschau.de/wirtschaft/finanzen/fed-zinsentscheid-warsh-inflation-trump-100.html"
+)
+
+test_rag$poll_ingest(.job_id = ingest_job_id)
+
+test_rag$chat_stream("Worum geht es in dem Artikel?")
+```

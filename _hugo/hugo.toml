@@ -66,6 +66,12 @@ publishDir = "../_public"
         parent = "case_studies"
         name = "RAG-System"
         url = "/case_studies/rag_system"
+    [[menu.main]]
+        weight = 5
+        identifier = "case_studies-faq_automation"
+        parent = "case_studies"
+        name = "FAQ-Automation"
+        url = "/case_studies/faq_automation"
 
 [module]
     [[module.mounts]]
@@ -89,6 +95,6 @@ defaultContentLanguageInSubdir = false
 [languages]
     [languages.de]
         disabled = false
-        languageCode = "de-DE"
-        languageDirection = "ltr"
-        languageName = "Deutsch"
+        locale = "de-DE"
+        direction = "ltr"
+        label = "Deutsch"
