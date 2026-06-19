@@ -862,18 +862,17 @@ format_response <- function(.response) {
   )
 )
 
-.dialogue_html <- .dialogue_cards |>
-  as.character() |>
-  stringi::stri_replace_all_regex("\\s*\\r?\\n\\s*", "")
+# .dialogue_html <- .dialogue_cards |>
+#   as.character() |>
+#   )
 
-knitr::asis_output(paste(
-  "{{{< raw_html >}}}",
-  "```{=html}",
-  .dialogue_html,
-  "```",
-  "{{{< /raw_html >}}}",
-  sep = "\n"
-))
+nd.util::render_raw_html(
+  # stringi::stri_replace_all_regex(
+  .dialogue_cards,
+  #   pattern = "\\s*\\r?\\n\\s*",
+  #   replacement = ""
+  # )
+)
 ```
 
 
