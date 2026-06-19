@@ -118,7 +118,7 @@ knitr::include_graphics(file.path(
 ))
 ```
 
-### Ausgangslage
+## Ausgangslage
 
 Endikau bietet Fördertechnik, Automatisierung, Retrofit sowie Service und Instandhaltung für Produktions- und Logistikprozesse an. Typische Kundenfragen sind fachlich konkret:
 
@@ -613,6 +613,12 @@ format_prompt <- function(.prompt) {
 .prompt_accordion <- tags$div(
   class = "accordion py-0",
   id = .accordion_id,
+  tags$style(
+    ".accordion .accordion-item .accordion-body p {",
+    "  margin-bottom: 1em;",
+    "  text-indent: 0;",
+    "}"
+  ),
   !!!purrr::imap(names(rag_prompts), function(.prompt_name, .index) {
     .is_open <- .index == 1
     .heading_id <- paste0("rag-prompt-heading-", .index)
@@ -624,14 +630,14 @@ format_prompt <- function(.prompt) {
         class = "accordion-header",
         id = .heading_id,
         tags$button(
-          class = paste(
+          class = str_c(
             c("accordion-button", if (!.is_open) "collapsed"),
             collapse = " "
           ),
           type = "button",
           `data-bs-toggle` = "collapse",
-          `data-bs-target` = paste0("#", .collapse_id),
-          `aria-expanded` = tolower(as.character(.is_open)),
+          `data-bs-target` = str_c("#", .collapse_id),
+          `aria-expanded` = if_else(.is_open, "true", "false"),
           `aria-controls` = .collapse_id,
           prompt_titles[[.prompt_name]]
         )
@@ -662,60 +668,130 @@ nd.util::render_raw_html(as.character(.prompt_accordion))
 Die technische Konfiguration bleibt bewusst schmal: Der Client erhält die kuratierte Prompt-Konfiguration. Die Befüllung der Wissensbasis ist als expliziter Schritt dokumentiert und wird beim Rendern der Fallstudie nicht automatisch ausgeführt. Das verhindert, dass ein Website-Build versehentlich den externen RAG-Service verändert.
 
 ```{r}
-rag_client <- nd.util::rag_client(
-  .system_prompt = rag_prompts$system_prompt,
-  .condense_prompt = rag_prompts$condense_prompt,
-  .context_prompt = rag_prompts$context_prompt,
-  .context_refine_prompt = rag_prompts$context_refine_prompt,
-  .response_prompt = rag_prompts$response_prompt,
-  .citation_qa_template = rag_prompts$citation_qa_template,
-  .citation_refine_template = rag_prompts$citation_refine_template
-)
-
-ingest_knowledge_base <- function(
-  .client = rag_client,
-  .sources = knowledge_base
-) {
-  pdf_jobs <- purrr::map(
-    .sources$datenblaetter,
-    \(.path) {
-      .client$ingest_pdf_async(
-        .pdf_paths = .path,
-        .label = paste(
-          "Produktdatenblatt",
-          tools::file_path_sans_ext(basename(.path))
-        )
-      )
-    }
+if (interactive()) {
+  rag_client <- nd.util::rag_client(
+    .system_prompt = rag_prompts$system_prompt,
+    .condense_prompt = rag_prompts$condense_prompt,
+    .context_prompt = rag_prompts$context_prompt,
+    .context_refine_prompt = rag_prompts$context_refine_prompt,
+    .response_prompt = rag_prompts$response_prompt,
+    .citation_qa_template = rag_prompts$citation_qa_template,
+    .citation_refine_template = rag_prompts$citation_refine_template
   )
 
-  website_jobs <- purrr::map(
-    .sources$webseiten,
-    \(.path) {
-      .client$ingest_html_async(
-        .html = paste(
-          readLines(.path, warn = FALSE, encoding = "UTF-8"),
-          collapse = "\n"
-        ),
-        .name = basename(.path),
-        .label = paste("Webseite", basename(.path))
-      )
-    }
-  )
+  store_cache_path <- fs::path(data_path, "store_cache.json")
 
-  list(
-    datenblaetter = pdf_jobs,
-    webseiten = website_jobs
-  )
+  if (fs::file_exists(store_cache_path)) {
+    rag_client$import_store(.path = store_cache_path)
+  } else {
+    purrr::walk(
+      .x = fs::dir_ls(
+        path = fs::path(data_path, "datenblaetter"),
+        regexp = "\\.pdf$"
+      ),
+      .f = \(.path) {
+        rag_client$ingest_pdf(.path)
+      },
+      .progress = TRUE
+    )
+    rag_client$export_store(.path = store_cache_path)
+  }
 }
-
-# Einmaliger Ingestionslauf, nicht beim Rendern ausführen:
-# ingest_jobs <- ingest_knowledge_base()
-# purrr::map(ingest_jobs$datenblaetter, rag_client$poll_ingest)
-# purrr::map(ingest_jobs$webseiten, rag_client$poll_ingest)
 ```
 
-### Die Antwort aus Sicht des Geschäftskunden
+```{r}
+#| output: asis
+chat_cached <- memoise::memoize(
+  \(.question) {
+    rag_client$chat_stream(.question)
+  },
+  cache = cachem::cache_disk(fs::path(data_path, "cache"))
+)
+
+format_response <- function(.response) {
+  .response <<- .response
+  .source_dict <- .response |>
+    purrr::chuck("sources") |>
+    (\(..x) {
+      rlang::set_names(..x, as.character(purrr::map_int(..x, "i")))
+    })() |>
+    purrr::map(\(.source) {
+      .id <- digest::digest(
+        list(.source, Sys.time(), stats::runif(1)),
+        algo = "crc32c"
+      )
+      htmltools::tagList(
+        tags$a(
+          tabindex = "0",
+          role = "button",
+          # `aria-label` = .title,
+          `data-bs-toggle` = "popover",
+          `data-bs-template-id` = .id,
+          # `data-bs-title` = .title,
+          tags$span(
+            class = " text-primary",
+            nd.util::icon_fa("fa-solid fa-circle-info")
+          )
+        ),
+        tags$template(
+          id = .id,
+          tags$ul(
+            class = "list-group list-group-flush",
+            tags$li(
+              tags$code("Dokument:"),
+              .source[["source_file"]],
+              class = "list-group-item"
+            ),
+            tags$li(
+              tags$code("Seitenzahl:"),
+              stringi::stri_c(.source[["page_numbers"]], collapse = ", "),
+              class = "list-group-item"
+            ),
+            tags$li(
+              tags$code("Auszug:"),
+              .source[["snippet"]],
+              class = "list-group-item"
+            ),
+          )
+        )
+      )
+    })
+
+  .ref_dict <- .response |>
+    purrr::chuck("answer") |>
+    stringi::stri_extract_all_regex("\\[[[:digit:]]+(, [[:digit:]]+)*\\]") |>
+    purrr::flatten_chr() |>
+    rlang::set_names() |>
+    stringr::str_extract_all("[[:digit:]]+") |>
+    purrr::map_chr(\(..x) {
+      ..x |>
+        purrr::map_chr(\(...x) {
+          as.character(purrr::chuck(.source_dict, ...x))
+        }) |>
+        stringi::stri_c(collapse = " ")
+    })
+
+  .response |>
+    purrr::chuck("answer") |>
+    stringi::stri_replace_all_fixed(
+      pattern = names(.ref_dict),
+      replacement = .ref_dict,
+      vectorize_all = FALSE
+    )
+}
+```
+
+```{r}
+nd.util::render_raw_html("Welche Produkte unterstützen Fernwartung?")
+```
+
+```{r}
+chat_cached(.question = "Welche Produkte unterstützen Fernwartung?") |>
+  format_response() |>
+  nd.util::render_raw_html()
+```
+
+## Die Antwort aus Sicht des Geschäftskunden
 
 Aus den Retrieval-Treffern und den Prompt-Regeln entsteht eine Antwort, die fachlich hilft, aber nicht mehr verspricht, als die Quellen hergeben. Für die Beispielanfrage könnte der Assistent so antworten:
 
@@ -731,7 +807,7 @@ Diese Antwort ist bewusst nicht nur „nett formuliert“. Sie erfüllt mehrere 
 - sie nennt fehlende Projektdaten,
 - sie vermeidet Preis-, Lieferzeit- oder Garantieaussagen.
 
-### Was KMU daraus gewinnen
+## Was KMU daraus gewinnen
 
 Für kleine und mittlere Unternehmen ist ein RAG-Assistent vor allem dann nützlich, wenn er in konkrete Arbeitsabläufe eingebettet wird. Typische Einsatzfelder sind:
 
@@ -760,7 +836,7 @@ business_value |>
   nd.util::nd_gt_to_html()
 ```
 
-### Qualitätssicherung und Grenzen
+## Qualitätssicherung und Grenzen
 
 Ein RAG-System ersetzt kein Engineering, keinen Vertrieb und keine Serviceorganisation. Es beschleunigt den Zugriff auf vorhandenes Wissen. Damit das im Alltag belastbar bleibt, braucht der Assistent klare Kontrollpunkte:
 
@@ -772,21 +848,8 @@ Ein RAG-System ersetzt kein Engineering, keinen Vertrieb und keine Serviceorgani
 
 Gerade im B2B-Bereich ist diese Grenze wichtig: Ein guter Assistent soll Kunden kompetent führen, aber bei projektspezifischen Auslegungen bewusst zur Klärung überleiten. Seine Stärke liegt nicht darin, menschliche Expertise zu ersetzen, sondern sie schneller an die richtige Stelle zu bringen.
 
-### Fazit
+## Fazit
 
 Die Fallstudie zeigt: Ein RAG-Wissensassistent entsteht nicht dadurch, dass man ein Sprachmodell „auf die Website loslässt“. Entscheidend sind die Zwischenschritte: relevante Quellen kuratieren, Dokumente sinnvoll zerlegen, Retrieval nachvollziehbar machen und Prompts als fachliche Leitplanken definieren.
 
 Für KMU im B2B-Sektor ist dieser Ansatz besonders interessant, weil er vorhandene Wissensbestände nutzbar macht, ohne sofort ein großes Datenprojekt zu starten. Schon eine sauber kuratierte Kombination aus Produktdatenblättern und Website-Inhalten kann ausreichen, um Vertrieb, Service und Projektierung im Tagesgeschäft spürbar zu entlasten.
-
-
-```{r}
-test_rag <- nd.util::rag_client()
-
-ingest_job_id <- test_rag$ingest_url_async(
-  "https://www.tagesschau.de/wirtschaft/finanzen/fed-zinsentscheid-warsh-inflation-trump-100.html"
-)
-
-test_rag$poll_ingest(.job_id = ingest_job_id)
-
-test_rag$chat_stream("Worum geht es in dem Artikel?")
-```

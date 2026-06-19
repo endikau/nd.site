@@ -25,3 +25,4 @@ _public/
 .npmrc
 venv/
 _hugo/themes/endikau_theme/assets.back/
+.vdoc.*
