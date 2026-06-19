@@ -771,25 +771,111 @@ format_response <- function(.response) {
         stringi::stri_c(collapse = " ")
     })
 
-  .response |>
+  .response_html <- .response |>
     purrr::chuck("answer") |>
     stringi::stri_replace_all_fixed(
       pattern = names(.ref_dict),
       replacement = .ref_dict,
       vectorize_all = FALSE
-    )
+    ) |>
+    commonmark::markdown_html() |>
+    htmltools::HTML()
+
+  return(.response_html)
 }
 ```
 
 ```{r}
-nd.util::render_raw_html("Welche Produkte unterstützen Fernwartung?")
+#| output: asis
+.dialogue_cards <- htmltools::tagList(
+  htmltools::tags$style(
+    htmltools::HTML(paste(
+      ".nd-article .card-body.rag-dialogue-card-body > p {",
+      "  margin-top: 0;",
+      "  margin-bottom: 1rem;",
+      "  text-indent: 0;",
+      "}",
+      ".nd-article .card-body.rag-dialogue-card-body > p:last-child {",
+      "  margin-bottom: 0;",
+      "  padding-bottom: 0;",
+      "}",
+      sep = "\n"
+    ))
+  ),
+  htmltools::tags$div(
+    class = "d-flex justify-content-start",
+    htmltools::tags$div(
+      class = "card mb-3 w-100 flex-row align-items-center",
+      style = "max-width: 540px;",
+      htmltools::tags$div(
+        class = paste(
+          "d-flex align-items-center justify-content-center",
+          "align-self-stretch flex-shrink-0 bg-primary rounded-start"
+        ),
+        style = paste(
+          "padding-left: var(--bs-card-spacer-y);",
+          "padding-right: var(--bs-card-spacer-y);"
+        ),
+        htmltools::tags$i(class = "fa-solid fa-user fa-2xl text-white")
+      ),
+      htmltools::tags$div(
+        class = "card-body rag-dialogue-card-body flex-grow-1",
+        style = "min-width: 0;",
+        htmltools::tags$h5(
+          class = "card-title",
+          "Frage"
+        ),
+        htmltools::tags$p(
+          "Welche Ihrer Produkte unterstützen Fernwartung?"
+        )
+      )
+    )
+  ),
+  htmltools::tags$div(
+    class = "d-flex justify-content-end",
+    htmltools::tags$div(
+      class = "card mb-3 w-100 flex-row align-items-center",
+      style = "max-width: 540px;",
+      htmltools::tags$div(
+        class = "card-body rag-dialogue-card-body flex-grow-1",
+        style = "min-width: 0;",
+        htmltools::tags$h5(
+          class = "card-title",
+          "Antwort"
+        ),
+        format_response(chat_cached(
+          .question = "Welche Ihrer Produkte unterstützen Fernwartung?"
+        ))
+      ),
+      htmltools::tags$div(
+        class = paste(
+          "d-flex align-items-center justify-content-center",
+          "align-self-stretch flex-shrink-0 bg-primary rounded-end"
+        ),
+        style = paste(
+          "padding-left: var(--bs-card-spacer-y);",
+          "padding-right: var(--bs-card-spacer-y);"
+        ),
+        htmltools::tags$i(class = "fa-solid fa-robot fa-2xl text-white")
+      )
+    )
+  )
+)
+
+.dialogue_html <- .dialogue_cards |>
+  as.character() |>
+  stringi::stri_replace_all_regex("\\s*\\r?\\n\\s*", "")
+
+knitr::asis_output(paste(
+  "{{{< raw_html >}}}",
+  "```{=html}",
+  .dialogue_html,
+  "```",
+  "{{{< /raw_html >}}}",
+  sep = "\n"
+))
 ```
 
-```{r}
-chat_cached(.question = "Welche Produkte unterstützen Fernwartung?") |>
-  format_response() |>
-  nd.util::render_raw_html()
-```
 
 ## Die Antwort aus Sicht des Geschäftskunden
 
