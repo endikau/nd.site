@@ -868,7 +868,7 @@ format_response <- function(.response) {
 
 nd.util::render_raw_html(
   # stringi::stri_replace_all_regex(
-  .dialogue_cards,
+  .dialogue_cards
   #   pattern = "\\s*\\r?\\n\\s*",
   #   replacement = ""
   # )
