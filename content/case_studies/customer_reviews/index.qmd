@@ -9,6 +9,7 @@ execute:
   echo: false
   message: false
   cache: false
+  eval: false # <- fix stm
 ---
 
 
@@ -273,8 +274,6 @@ review_tokens <- reviews |>
 review_tokens_clean <- review_tokens |>
   filter(!str_detect(Wort, "^\\d+$|^[sa]\\d+$|^[0-9]+[a-z]*$")) |>
   anti_join(custom_stopwords, by = "Wort")
-
-
 ```
 
 ```{r}
@@ -527,7 +526,6 @@ sentiment_summary <- review_summary |>
     perc_neutral = neutral_reviews / total_reviews * 100
   )
 
-
 # sentiment_summary |>
 #   select(perc_positive, perc_negative, perc_neutral) |>
 #   pivot_longer(everything(), names_to = "sentiment", values_to = "percent") |>
@@ -553,7 +551,6 @@ sentiment_summary <- review_summary |>
 #     legend.title = ggplot2::element_blank(),
 #     legend.text = ggplot2::element_text(size = 12)
 #   )
-
 ```
 
 
@@ -785,7 +782,6 @@ asbs_plot <-
   )
 
 asbs_plot
-
 ```
 
 
@@ -912,6 +908,7 @@ docs_worst <- tokens_for_stm |>
   summarise(text = paste(Wort, collapse = " "), .groups = "drop")
 
 meta_worst <- reviews |>
+
   filter(Produkttyp == "Kopfhörer", ID %in% docs_worst$ID) |>
   mutate(
     Bewertung = as.factor(Bewertung),
@@ -947,7 +944,6 @@ stm_model <- stm(
   verbose = FALSE,
   seed = 123
 )
-
 ```
 
 
@@ -1055,7 +1051,6 @@ if (interactive()) {
 
 
 topic_doc_distr
-
 ```
 
 
