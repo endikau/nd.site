@@ -10,7 +10,7 @@ execute:
   warning: false
   message: false
   cache: false
-  freeze: true
+  freeze: auto
 engine: knitr
 knitr:
   opts_chunk:

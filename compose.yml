@@ -1,23 +1,10 @@
 services:
   static_serve:
-    container_name: nd_site-static_serve
-    image: ghcr.io/endikau/nd_site-static_serve:latest
-    # image: nd_site-static_serve:local
+    image: ghcr.io/endikau/nd_site-static_serve:${ND_SITE_TAG:-latest}
+    restart: unless-stopped
     ports:
-      - 12348:8080
-    
-    # For live-mount development, uncomment the volume below.
-    # volumes:
-    #   - .:/project
-    # command: |
-    #   quarto render && exit 0
-  # static_serve:
-  #   container_name: static_serve
-  #   image: joseluisq/static-web-server:2-alpine
-  #   restart: unless-stopped
-  #   ports: 
-  #     - 12345:80
-  #   environment:
-  #     - SERVER_ROOT=/var/public
-  #   volumes:
-  #     - ./_public:/var/public:ro
+      - "12348:8080"
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"

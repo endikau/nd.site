@@ -3,6 +3,10 @@ name: Build and publish Docker image
 on:
   push:
     branches: [ main ]
+  workflow_dispatch:
+
+env:
+  RUNTIME_TAG: 4.6.0-py3.12.12-v2
 
 jobs:
   build-and-push:
@@ -12,9 +16,6 @@ jobs:
     permissions:
       contents: read
       packages: write   
-
-    env:
-      GITHUB_PAT: ${{ secrets.ND_ACTIONS_READ_TOKEN }}
 
     steps:
       - name: Check out code
@@ -37,7 +38,7 @@ jobs:
 
       - name: Build and push image (tracked files only)
         env:
-          GITHUB_PAT: ${{ secrets.GITHUB_PAT }}
+          GITHUB_PAT: ${{ secrets.ND_ACTIONS_READ_TOKEN }}
         run: |
           set -euo pipefail
 
@@ -49,10 +50,12 @@ jobs:
           git ls-files -z | tar --null -T - -cf - | docker buildx build \
             --secret id=npmrc,src=/tmp/.npmrc \
             "${secret_args[@]}" \
+            --build-arg RUNTIME_TAG="${RUNTIME_TAG}" \
             --cache-from type=gha \
             --cache-to type=gha,mode=max \
             -f Dockerfile \
             -t ghcr.io/${{ github.repository_owner }}/nd_site-static_serve:latest \
+            -t ghcr.io/${{ github.repository_owner }}/nd_site-static_serve:sha-${{ github.sha }} \
             --push \
             -
         shell: bash

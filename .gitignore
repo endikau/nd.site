@@ -10,6 +10,7 @@ content/**/*.md
 public/
 public_serve/
 content/**/*_cache/
+!content/**/rag_chat_cache/
 content/**/index.markdown_strict_files/
 content/**/index_files/libs/
 **/*.quarto_ipynb

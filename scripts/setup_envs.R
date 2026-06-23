@@ -1,42 +1,21 @@
-# scripts/setup_envs.R
-dir.create(Sys.getenv("R_LIBS_USER"), recursive = TRUE, showWarnings = FALSE)
-.libPaths(new = Sys.getenv("R_LIBS_USER"))
-
-install.packages(
-  pkgs = c("renv", "reticulate"),
-  repos = "https://packagemanager.posit.co/cran/latest",  
-  Ncpus = parallel::detectCores()
-)
-
-renv_library <- renv::paths$library(project = getwd())
-dir.create(renv_library, recursive = TRUE, showWarnings = FALSE)
+options(renv.consent = TRUE)
 
 lockfile <- renv::lockfile_read("renv.lock")
+locked_r_version <- lockfile[["R"]][["Version"]]
 
-python_version <- lockfile[["Python"]][["Version"]]
-python_type <- lockfile[["Python"]][["Type"]]
-python_name <- lockfile[["Python"]][["Name"]]
-
-if(!is.null(python_version)){
-  python_exe <- reticulate::install_python(version = python_version)
-}
-
-if(python_type == "virtualenv"){
-  if(reticulate::virtualenv_exists(python_name)){
-    reticulate::virtualenv_remove(python_name, confirm = FALSE)
-  }
-  python_env <- reticulate::virtualenv_create(
-    envname = python_name, 
-    python = python_exe
+if (
+  !is.null(locked_r_version) &&
+  !identical(as.character(getRversion()), locked_r_version)
+) {
+  warning(
+    "R version mismatch: image provides ",
+    getRversion(),
+    " but renv.lock requires ",
+    locked_r_version,
+    ". Continuing with the image R version.",
+    call. = FALSE,
+    immediate. = TRUE
   )
-  python_exe <- reticulate::virtualenv_python(envname = python_env)
-  renv::use_python(python = python_exe, type = "virtualenv")
-}else{
-  stop("not a virtualenv")
 }
 
-renv::restore(
-  library = renv_library,
-  clean = TRUE,
-  prompt = FALSE
-)
+renv::restore(clean = TRUE, prompt = FALSE)
