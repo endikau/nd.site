@@ -9,7 +9,6 @@ execute:
   echo: false
   message: false
   cache: false
-  eval: false # <- fix stm
 ---
 
 

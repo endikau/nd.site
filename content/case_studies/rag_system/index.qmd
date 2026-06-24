@@ -432,15 +432,22 @@ pipeline_trace_table |>
 # Bootstrap-Card mit list-group statt einer gt-Tabelle.
 trace_field <- function(.label, .value) {
   tags$li(
-    class = "list-group-item",
-    tags$code(paste0(.label, ":")),
-    " ",
-    .value
+    tags$code(stringi::stri_c(.label, ":")),
+    .value,
+    class = "list-group-item"
   )
 }
 
 trace_cards <- retrieval_trace_table |>
-  purrr::pmap(function(Rang, Score, Quelle, Abschnitt, Entscheidung, Grund, Auszug) {
+  purrr::pmap(function(
+    Rang,
+    Score,
+    Quelle,
+    Abschnitt,
+    Entscheidung,
+    Grund,
+    Auszug
+  ) {
     .kept <- Entscheidung == "Behalten"
     tags$div(
       class = paste0(
@@ -454,7 +461,10 @@ trace_cards <- retrieval_trace_table |>
         trace_field(
           "Entscheidung",
           tags$span(
-            class = paste0("badge ", if (.kept) "bg-success" else "bg-secondary"),
+            class = paste0(
+              "badge ",
+              if (.kept) "bg-success" else "bg-secondary"
+            ),
             Entscheidung
           )
         ),
