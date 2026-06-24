@@ -19,6 +19,16 @@ Uses a streamed git context, so only tracked files are sent to Docker.
 
 Result: `nd_site-static_serve:local`.
 
+## Set up local R/Python environments
+For non-Docker rendering, run:
+
+```bash
+Rscript scripts/setup_envs.R
+```
+
+This restores R packages with renv, creates the Python virtualenv recorded in
+`renv.lock`, and installs `requirements.txt`.
+
 ## Render locally
 Run the rendered site:
 

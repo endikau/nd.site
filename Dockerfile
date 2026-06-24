@@ -17,17 +17,20 @@ RUN --mount=type=cache,target=/root/.cache/R/renv \
     if [ -s /run/secrets/github_pat ]; then \
       export GITHUB_PAT="$(cat /run/secrets/github_pat)"; \
     fi; \
-    Rscript scripts/setup_envs.R
+    ND_SETUP_ENVS=R Rscript scripts/setup_envs.R
 
 
 FROM ghcr.io/endikau/nd_docker-runtime:${RUNTIME_TAG} AS python-deps
 
-COPY requirements.txt /tmp/requirements.txt
+WORKDIR /project
+
+COPY renv.lock requirements.txt ./
+COPY scripts/setup_envs.R scripts/setup_envs.R
 
 RUN --mount=type=cache,target=/root/.cache/pip \
-    python -m venv /opt/nd/venv \
- && /opt/nd/venv/bin/python -m pip install --upgrade pip \
- && /opt/nd/venv/bin/python -m pip install -r /tmp/requirements.txt
+    ND_SETUP_ENVS=PYTHON \
+    ND_PYTHON_VENV=/opt/nd/venv \
+    Rscript scripts/setup_envs.R
 
 
 FROM ghcr.io/endikau/nd_docker-runtime:${RUNTIME_TAG} AS node-deps
