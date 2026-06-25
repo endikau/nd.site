@@ -9,7 +9,7 @@ execute:
   echo: false
   warning: false
   message: false
-  cache: true
+  cache: false
 ---
 
 ```{r}
@@ -195,7 +195,9 @@ make_accordion <- function(.items, .id, .open_first = TRUE) {
     class = "accordion py-0",
     id = .id,
     tags$style(htmltools::HTML(stringi::stri_c(
-      "#", .id, " .accordion-body p { margin-bottom: 1em; text-indent: 0; }"
+      "#",
+      .id,
+      " .accordion-body p { margin-bottom: 1em; text-indent: 0; }"
     ))),
     !!!purrr::map2(.items, seq_along(.items), function(.item, .index) {
       .is_open <- .open_first && .index == 1
@@ -310,10 +312,10 @@ Wie diese Zerlegung konkret aussieht, zeigt der direkte Vergleich am RF-500-Date
 # Document-Store-Einträge einmalig exportieren und cachen; danach offline nutzbar.
 documents_cache_path <- fs::path(data_path, "rag_documents_cache.rds")
 rag_documents <- if (fs::file_exists(documents_cache_path)) {
-  readRDS(documents_cache_path)
+  readr::read_rds(documents_cache_path)
 } else {
   .docs <- rag_client$export_documents()$documents
-  saveRDS(.docs, documents_cache_path)
+  readr::write_rds(.docs, documents_cache_path)
   .docs
 }
 
@@ -327,7 +329,9 @@ doc_name <- stringi::stri_replace_first_regex(
   ""
 )
 pdf_path <- fs::path(
-  data_path, "datenblaetter", "KF_RF500_Datenblatt_Detailed.pdf"
+  data_path,
+  "datenblaetter",
+  "KF_RF500_Datenblatt_Detailed.pdf"
 )
 
 # Einen Ausschnitt des Datenblatts (Region in PDF-Punkten) als PNG rendern und
@@ -382,7 +386,11 @@ make_comparison <- function(.chunk, .box, .name) {
           class = "list-group list-group-flush",
           tags$li(tags$code("Dokument:"), doc_name, class = "list-group-item"),
           tags$li(tags$code("Seite:"), .page, class = "list-group-item"),
-          tags$li(tags$code("Überschrift:"), .heading, class = "list-group-item"),
+          tags$li(
+            tags$code("Überschrift:"),
+            .heading,
+            class = "list-group-item"
+          ),
           tags$li(tags$code("Text:"), .chunk$text, class = "list-group-item")
         )
       )

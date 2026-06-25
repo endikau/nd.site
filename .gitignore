@@ -27,3 +27,4 @@ _public/
 venv/
 _hugo/themes/endikau_theme/assets.back/
 .vdoc.*
+**/index_files/execute-results/
