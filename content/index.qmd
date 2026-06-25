@@ -107,14 +107,8 @@ readr::read_rds(here::here("content", "data", "wordcloud_data.rds")) |>
         {{{< bs_card card_img_src="/assets/img/network_analysis_cover.svg" card_img_bg="#9c9c9c" card_title="Netzwerkanalyse" card_text="Eine Netzwerkanalyse basierend auf der ORG-Entität: Justus Liebig Universität. …" card_href="/case_studies/network_analysis" >}}} 
       {{{< /div >}}}
       {{{< div class="m-col-12 m-col-md-6 m-col-xl-4 pb-md-2" >}}}
-        {{{< bs_card card_img_src="/assets/img/ner_cover.svg" card_img_bg="#9c9c9c" card_title="RAG-System" card_text="Dies ist ein Typoblindtext. An ihm kann man sehen, ob alle Buchstaben da sind und wie sie aussehen. Manchmal benutzt man Worte wie Hamburgefonts, Rafgenduks oder Handgloves, um Schriften zu testen." card_href="/case_studies/rag_system" >}}}
-      {{{< /div >}}} 
-      {{{< div class="m-col-12 m-col-md-6 m-col-xl-4 pb-md-2" >}}}
-        {{{< bs_card card_img_src="/assets/img/ner_cover.svg" card_img_bg="#9c9c9c" card_title="RAG-System" card_text="Dies ist ein Typoblindtext. An ihm kann man sehen, ob alle Buchstaben da sind und wie sie aussehen. Manchmal benutzt man Worte wie Hamburgefonts, Rafgenduks oder Handgloves, um Schriften zu testen." card_href="/case_studies/rag_system" >}}}
-      {{{< /div >}}} 
-      {{{< div class="m-col-12 m-col-md-6 m-col-xl-4 pb-md-2" >}}}
-        {{{< bs_card card_img_src="/assets/img/ner_cover.svg" card_img_bg="#9c9c9c" card_title="RAG-System" card_text="Dies ist ein Typoblindtext. An ihm kann man sehen, ob alle Buchstaben da sind und wie sie aussehen. Manchmal benutzt man Worte wie Hamburgefonts, Rafgenduks oder Handgloves, um Schriften zu testen." card_href="/case_studies/rag_system" >}}}
-      {{{< /div >}}} 
+        {{{< bs_card_emoji emoji_code="1f916" emoji_bg="#9c9c9c" card_title="RAG-System" card_text="Diese Fallstudie zeigt Schritt für Schritt, wie aus unternehmensspezifischen Dokumenten – Produktdatenblättern und Website-Inhalten – ein RAG-Wissensassistent entsteht, der Fragen ausschließlich auf Basis belegbarer Quellen beantwortet." card_href="/case_studies/rag_system" >}}}
+      {{{< /div >}}}
     {{{< /div >}}}
   {{{< /div >}}}
 {{{< /div >}}}
