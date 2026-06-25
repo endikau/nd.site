@@ -20,6 +20,9 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v4
+        with:
+          lfs: true   # LFS-Dateien (content/.../data/*) ins Working-Tree smudgen,
+                      # bevor `git ls-files | tar` den Docker-Kontext baut
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
