@@ -239,6 +239,50 @@ make_accordion <- function(.items, .id, .open_first = TRUE) {
     })
   )
 }
+
+# Stil für die Frage-/Antwort-Karten (wird einmal pro Seite injiziert).
+dialogue_style <- tags$style(
+  htmltools::HTML(paste(
+    ".nd-article .card-body.rag-dialogue-card-body > p {",
+    "  margin-top: 0;",
+    "  margin-bottom: 1rem;",
+    "  text-indent: 0;",
+    "}",
+    ".nd-article .card-body.rag-dialogue-card-body > p:last-of-type {",
+    "  margin-bottom: 0;",
+    "  padding-bottom: 0;",
+    "}",
+    sep = "\n"
+  ))
+)
+
+# Eine Nutzerfrage als linksbündige „Frage"-Karte.
+make_question_box <- function(.question) {
+  tags$div(
+    class = "d-flex justify-content-start",
+    tags$div(
+      class = "card mb-3 w-100 flex-row align-items-center",
+      style = "max-width: 540px;",
+      tags$div(
+        class = paste(
+          "d-flex align-items-center justify-content-center",
+          "align-self-stretch flex-shrink-0 bg-primary rounded-start"
+        ),
+        style = paste(
+          "padding-left: var(--bs-card-spacer-y);",
+          "padding-right: var(--bs-card-spacer-y);"
+        ),
+        tags$i(class = "fa-solid fa-user fa-2xl text-white")
+      ),
+      tags$div(
+        class = "card-body rag-dialogue-card-body flex-grow-1",
+        style = "min-width: 0;",
+        tags$h5(class = "card-title", "Frage"),
+        tags$p(.question)
+      )
+    )
+  )
+}
 ```
 
 ## Warum Retrieval-Augmented Generation?
@@ -433,7 +477,75 @@ nd.util::render_raw_html(make_accordion(chunk_examples, "rag-chunk-accordion"))
 
 Damit die Suche nicht auf wörtliche Übereinstimmungen angewiesen ist, wird jeder von Docling erzeugte Chunk durch ein Embedding-Modell in einen Vektor übersetzt – eine Zahlenfolge, die seine Bedeutung abbildet. Inhaltlich ähnliche Abschnitte liegen in diesem Vektorraum nahe beieinander, auch wenn sie unterschiedliche Wörter verwenden. Genau das macht die spätere Suche semantisch: „Behälter zwischen zwei Ebenen heben" kann die Hubstation finden, ohne dass das Wort „Hubstation" in der Frage vorkommt.
 
-Diese Vektoren werden zusammen mit Text und Metadaten in einer Vektordatenbank abgelegt – hier Qdrant. Bei einer Kundenfrage wird die Frage mit demselben Modell eingebettet; die Datenbank liefert anschließend die Chunks mit den ähnlichsten Vektoren zurück, jeweils mit einem Ähnlichkeitswert (Score). Dieser Score ist die Grundlage für die nächste Stufe, in der die Treffer gefiltert und für die Antwort ausgewählt werden.
+Diese Vektoren werden zusammen mit Text und Metadaten in einer Vektordatenbank abgelegt – hier Qdrant. Bei einer Kundenfrage wird die Frage mit demselben Modell eingebettet; die Datenbank liefert anschließend die Chunks mit den ähnlichsten Vektoren zurück, jeweils mit einem Ähnlichkeitswert (Score). Dieser Score ist später die Grundlage dafür, die Treffer zu filtern und für die Antwort auszuwählen.
+
+#### Prompts als Leitplanken definieren
+
+Die Prompts sind bei einem B2B-Wissensassistenten nicht nur Stilvorgaben. Sie sind fachliche Leitplanken: Der Assistent soll professionell beraten, aber keine technischen Werte erfinden, keine Lieferzeiten zusagen und keine rechtlich relevanten Aussagen improvisieren.
+
+Die explizite Pipeline nutzt nur Prompts, die einer konkreten Stufe zugeordnet sind: Der Condense Prompt formuliert Folgefragen für das Retrieval um. System- und Response-Regeln werden in die effektiven Citation-Templates eingebaut. Die vollständigen Prompt-Texte sind im Fallstudiencode hinterlegt und werden mit Testfragen, Grenzfällen und echten Support- oder Vertriebsdialogen iterativ geprüft.
+
+```{r}
+#| output: asis
+prompt_titles <- c(
+  system_prompt = "System Prompt",
+  condense_prompt = "Condense Prompt",
+  response_prompt = "Response Prompt",
+  citation_qa_template = "Citation QA Template",
+  citation_refine_template = "Citation Refine Template"
+)
+
+# Aufgabe je Komponente – wird in den Accordion-Titel integriert.
+prompt_tasks <- c(
+  system_prompt = "Rolle, Tonalität und harte Grenzen festlegen",
+  condense_prompt = "Nachfragen in eigenständige Suchfragen umformulieren",
+  response_prompt = "Fachliche Antwortregeln ergänzen",
+  citation_qa_template = "Erste Antwort aus nummerierten Quellen erzeugen",
+  citation_refine_template = "Weitere Kontextblöcke kontrolliert einarbeiten"
+)
+
+format_prompt <- function(.prompt) {
+  # .prompt <- rag_prompts[[2]]
+  .prompt |>
+    # Trennzeichen-Zeilen (------) isolieren, damit Markdown sie als <hr>
+    # rendert und nicht die Vorzeile zur Setext-Überschrift (H2) macht.
+    stringi::stri_replace_all_regex("(?m)^(-{3,})$", "\n$1\n") |>
+    stringi::stri_split_fixed("\n") |>
+    purrr::flatten_chr() |>
+    (\(..x) {
+      unname(split(..x, cumsum(..x == "")))
+    })() |>
+    purrr::map(stringi::stri_omit_empty) |>
+    purrr::map(\(..x) {
+      purrr::modify_if(
+        .x = ..x,
+        .p = stringi::stri_detect_regex(..x, "^\\{.*\\}$"),
+        .f = \(...x) {
+          stringi::stri_c("<code>", ...x, "</code>")
+        }
+      )
+    }) |>
+    purrr::map_chr(stringi::stri_c, collapse = "\n") |>
+    stringi::stri_c(collapse = "\n\n") |>
+    commonmark::markdown_html() |>
+    htmltools::HTML()
+}
+
+prompt_items <- purrr::map(names(rag_prompts), function(.name) {
+  list(
+    title = tags$span(
+      tags$strong(prompt_titles[[.name]]),
+      " – ",
+      prompt_tasks[[.name]]
+    ),
+    body = format_prompt(rag_prompts[[.name]])
+  )
+})
+
+nd.util::render_raw_html(make_accordion(prompt_items, "rag-prompt-accordion"))
+```
+
+#### Retrieval nachvollziehbar machen
 
 ```{r}
 # Beispielanfragen, an denen sich die Funktionsweise illustrieren lässt.
@@ -459,8 +571,6 @@ chat_cached <- memoise::memoize(
 # Antworten, Quellen und Traces aus dem Cache bedient.
 rag_results <- purrr::map(rag_queries, chat_cached)
 ```
-
-#### Retrieval nachvollziehbar machen
 
 ```{r}
 trace_result <- rag_results$worked_example
@@ -570,11 +680,13 @@ pipeline_trace_table <- tibble::tibble(
 n_total <- retrieval_trace$result_count
 n_kept <- filtering_trace$accepted_count
 n_rejected <- filtering_trace$rejected_count
+
 n_docs <- filtering_trace$accepted |>
   purrr::map_chr("source_file") |>
   clean_source() |>
   unique() |>
   length()
+
 reason_summary <- rejected_reason |>
   label_reason() |>
   table() |>
@@ -584,7 +696,13 @@ reason_summary <- rejected_reason |>
 
 Als konkretes Beispiel dient eine tatsächlich ausgeführte Anfrage – eine typische, anforderungsorientierte Vertriebsfrage:
 
-> `r trace_result$trace$input$query`
+```{r}
+#| output: asis
+nd.util::render_raw_html(tags$div(
+  dialogue_style,
+  make_question_box(trace_result$trace$input$query)
+))
+```
 
 Der Service arbeitet dabei nicht mit einer vereinfachten Schlagwortzählung. Die Anfrage wird als Embedding an Qdrant übergeben. Zunächst werden zwölf semantisch ähnliche Chunks geladen. Danach reduziert eine explizite Filterstufe den Kontext: Treffer unterhalb des Mindest-Scores werden entfernt, ein einzelnes Dokument darf höchstens drei Chunks beitragen, Textduplikate werden verworfen und maximal sechs Chunks gelangen in die Antwortgenerierung.
 
@@ -612,148 +730,91 @@ trace_field <- function(.label, .value) {
   )
 }
 
-trace_cards <- retrieval_trace_table |>
-  purrr::pmap(function(
-    Rang,
-    Score,
-    Quelle,
-    Abschnitt,
-    Entscheidung,
-    Grund,
-    Auszug
-  ) {
-    # .kept <- Entscheidung == "Behalten"
-    tags$div(
-      class = paste0(
-        "card mb-4"
-        # if (.kept) "border-success" else "border-secondary"
-      ),
-      tags$ul(
-        class = "list-group list-group-flush",
-        tags$li(
-          class = "list-group-item py-0",
+# Eine Karte je Treffer. Der Verwerfungsgrund wird nur bei Bedarf gezeigt.
+make_trace_card <- function(
+  .Rang,
+  .Score,
+  .Quelle,
+  .Abschnitt,
+  .Grund,
+  .Auszug,
+  .show_reason = FALSE
+) {
+  tags$div(
+    class = "card mb-3",
+    tags$ul(
+      class = "list-group list-group-flush",
+      tags$li(
+        class = "list-group-item py-0",
+        tags$div(
+          class = "grid",
           tags$div(
-            class = "grid",
-            tags$div(
-              class = "g-col-6",
-              style = stringi::stri_c(
-                "border-right: var(--bs-list-group-border-width) ",
-                "solid var(--bs-list-group-border-color);",
-                "padding: var(--bs-list-group-item-padding-y) 0;"
-              ),
-              tags$code("Rang:"),
-              Rang,
+            class = "g-col-6",
+            style = stringi::stri_c(
+              "border-right: var(--bs-list-group-border-width) ",
+              "solid var(--bs-list-group-border-color);",
+              "padding: var(--bs-list-group-item-padding-y) 0;"
             ),
-            tags$div(
-              class = "g-col-6",
-              style = "padding: var(--bs-list-group-item-padding-y) 0;",
-              tags$code("Score:"),
-              sprintf("%.3f", Score)
-            )
+            tags$code("Rang:"),
+            .Rang
           ),
-          # "Rang",
-          # stringi::stri_c(Rang, " (Score ", sprintf("%.3f", Score), ")")
-        ),
-        # trace_field(
-        #   "Entscheidung",
-        #   tags$span(
-        #     class = paste0(
-        #       "badge ",
-        #       if (.kept) "bg-success" else "bg-secondary"
-        #     ),
-        #     Entscheidung
-        #   )
-        # ),
-        # trace_field("Grund", Grund),
-        trace_field("Quelle", Quelle),
-        trace_field("Abschnitt", Abschnitt),
-        trace_field("Auszug", Auszug)
-      )
+          tags$div(
+            class = "g-col-6",
+            style = "padding: var(--bs-list-group-item-padding-y) 0;",
+            tags$code("Score:"),
+            sprintf("%.3f", .Score)
+          )
+        )
+      ),
+      trace_field("Quelle", .Quelle),
+      trace_field("Abschnitt", .Abschnitt),
+      if (.show_reason) trace_field("Grund", .Grund),
+      trace_field("Auszug", .Auszug)
     )
-  })
+  )
+}
+
+# Karten für eine Treffergruppe (genutzt / verworfen) erzeugen.
+make_trace_cards <- function(.df, .show_reason = FALSE) {
+  purrr::pmap(
+    .df,
+    function(Rang, Score, Quelle, Abschnitt, Entscheidung, Grund, Auszug) {
+      make_trace_card(
+        Rang,
+        Score,
+        Quelle,
+        Abschnitt,
+        Grund,
+        Auszug,
+        .show_reason = .show_reason
+      )
+    }
+  )
+}
+
+kept_df <- dplyr::filter(retrieval_trace_table, Entscheidung == "Behalten")
+rejected_df <- dplyr::filter(retrieval_trace_table, Entscheidung == "Verworfen")
+
+trace_items <- list(
+  list(
+    title = stringi::stri_c("Genutzte Quellen (", nrow(kept_df), ")"),
+    body = tags$div(make_trace_cards(kept_df, .show_reason = FALSE))
+  ),
+  list(
+    title = stringi::stri_c("Verworfene Quellen (", nrow(rejected_df), ")"),
+    body = tags$div(make_trace_cards(rejected_df, .show_reason = TRUE))
+  )
+)
 
 nd.util::render_raw_html(tags$div(
   tags$p(class = "fw-bold mb-2", "Embedding-Treffer und Filterentscheidungen"),
-  trace_cards
+  make_accordion(trace_items, "rag-trace-accordion")
 ))
 ```
 
 Für diese Anfrage wurden `r n_kept` der `r n_total` Treffer in den Antwortkontext übernommen. Die übrigen `r n_rejected` Kandidaten wurden nachvollziehbar verworfen (`r reason_summary`). Bemerkenswert ist, dass die ausgewählten Treffer aus `r n_docs` verschiedenen Dokumenten stammen. Der Assistent wägt also mehrere Datenblätter gegeneinander ab, statt nur ein einzelnes Dokument wiederzugeben. Der Trace enthält außerdem die Rohtexte, Seitenzahlen und Überschriften jedes Treffers sowie getrennte Laufzeiten für Query-Rewrite, Retrieval, Filterung, Citation-Chunking und Generierung.
 
 Dieser Zwischenschritt ist für Unternehmen besonders wichtig. Ein RAG-Assistent sollte nicht als Blackbox betrieben werden. Wenn eine Antwort falsch oder unvollständig ist, zeigt der Trace, ob die Suchfrage ungeeignet formuliert wurde, relevante Chunks nicht gefunden wurden, ein Filter zu streng war oder die Antwort trotz passenden Kontexts unzureichend blieb. Verborgene Gedankengänge des Sprachmodells werden dabei nicht offengelegt; protokolliert werden ausschließlich überprüfbare Pipeline-Artefakte.
-
-#### Prompts als Leitplanken definieren
-
-Die Prompts sind bei einem B2B-Wissensassistenten nicht nur Stilvorgaben. Sie sind fachliche Leitplanken: Der Assistent soll professionell beraten, aber keine technischen Werte erfinden, keine Lieferzeiten zusagen und keine rechtlich relevanten Aussagen improvisieren.
-
-```{r}
-prompt_overview <- tibble::tribble(
-  ~Komponente, ~Aufgabe, ~`Warum das im B2B-Kontext wichtig ist`,
-  "System Prompt", "Rolle, Tonalität und harte Grenzen festlegen", "Verhindert erfundene Zusagen und sorgt für professionelle Sie-Ansprache.",
-  "Condense Prompt", "Nachfragen in eigenständige Suchfragen umformulieren", "Hält Produktnamen, technische Randbedingungen und Vergleichsabsichten im Kontext.",
-  "Response Prompt", "Fachliche Antwortregeln ergänzen", "Wird direkt in die effektiven Citation-Templates integriert.",
-  "Citation QA Template", "Erste Antwort aus nummerierten Quellen erzeugen", "Technische Aussagen bleiben auf konkrete Dokumentstellen rückführbar.",
-  "Citation Refine Template", "Weitere Kontextblöcke kontrolliert einarbeiten", "Neue Aussagen erhalten Quellenmarken; unpassender Kontext verändert die Antwort nicht."
-)
-```
-
-```{r}
-prompt_overview |>
-  gt::gt() |>
-  gt::tab_header(title = "Prompt-Komponenten als operative Leitplanken") |>
-  gt::tab_options(
-    table.width = gt::pct(100),
-    data_row.padding = gt::px(5)
-  ) |>
-  nd.util::nd_gt_tab_options() |>
-  nd.util::nd_gt_to_html()
-```
-
-Die explizite Pipeline nutzt nur Prompts, die einer konkreten Stufe zugeordnet sind: Der Condense Prompt formuliert Folgefragen für das Retrieval um. System- und Response-Regeln werden in die effektiven Citation-Templates eingebaut. Die vollständigen Prompt-Texte sind im Fallstudiencode hinterlegt und werden mit Testfragen, Grenzfällen und echten Support- oder Vertriebsdialogen iterativ geprüft.
-
-```{r}
-#| output: asis
-prompt_titles <- c(
-  system_prompt = "System Prompt",
-  condense_prompt = "Condense Prompt",
-  response_prompt = "Response Prompt",
-  citation_qa_template = "Citation QA Template",
-  citation_refine_template = "Citation Refine Template"
-)
-
-format_prompt <- function(.prompt) {
-  # .prompt <- rag_prompts[[2]]
-  .prompt |>
-    stringi::stri_split_fixed("\n") |>
-    purrr::flatten_chr() |>
-    (\(..x) {
-      unname(split(..x, cumsum(..x == "")))
-    })() |>
-    purrr::map(stringi::stri_omit_empty) |>
-    purrr::map(\(..x) {
-      purrr::modify_if(
-        .x = ..x,
-        .p = stringi::stri_detect_regex(..x, "^\\{.*\\}$"),
-        .f = \(...x) {
-          stringi::stri_c("<code>", ...x, "</code>")
-        }
-      )
-    }) |>
-    purrr::map_chr(stringi::stri_c, collapse = "\n") |>
-    stringi::stri_c(collapse = "\n\n") |>
-    commonmark::markdown_html() |>
-    htmltools::HTML()
-}
-
-prompt_items <- purrr::map(names(rag_prompts), function(.name) {
-  list(
-    title = prompt_titles[[.name]],
-    body = format_prompt(rag_prompts[[.name]])
-  )
-})
-
-nd.util::render_raw_html(make_accordion(prompt_items, "rag-prompt-accordion"))
-```
 
 #### Den RAG-Client konfigurieren
 
@@ -847,79 +908,45 @@ format_response <- function(.response) {
 
 ```{r}
 #| output: asis
-dialogue_style <- tags$style(
-  htmltools::HTML(paste(
-    ".nd-article .card-body.rag-dialogue-card-body > p {",
-    "  margin-top: 0;",
-    "  margin-bottom: 1rem;",
-    "  text-indent: 0;",
-    "}",
-    ".nd-article .card-body.rag-dialogue-card-body > p:last-of-type {",
-    "  margin-bottom: 0;",
-    "  padding-bottom: 0;",
-    "}",
-    sep = "\n"
-  ))
-)
-
-# Ein Frage-/Antwort-Kartenpaar aus einem gecachten chat_cached()-Ergebnis.
-render_dialogue <- function(.question, .result) {
+# Eine Assistenten-Antwort als rechtsbündige „Antwort"-Karte.
+make_answer_box <- function(.result) {
   tags$div(
+    class = "d-flex justify-content-end",
     tags$div(
-      class = "d-flex justify-content-start",
+      class = "card mb-3 w-100 flex-row align-items-center",
+      style = "max-width: 540px;",
       tags$div(
-        class = "card mb-3 w-100 flex-row align-items-center",
-        style = "max-width: 540px;",
-        tags$div(
-          class = paste(
-            "d-flex align-items-center justify-content-center",
-            "align-self-stretch flex-shrink-0 bg-primary rounded-start"
-          ),
-          style = paste(
-            "padding-left: var(--bs-card-spacer-y);",
-            "padding-right: var(--bs-card-spacer-y);"
-          ),
-          tags$i(class = "fa-solid fa-user fa-2xl text-white")
-        ),
-        tags$div(
-          class = "card-body rag-dialogue-card-body flex-grow-1",
-          style = "min-width: 0;",
-          tags$h5(class = "card-title", "Frage"),
-          tags$p(.question)
-        )
-      )
-    ),
-    tags$div(
-      class = "d-flex justify-content-end",
+        class = "card-body rag-dialogue-card-body flex-grow-1",
+        style = "min-width: 0;",
+        tags$h5(class = "card-title", "Antwort"),
+        format_response(.result)
+      ),
       tags$div(
-        class = "card mb-3 w-100 flex-row align-items-center",
-        style = "max-width: 540px;",
-        tags$div(
-          class = "card-body rag-dialogue-card-body flex-grow-1",
-          style = "min-width: 0;",
-          tags$h5(class = "card-title", "Antwort"),
-          format_response(.result)
+        class = paste(
+          "d-flex align-items-center justify-content-center",
+          "align-self-stretch flex-shrink-0 bg-primary rounded-end"
         ),
-        tags$div(
-          class = paste(
-            "d-flex align-items-center justify-content-center",
-            "align-self-stretch flex-shrink-0 bg-primary rounded-end"
-          ),
-          style = paste(
-            "padding-left: var(--bs-card-spacer-y);",
-            "padding-right: var(--bs-card-spacer-y);"
-          ),
-          tags$i(class = "fa-solid fa-robot fa-2xl text-white")
-        )
+        style = paste(
+          "padding-left: var(--bs-card-spacer-y);",
+          "padding-right: var(--bs-card-spacer-y);"
+        ),
+        tags$i(class = "fa-solid fa-robot fa-2xl text-white")
       )
     )
   )
 }
 
-nd.util::render_raw_html(tags$div(
-  dialogue_style,
+# Ein Frage-/Antwort-Kartenpaar aus einem gecachten chat_cached()-Ergebnis.
+render_dialogue <- function(.question, .result) {
+  tags$div(
+    make_question_box(.question),
+    make_answer_box(.result)
+  )
+}
+
+nd.util::render_raw_html(
   render_dialogue(rag_queries$worked_example, rag_results$worked_example)
-))
+)
 ```
 
 
