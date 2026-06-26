@@ -1,5 +1,19 @@
 {{ if .TableOfContents }}
+{{ $tocMaxDepth := .Params.toc_max_depth | default 4 | int }}
 <div id="page-toc-container" class="nd-toc z-3">
+    {{ if le $tocMaxDepth 2 }}
+    <style>
+        #page-toc #TableOfContents > ul > li > ul {
+            display: none;
+        }
+    </style>
+    {{ else if eq $tocMaxDepth 3 }}
+    <style>
+        #page-toc #TableOfContents > ul > li > ul > li > ul {
+            display: none;
+        }
+    </style>
+    {{ end }}
     <nav id="page-toc" aria-label="Inhaltsverzeichnis">
         <strong class="h6 my-2">Inhaltsverzeichnis</strong>
         <hr class="d-block my-2">

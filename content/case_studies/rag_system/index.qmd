@@ -5,6 +5,8 @@ figtitle: "🤖"
 date: "2026-06-17T12:00:00+02:00"
 draft: false
 toc_show: true
+toc_max_depth: 3
+html-table-processing: none
 execute:
   echo: false
   warning: false
@@ -203,6 +205,16 @@ make_accordion <- function(.items, .id, .open_first = TRUE) {
       .is_open <- .open_first && .index == 1
       .heading_id <- paste0(.id, "-heading-", .index)
       .collapse_id <- paste0(.id, "-collapse-", .index)
+      # Optionaler Untertitel: zweizeiliger Header (Titel fett, Untertitel normal).
+      .header <- if (is.null(.item$subtitle)) {
+        .item$title
+      } else {
+        tags$span(
+          class = "d-flex flex-column",
+          tags$span(class = "fw-bold", .item$title),
+          tags$span(class = "fw-normal", .item$subtitle)
+        )
+      }
       tags$div(
         class = "accordion-item",
         tags$div(
@@ -218,7 +230,7 @@ make_accordion <- function(.items, .id, .open_first = TRUE) {
             `data-bs-target` = paste0("#", .collapse_id),
             `aria-expanded` = if (.is_open) "true" else "false",
             `aria-controls` = .collapse_id,
-            .item$title
+            .header
           )
         ),
         tags$div(
@@ -251,6 +263,36 @@ dialogue_style <- tags$style(
     ".nd-article .card-body.rag-dialogue-card-body > p:last-of-type {",
     "  margin-bottom: 0;",
     "  padding-bottom: 0;",
+    "}",
+    ".nd-article .rag-dialogue-table-scroll {",
+    "  width: 100%;",
+    "  max-width: 100%;",
+    "  overflow-x: auto;",
+    "  overflow-y: hidden;",
+    "  margin-bottom: 1rem;",
+    "  -webkit-overflow-scrolling: touch;",
+    "}",
+    ".nd-article .rag-dialogue-table-scroll table {",
+    "  width: max-content;",
+    "  min-width: 42rem;",
+    "  max-width: none;",
+    "  margin-bottom: 0;",
+    "  border-collapse: collapse;",
+    "  table-layout: auto;",
+    "}",
+    ".nd-article .rag-dialogue-table-scroll th,",
+    ".nd-article .rag-dialogue-table-scroll td {",
+    "  padding: 0.35rem 0.5rem;",
+    "  border: 1px solid var(--bs-border-color);",
+    "  vertical-align: top;",
+    "}",
+    ".nd-article .rag-dialogue-table-scroll th:first-child,",
+    ".nd-article .rag-dialogue-table-scroll td:first-child {",
+    "  min-width: 8rem;",
+    "}",
+    ".nd-article .rag-dialogue-table-scroll th:not(:first-child),",
+    ".nd-article .rag-dialogue-table-scroll td:not(:first-child) {",
+    "  min-width: 14rem;",
     "}",
     sep = "\n"
   ))
@@ -351,7 +393,6 @@ Die Chunk-Größe ist ein praktischer Kompromiss:
 Wie diese Zerlegung konkret aussieht, zeigt der direkte Vergleich am RF-500-Datenblatt: links der Ausschnitt aus der Originalseite, rechts der daraus erzeugte Eintrag im Document Store – samt Herkunft (Dokument, Seite, Überschrift), die später für die Quellenangabe gebraucht wird. Aufklappbar für eine Tabellen- und eine Fließtextpassage:
 
 ```{r}
-#| output: asis
 #| cache: false
 # Document-Store-Einträge einmalig exportieren und cachen; danach offline nutzbar.
 documents_cache_path <- fs::path(data_path, "rag_documents_cache.rds")
@@ -483,10 +524,9 @@ Diese Vektoren werden zusammen mit Text und Metadaten in einer Vektordatenbank a
 
 Die Prompts sind bei einem B2B-Wissensassistenten nicht nur Stilvorgaben. Sie sind fachliche Leitplanken: Der Assistent soll professionell beraten, aber keine technischen Werte erfinden, keine Lieferzeiten zusagen und keine rechtlich relevanten Aussagen improvisieren.
 
-Die explizite Pipeline nutzt nur Prompts, die einer konkreten Stufe zugeordnet sind: Der Condense Prompt formuliert Folgefragen für das Retrieval um. System- und Response-Regeln werden in die effektiven Citation-Templates eingebaut. Die vollständigen Prompt-Texte sind im Fallstudiencode hinterlegt und werden mit Testfragen, Grenzfällen und echten Support- oder Vertriebsdialogen iterativ geprüft.
+Die Leitplanken werden mit Testfragen, Grenzfällen und echten Support- oder Vertriebsdialogen iterativ geprüft. Entscheidend ist nicht, dass der Assistent möglichst ausführlich antwortet, sondern dass er im erlaubten Rahmen bleibt: belegt, hilfreich und klar in seinen Grenzen.
 
 ```{r}
-#| output: asis
 prompt_titles <- c(
   system_prompt = "System Prompt",
   condense_prompt = "Condense Prompt",
@@ -533,11 +573,8 @@ format_prompt <- function(.prompt) {
 
 prompt_items <- purrr::map(names(rag_prompts), function(.name) {
   list(
-    title = tags$span(
-      tags$strong(prompt_titles[[.name]]),
-      " – ",
-      prompt_tasks[[.name]]
-    ),
+    title = prompt_titles[[.name]],
+    subtitle = prompt_tasks[[.name]],
     body = format_prompt(rag_prompts[[.name]])
   )
 })
@@ -545,7 +582,13 @@ prompt_items <- purrr::map(names(rag_prompts), function(.name) {
 nd.util::render_raw_html(make_accordion(prompt_items, "rag-prompt-accordion"))
 ```
 
-#### Retrieval nachvollziehbar machen
+#### Ablauf der Anfragebearbeitung
+
+Wenn eine Anfrage eingeht, wird sie zuerst in eine eigenständige Suchfrage überführt, sofern der Chatverlauf dafür relevant ist. Anschließend sucht der Assistent in der kuratierten Wissensbasis nach passenden Textauszügen, wählt daraus einen begrenzten Antwortkontext aus und formuliert die Antwort ausschließlich auf dieser Grundlage.
+
+Für Geschäftskunden ist dabei weniger die technische Umsetzung entscheidend als das Verhalten der Antwort: Sie soll eine klare Empfehlung geben, belegte Aussagen mit Quellenmarken versehen und fehlende Projektdaten offen benennen. Wenn die Quellenlage nicht ausreicht, darf der Assistent keine Werte ergänzen, sondern muss die Grenze der Wissensbasis sichtbar machen.
+
+Die Beispiele unten zeigen diesen Ablauf an typischen Kundenfragen.
 
 ```{r}
 # Beispielanfragen, an denen sich die Funktionsweise illustrieren lässt.
@@ -553,6 +596,10 @@ rag_queries <- list(
   worked_example = paste(
     "Wir möchten rund 80 kg schwere Werkstückträger im Dreischichtbetrieb",
     "fördern. Welche Förderlösung passt und welche Angaben benötigen Sie noch?"
+  ),
+  worked_followup = paste(
+    "Und wenn die Werkstückträger nur etwa 25 kg wiegen,",
+    "würde dann eine kleinere Lösung reichen?"
   ),
   semantic = paste(
     "Wir möchten Kartons und Behälter um etwa einen Meter auf eine höhere",
@@ -567,9 +614,29 @@ chat_cached <- memoise::memoize(
   cache = cachem::cache_disk(fs::path(data_path, "rag_chat_cache"))
 )
 
-# Ein einziger Lauf füllt den Cache für alle Beispielanfragen; danach werden
-# Antworten, Quellen und Traces aus dem Cache bedient.
-rag_results <- purrr::map(rag_queries, chat_cached)
+chat_cached_history <- memoise::memoize(
+  \(.question, .history = list()) {
+    rag_client$chat_stream(.question, .history = .history)
+  },
+  cache = cachem::cache_disk(fs::path(data_path, "rag_chat_cache"))
+)
+
+rag_results <- purrr::map(rag_queries[c(
+  "worked_example",
+  "semantic",
+  "gap",
+  "guardrail"
+)], chat_cached)
+
+rag_history_worked_example <- list(
+  list(role = "user", content = rag_queries$worked_example),
+  list(role = "assistant", content = rag_results$worked_example$answer)
+)
+
+rag_results$worked_followup <- chat_cached_history(
+  rag_queries$worked_followup,
+  .history = rag_history_worked_example
+)
 ```
 
 ```{r}
@@ -579,33 +646,19 @@ trace <- trace_result$trace
 retrieval_trace <- trace$retrieval
 filtering_trace <- trace$filtering
 
-# Roh-Trace für die Darstellung aufbereiten.
 clean_source <- function(.x) {
   stringi::stri_replace_first_regex(.x, "^(PDF|HTML)-Dokument:\\s*", "")
 }
 
-reason_labels <- c(
-  below_similarity_threshold = "Score unter Mindestwert",
-  document_chunk_limit = "Limit je Dokument erreicht",
-  final_top_k_limit = "über finalem Kontextlimit",
-  duplicate_text = "Textduplikat"
-)
-label_reason <- function(.code) {
-  .lab <- unname(reason_labels[.code])
-  ifelse(is.na(.lab), .code, .lab)
-}
-
-# Filterentscheidung je Treffer über die node_id zuordnen.
 accepted_ids <- purrr::map_chr(filtering_trace$accepted, "node_id")
-rejected_reason <- rlang::set_names(
-  purrr::map_chr(filtering_trace$rejected, "reason"),
-  purrr::map_chr(filtering_trace$rejected, "node_id")
-)
 
 retrieval_trace_table <- purrr::map_dfr(
   retrieval_trace$results,
   function(.hit) {
-    .kept <- .hit$node_id %in% accepted_ids
+    if (!(.hit$node_id %in% accepted_ids)) {
+      return(NULL)
+    }
+
     .headings <- unlist(.hit$headings)
     tibble::tibble(
       Rang = .hit$i,
@@ -616,70 +669,13 @@ retrieval_trace_table <- purrr::map_dfr(
       } else {
         ""
       },
-      Entscheidung = if (.kept) "Behalten" else "Verworfen",
-      Grund = if (.kept) {
-        "Für Antwortkontext ausgewählt"
-      } else {
-        label_reason(rejected_reason[[.hit$node_id]])
-      },
       Auszug = .hit$context_text
     )
   }
 )
 
-pipeline_trace_table <- tibble::tibble(
-  Stufe = c(
-    "Query-Aufbereitung",
-    "Semantisches Retrieval",
-    "Filterung",
-    "Citation-Chunking",
-    "Antwortgenerierung",
-    "Zitatprüfung"
-  ),
-  `Tatsächlicher Trace-Wert` = c(
-    if (isTRUE(trace$query_preparation$rewrite_applied)) {
-      paste(
-        "Folgefrage umgeschrieben zu:",
-        trace$query_preparation$output_query
-      )
-    } else {
-      "Frage unverändert übernommen, da kein Chatverlauf vorlag"
-    },
-    sprintf(
-      "%d Embedding-Treffer angefordert und %d Treffer geliefert",
-      retrieval_trace$requested_top_k,
-      retrieval_trace$result_count
-    ),
-    sprintf(
-      "%d Treffer behalten, %d verworfen; Mindestscore %.2f; maximal %d Chunks je Dokument",
-      filtering_trace$accepted_count,
-      filtering_trace$rejected_count,
-      filtering_trace$similarity_min_score,
-      filtering_trace$max_chunks_per_document
-    ),
-    sprintf(
-      "%d gefilterte Chunks wurden zu %d nummerierten Quellen",
-      trace$citation_chunking$input_node_count,
-      trace$citation_chunking$output_chunk_count
-    ),
-    sprintf(
-      "%d Zeichen erzeugt; Laufzeit %.0f ms",
-      trace$generation$answer_characters,
-      trace$timings_ms$generation
-    ),
-    sprintf(
-      "%d von %d Aussagen mit Quellenmarke; Abdeckung %.1f %%",
-      trace$citation_validation$cited_statement_count,
-      trace$citation_validation$statement_count,
-      100 * trace$citation_validation$citation_coverage_ratio
-    )
-  )
-)
-
-# Kennzahlen für den Fließtext.
 n_total <- retrieval_trace$result_count
 n_kept <- filtering_trace$accepted_count
-n_rejected <- filtering_trace$rejected_count
 
 n_docs <- filtering_trace$accepted |>
   purrr::map_chr("source_file") |>
@@ -687,61 +683,53 @@ n_docs <- filtering_trace$accepted |>
   unique() |>
   length()
 
-reason_summary <- rejected_reason |>
-  label_reason() |>
-  table() |>
-  (\(.t) paste0(.t, "× ", names(.t)))() |>
-  paste(collapse = ", ")
-```
+trace_query_summary <- if (isTRUE(trace$query_preparation$rewrite_applied)) {
+  paste(
+    "wurde für die Suche umformuliert zu:",
+    trace$query_preparation$output_query
+  )
+} else {
+  "wurde unverändert verwendet"
+}
 
-Als konkretes Beispiel dient eine tatsächlich ausgeführte Anfrage – eine typische, anforderungsorientierte Vertriebsfrage:
-
-```{r}
-#| output: asis
-nd.util::render_raw_html(tags$div(
-  dialogue_style,
-  make_question_box(trace_result$trace$input$query)
-))
-```
-
-Der Service arbeitet dabei nicht mit einer vereinfachten Schlagwortzählung. Die Anfrage wird als Embedding an Qdrant übergeben. Zunächst werden zwölf semantisch ähnliche Chunks geladen. Danach reduziert eine explizite Filterstufe den Kontext: Treffer unterhalb des Mindest-Scores werden entfernt, ein einzelnes Dokument darf höchstens drei Chunks beitragen, Textduplikate werden verworfen und maximal sechs Chunks gelangen in die Antwortgenerierung.
-
-```{r}
-pipeline_trace_table |>
-  gt::gt() |>
-  gt::tab_header(title = "Tatsächlich protokollierte Pipeline-Stufen") |>
-  gt::tab_options(
-    table.width = gt::pct(100),
-    data_row.padding = gt::px(5)
-  ) |>
-  nd.util::nd_gt_tab_options() |>
-  nd.util::nd_gt_to_html()
+trace_cited_statement_count <- trace$citation_validation$cited_statement_count
+trace_statement_count <- trace$citation_validation$statement_count
 ```
 
 ```{r}
 #| output: asis
-# Die Treffertabelle ist für schmale Layouts zu breit; daher je Treffer eine
-# Bootstrap-Card mit list-group statt einer gt-Tabelle.
-trace_field <- function(.label, .value) {
+trace_field <- function(.label, .value, .line_clamp = NULL) {
+  .content <- if (is.null(.line_clamp)) {
+    .value
+  } else {
+    tags$div(
+      style = stringi::stri_c(
+        "overflow: hidden; width: 100%; display: -webkit-box; ",
+        "-webkit-line-clamp: ",
+        .line_clamp,
+        "; -webkit-box-orient: vertical;"
+      ),
+      .value
+    )
+  }
+
   tags$li(
     tags$code(stringi::stri_c(.label, ":")),
-    .value,
+    .content,
     class = "list-group-item"
   )
 }
 
-# Eine Karte je Treffer. Der Verwerfungsgrund wird nur bei Bedarf gezeigt.
 make_trace_card <- function(
   .Rang,
   .Score,
   .Quelle,
   .Abschnitt,
-  .Grund,
-  .Auszug,
-  .show_reason = FALSE
+  .Auszug
 ) {
   tags$div(
-    class = "card mb-3",
+    class = "card",
+    style = "width: 100%;",
     tags$ul(
       class = "list-group list-group-flush",
       tags$li(
@@ -768,62 +756,42 @@ make_trace_card <- function(
       ),
       trace_field("Quelle", .Quelle),
       trace_field("Abschnitt", .Abschnitt),
-      if (.show_reason) trace_field("Grund", .Grund),
-      trace_field("Auszug", .Auszug)
+      trace_field("Auszug", .Auszug, .line_clamp = 8)
     )
   )
 }
 
-# Karten für eine Treffergruppe (genutzt / verworfen) erzeugen.
-make_trace_cards <- function(.df, .show_reason = FALSE) {
-  purrr::pmap(
-    .df,
-    function(Rang, Score, Quelle, Abschnitt, Entscheidung, Grund, Auszug) {
+make_trace_cards <- function(.df) {
+  .df |>
+    dplyr::select(Rang, Score, Quelle, Abschnitt, Auszug) |>
+    purrr::pmap(function(Rang, Score, Quelle, Abschnitt, Auszug) {
       make_trace_card(
         Rang,
         Score,
         Quelle,
         Abschnitt,
-        Grund,
-        Auszug,
-        .show_reason = .show_reason
+        Auszug
       )
-    }
-  )
+    })
 }
 
-kept_df <- dplyr::filter(retrieval_trace_table, Entscheidung == "Behalten")
-rejected_df <- dplyr::filter(retrieval_trace_table, Entscheidung == "Verworfen")
-
-trace_items <- list(
-  list(
-    title = stringi::stri_c("Genutzte Quellen (", nrow(kept_df), ")"),
-    body = tags$div(make_trace_cards(kept_df, .show_reason = FALSE))
-  ),
-  list(
-    title = stringi::stri_c("Verworfene Quellen (", nrow(rejected_df), ")"),
-    body = tags$div(make_trace_cards(rejected_df, .show_reason = TRUE))
-  )
-)
-
-nd.util::render_raw_html(tags$div(
-  tags$p(class = "fw-bold mb-2", "Embedding-Treffer und Filterentscheidungen"),
-  make_accordion(trace_items, "rag-trace-accordion")
-))
+trace_source_cards <- make_trace_cards(retrieval_trace_table)
 ```
-
-Für diese Anfrage wurden `r n_kept` der `r n_total` Treffer in den Antwortkontext übernommen. Die übrigen `r n_rejected` Kandidaten wurden nachvollziehbar verworfen (`r reason_summary`). Bemerkenswert ist, dass die ausgewählten Treffer aus `r n_docs` verschiedenen Dokumenten stammen. Der Assistent wägt also mehrere Datenblätter gegeneinander ab, statt nur ein einzelnes Dokument wiederzugeben. Der Trace enthält außerdem die Rohtexte, Seitenzahlen und Überschriften jedes Treffers sowie getrennte Laufzeiten für Query-Rewrite, Retrieval, Filterung, Citation-Chunking und Generierung.
-
-Dieser Zwischenschritt ist für Unternehmen besonders wichtig. Ein RAG-Assistent sollte nicht als Blackbox betrieben werden. Wenn eine Antwort falsch oder unvollständig ist, zeigt der Trace, ob die Suchfrage ungeeignet formuliert wurde, relevante Chunks nicht gefunden wurden, ein Filter zu streng war oder die Antwort trotz passenden Kontexts unzureichend blieb. Verborgene Gedankengänge des Sprachmodells werden dabei nicht offengelegt; protokolliert werden ausschließlich überprüfbare Pipeline-Artefakte.
-
-#### Den RAG-Client konfigurieren
-
-Die technische Konfiguration bleibt bewusst schmal: Der Client erhält die kuratierte Prompt-Konfiguration. Die Beispielanfragen wurden weiter oben einmal ausgeführt und liegen seither im Disk-Cache (`rag_chat_cache/`). Beim erneuten Rendern – etwa im automatischen Website-Build ohne API-Zugang – werden Antworten, Quellen und Traces ausschließlich aus diesem Cache bedient. Der externe RAG-Service wird dabei nicht erneut angesprochen.
 
 ```{r}
 #| output: asis
 format_response <- function(.response) {
   # .response <<- .response
+  .make_source_anchor <- function(.id) {
+    stringi::stri_c(
+      "<a tabindex=\"0\" role=\"button\" data-bs-toggle=\"popover\" ",
+      "data-bs-template-id=\"",
+      htmltools::htmlEscape(.id),
+      "\"><span class=\"text-primary\"><i class=\"fa-solid fa-circle-info\" ",
+      "role=\"presentation\"></i></span></a>"
+    )
+  }
+
   .source_dict <- .response |>
     purrr::chuck("sources") |>
     (\(..x) {
@@ -835,18 +803,7 @@ format_response <- function(.response) {
         algo = "crc32c"
       )
       list(
-        anchor = tags$a(
-          tabindex = "0",
-          role = "button",
-          # `aria-label` = .title,
-          `data-bs-toggle` = "popover",
-          `data-bs-template-id` = .id,
-          # `data-bs-title` = .title,
-          tags$span(
-            class = " text-primary",
-            nd.util::icon_fa("fa-solid fa-circle-info")
-          )
-        ),
+        anchor = .make_source_anchor(.id),
         template = tags$template(
           id = .id,
           tags$ul(
@@ -865,7 +822,7 @@ format_response <- function(.response) {
               tags$code("Auszug:"),
               .source[["snippet"]],
               class = "list-group-item"
-            ),
+            )
           )
         )
       )
@@ -884,14 +841,18 @@ format_response <- function(.response) {
     purrr::map_chr(\(..x) {
       ..x |>
         purrr::map_chr(\(...x) {
-          as.character(purrr::chuck(.source_dict, ...x, "anchor"))
+          purrr::chuck(.source_dict, ...x, "anchor")
         }) |>
         stringi::stri_c(collapse = " ")
     })
 
   .response_html <- .response |>
     purrr::chuck("answer") |>
-    commonmark::markdown_html() |>
+    commonmark::markdown_html(extensions = TRUE) |>
+    stringi::stri_replace_all_regex(
+      pattern = "(?s)<table>.*?</table>",
+      replacement = "<div class=\"rag-dialogue-table-scroll\">$0</div>"
+    ) |>
     stringi::stri_replace_all_fixed(
       pattern = names(.ref_dict),
       replacement = .ref_dict,
@@ -936,61 +897,119 @@ make_answer_box <- function(.result) {
   )
 }
 
-# Ein Frage-/Antwort-Kartenpaar aus einem gecachten chat_cached()-Ergebnis.
-render_dialogue <- function(.question, .result) {
-  tags$div(
-    make_question_box(.question),
-    make_answer_box(.result)
-  )
+fmt_question <- function(.question) {
+  make_question_box(.question)
 }
 
+fmt_response <- function(.result) {
+  make_answer_box(.result)
+}
+
+# Eine beliebig lange Folge aus fmt_question()/fmt_response()-Elementen.
+render_dialogue <- function(...) {
+  do.call(
+    tags$div,
+    c(list(htmltools::singleton(dialogue_style)), list(...))
+  )
+}
+```
+
+### Beispielhafte Anfragen und Antworten
+
+Die folgenden Dialoge zeigen, wie der Assistent in typischen Situationen reagieren soll: bei einer anforderungsorientierten Produktempfehlung mit Folgefrage, bei einer semantischen Suche ohne Produktnamen, bei fehlenden Daten und bei Fragen außerhalb der Wissensbasis.
+
+#### Produktempfehlung bei unvollständigen Anforderungen
+
+Die Frage beschreibt Fördergut, Gewicht und Betriebsmodell, aber noch nicht alle Auslegungsdaten. Der Assistent soll deshalb eine fachliche Richtung geben und zugleich klar benennen, welche Angaben für eine belastbare Auswahl noch fehlen.
+
+```{r}
 nd.util::render_raw_html(
-  render_dialogue(rag_queries$worked_example, rag_results$worked_example)
+  render_dialogue(
+    fmt_question(rag_queries$worked_example)
+  )
 )
 ```
 
+Zunächst liegt nur die Kundenfrage vor. Bevor der Assistent antwortet, sucht das System passende Textstellen aus der Wissensbasis und begrenzt den Kontext auf die Quellen, die die Antwort tatsächlich tragen sollen.
 
-### Die Antwort aus Sicht des Geschäftskunden
+Für dieses Beispiel zeigt der Trace, welche Textstellen ausgewählt wurden. Die Suchfrage `r trace_query_summary`. Insgesamt wurden `r n_total` Textstellen als mögliche Quellen gefunden; `r n_kept` davon wurden für die Antwort genutzt. Diese Textstellen stammen aus `r n_docs` verschiedenen Dokumenten. Das ist keine Offenlegung interner Modellgedanken, sondern eine prüfbare Dokumentation der verwendeten Quellenbasis.
 
-Die oben gezeigte Antwort entsteht aus den Retrieval-Treffern und den Prompt-Regeln. Sie hilft fachlich, verspricht aber nicht mehr, als die Quellen hergeben. Über die Info-Symbole an den Quellenmarken lässt sich nachvollziehen, aus welchem Dokument und welcher Seite jede Aussage stammt.
+```{r}
+#| output: asis
+trace_source_cards |>
+  nd.util::nd_carousel(.title = "Genutzte Textstellen für die Antwort")
+```
 
-Diese Antwort ist bewusst nicht nur „nett formuliert“. Sie erfüllt mehrere operative Anforderungen:
+Die einzelnen Karten machen sichtbar, aus welchen Dokumenten und Abschnitten die genutzten Quellen stammen. Der Assistent stützt die spätere Antwort also nicht nur auf ein einzelnes Datenblatt, sondern gleicht mehrere Quellen gegeneinander ab.
+
+Mit dieser Quellenbasis hat der Assistent alles, was er für die Antwortgenerierung braucht. Die Antwort hilft fachlich, verspricht aber nicht mehr, als die Quellen hergeben. Über die Info-Symbole an den Quellenmarken lässt sich nachvollziehen, aus welchem Dokument und welcher Seite jede Aussage stammt; `r trace_cited_statement_count` von `r trace_statement_count` Aussagen tragen eine solche Quellenmarke.
+
+```{r}
+nd.util::render_raw_html(
+  render_dialogue(
+    fmt_response(rag_results$worked_example)
+  )
+)
+```
+
+Im Anschluss kann der Kunde direkt nachfassen, ohne alle Randbedingungen noch einmal zu wiederholen. Die Folgefrage bezieht sich auf die bisherige Produktempfehlung und verändert nur eine zentrale Annahme: das Gewicht des Förderguts.
+
+```{r}
+nd.util::render_raw_html(
+  render_dialogue(
+    fmt_question(rag_queries$worked_followup),
+    fmt_response(rag_results$worked_followup)
+  )
+)
+```
+
+Die Antworten in diesem Beispiel sind bewusst nicht nur „nett formuliert“. Sie erfüllen mehrere operative Anforderungen:
 
 {{{< fa-ul >}}}
-  {{{< fa-solid-li icon="box" >}}} sie nennt ein konkret passendes Produkt, {{{< /fa-solid-li >}}}
-  {{{< fa-solid-li icon="file-lines" >}}} sie begründet die Empfehlung mit Datenblattwerten und macht die Quellen über Inline-Zitate nachvollziehbar, {{{< /fa-solid-li >}}}
-  {{{< fa-solid-li icon="circle-question" >}}} sie benennt aktiv die noch fehlenden Projektdaten, statt eine Auslegung vorzutäuschen, {{{< /fa-solid-li >}}}
-  {{{< fa-solid-li icon="ban" >}}} sie vermeidet Preis-, Lieferzeit- oder Garantieaussagen, die in den Quellen nicht gedeckt sind. {{{< /fa-solid-li >}}}
+  {{{< fa-solid-li icon="box" >}}} sie nennen konkrete passende Optionen, {{{< /fa-solid-li >}}}
+  {{{< fa-solid-li icon="file-lines" >}}} sie begründen die Empfehlung mit Datenblattwerten und machen die Quellen über Inline-Zitate nachvollziehbar, {{{< /fa-solid-li >}}}
+  {{{< fa-solid-li icon="circle-question" >}}} sie benennen aktiv die noch fehlenden Projektdaten, statt eine Auslegung vorzutäuschen, {{{< /fa-solid-li >}}}
+  {{{< fa-solid-li icon="ban" >}}} sie vermeiden Preis-, Lieferzeit- oder Garantieaussagen, die in den Quellen nicht gedeckt sind. {{{< /fa-solid-li >}}}
 {{{< /fa-ul >}}}
 
-### Stärken und Grenzen an weiteren Beispielen
+Erst im Zusammenspiel mehrerer Anfragen wird sichtbar, was ein sauber aufgesetztes RAG-System ausmacht. Die folgenden drei Dialoge zeigen weitere Stärken und Grenzen.
 
-Erst im Zusammenspiel mehrerer Anfragen wird sichtbar, was ein sauber aufgesetztes RAG-System ausmacht. Die folgenden drei Dialoge sind ebenfalls real ausgeführt und stammen aus demselben Cache.
+#### Semantische Suche statt Stichwortabgleich.
 
-**Semantische Suche statt Stichwortabgleich.** In der Frage fällt kein Produktname. Trotzdem findet das System die passende Hubstation, weil die Einbettung die Bedeutung („zwischen zwei Ebenen heben“) erfasst – nicht nur Schlagworte.
+In der Frage fällt kein Produktname. Trotzdem findet das System die passende Hubstation, weil die Suche die Bedeutung („zwischen zwei Ebenen heben“) erfasst – nicht nur Schlagworte.
 
 ```{r}
-#| output: asis
 nd.util::render_raw_html(
-  render_dialogue(rag_queries$semantic, rag_results$semantic)
+  render_dialogue(
+    fmt_question(rag_queries$semantic),
+    fmt_response(rag_results$semantic)
+  )
 )
 ```
 
-**Fehlende Information offenlegen.** Die HS-120 wird in den Datenblättern nur am Rande erwähnt, ein eigenes Dokument existiert nicht. Statt einen Wert zu erfinden, sagt der Assistent klar, dass nur die HS-90 dokumentiert ist.
+#### Fehlende Information offenlegen.
+
+Die HS-120 wird in den Datenblättern nur am Rande erwähnt, ein eigenes Dokument existiert nicht. Statt einen Wert zu erfinden, sagt der Assistent klar, dass nur die HS-90 dokumentiert ist.
 
 ```{r}
-#| output: asis
 nd.util::render_raw_html(
-  render_dialogue(rag_queries$gap, rag_results$gap)
+  render_dialogue(
+    fmt_question(rag_queries$gap),
+    fmt_response(rag_results$gap)
+  )
 )
 ```
 
-**Keine erfundenen Werte.** Preise sind nicht Teil der Wissensbasis. Die Leitplanken im Prompt verhindern, dass das Modell eine plausible, aber falsche Zahl nennt.
+#### Keine erfundenen Werte.
+
+Preise sind nicht Teil der Wissensbasis. Die fachlichen Leitplanken verhindern, dass das Modell eine plausible, aber falsche Zahl nennt.
 
 ```{r}
-#| output: asis
 nd.util::render_raw_html(
-  render_dialogue(rag_queries$guardrail, rag_results$guardrail)
+  render_dialogue(
+    fmt_question(rag_queries$guardrail),
+    fmt_response(rag_results$guardrail)
+  )
 )
 ```
 
@@ -1029,16 +1048,16 @@ Ein RAG-System ersetzt kein Engineering, keinen Vertrieb und keine Serviceorgani
 
 {{{< fa-ul >}}}
   {{{< fa-solid-li icon="1" >}}} **Quellenprüfung:** Stimmen die Dokumente im Index mit dem aktuellen Produktstand überein? {{{< /fa-solid-li >}}}
-  {{{< fa-solid-li icon="2" >}}} **Retrieval-Prüfung:** Werden bei typischen Fragen die richtigen Chunks gefunden? {{{< /fa-solid-li >}}}
+  {{{< fa-solid-li icon="2" >}}} **Suchprüfung:** Werden bei typischen Fragen die richtigen Textstellen gefunden? {{{< /fa-solid-li >}}}
   {{{< fa-solid-li icon="3" >}}} **Antwortprüfung:** Bleibt die Antwort innerhalb der Quellenlage? {{{< /fa-solid-li >}}}
   {{{< fa-solid-li icon="4" >}}} **Grenzfalltests:** Wie reagiert das System auf fehlende Daten, Preisfragen, Garantiefragen oder unklare Anforderungen? {{{< /fa-solid-li >}}}
-  {{{< fa-solid-li icon="5" >}}} **Feedbackschleife:** Falsche oder unvollständige Antworten werden nicht nur korrigiert, sondern auf Ursache geprüft: Dokument, Retrieval oder Prompt. {{{< /fa-solid-li >}}}
+  {{{< fa-solid-li icon="5" >}}} **Feedbackschleife:** Falsche oder unvollständige Antworten werden nicht nur korrigiert, sondern auf Ursache geprüft: Dokument, Suche oder Leitplanken. {{{< /fa-solid-li >}}}
 {{{< /fa-ul >}}}
 
 Diese Grenze ist entscheidend: Ein guter Assistent soll kompetent führen, aber bei spezifischen Auslegungen bewusst zur Klärung überleiten. Seine Stärke liegt nicht darin, menschliche Expertise zu ersetzen, sondern sie schneller an die richtige Stelle zu bringen.
 
 ## Fazit
 
-Die Fallstudie zeigt: Ein RAG-Wissensassistent entsteht nicht dadurch, dass man ein Sprachmodell „auf die Website loslässt“. Entscheidend sind die Zwischenschritte: relevante Quellen kuratieren, Dokumente sinnvoll zerlegen, Retrieval nachvollziehbar machen und Prompts als fachliche Leitplanken definieren.
+Die Fallstudie zeigt: Ein RAG-Wissensassistent entsteht nicht dadurch, dass man ein Sprachmodell „auf die Website loslässt“. Entscheidend sind die Zwischenschritte: relevante Quellen kuratieren, Dokumente sinnvoll zerlegen, passende Textstellen auffindbar machen und fachliche Leitplanken definieren.
 
 Der Ansatz ist gerade deshalb interessant, weil er vorhandene Wissensbestände nutzbar macht, ohne sofort ein großes Datenprojekt zu starten. Schon eine sauber kuratierte Auswahl unternehmensspezifischer Dokumente — wie hier Produktdatenblätter und Website-Inhalte — kann ausreichen, um Vertrieb, Service und Projektierung im Tagesgeschäft spürbar zu entlasten.
