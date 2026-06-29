@@ -264,6 +264,15 @@ dialogue_style <- tags$style(
     "  margin-bottom: 0;",
     "  padding-bottom: 0;",
     "}",
+    ".nd-article .rag-dialogue-avatar {",
+    "  container-type: inline-size;",
+    "  overflow: hidden;",
+    "}",
+    ".nd-article .rag-dialogue-avatar > i,",
+    ".nd-article .rag-dialogue-avatar > svg {",
+    "  font-size: min(3.5rem, 60cqw);",
+    "  line-height: 1;",
+    "}",
     ".nd-article .rag-dialogue-table-scroll {",
     "  width: 100%;",
     "  max-width: 100%;",
@@ -316,24 +325,20 @@ dialogue_style <- tags$style(
 # Eine Nutzerfrage als linksbündige „Frage"-Karte.
 make_question_box <- function(.question) {
   tags$div(
-    class = "d-flex justify-content-start",
+    class = "grid mb-3",
+    style = "--bs-gap: 0;",
     tags$div(
-      class = "card mb-3 w-100 flex-row align-items-center",
-      style = "max-width: 540px;",
-      tags$div(
-        class = paste(
-          "d-flex align-items-center justify-content-center",
-          "align-self-stretch flex-shrink-0 bg-primary rounded-start"
-        ),
-        style = paste(
-          "padding-left: var(--bs-card-spacer-y);",
-          "padding-right: var(--bs-card-spacer-y);"
-        ),
-        tags$i(class = "fa-solid fa-user fa-2xl text-white")
+      class = paste(
+        "g-col-2 rag-dialogue-avatar d-flex align-items-center",
+        "justify-content-center bg-primary rounded-start"
       ),
+      tags$i(class = "fa-solid fa-user text-white")
+    ),
+    tags$div(
+      class = "g-col-10 g-col-md-8 card rounded-start-0",
+      style = "min-width: 0;",
       tags$div(
-        class = "card-body rag-dialogue-card-body flex-grow-1",
-        style = "min-width: 0;",
+        class = "card-body rag-dialogue-card-body",
         tags$h5(class = "card-title", "Frage"),
         tags$p(.question)
       )
@@ -715,7 +720,6 @@ trace_statement_count <- trace$citation_validation$statement_count
 ```
 
 ```{r}
-#| output: asis
 trace_field <- function(.label, .value, .line_clamp = NULL) {
   .content <- if (is.null(.line_clamp)) {
     .value
@@ -797,7 +801,6 @@ trace_source_cards <- make_trace_cards(retrieval_trace_table)
 ```
 
 ```{r}
-#| output: asis
 format_response <- function(.response) {
   # .response <<- .response
   .make_source_anchor <- function(.id) {
@@ -886,31 +889,26 @@ format_response <- function(.response) {
 ```
 
 ```{r}
-#| output: asis
 # Eine Assistenten-Antwort als rechtsbündige „Antwort"-Karte.
 make_answer_box <- function(.result) {
   tags$div(
-    class = "d-flex justify-content-end",
+    class = "grid mb-3",
+    style = "--bs-gap: 0;",
     tags$div(
-      class = "card mb-3 w-100 flex-row align-items-center",
-      style = "max-width: 540px;",
+      class = "g-col-10 g-col-md-8 g-start-md-3 card rounded-end-0",
+      style = "min-width: 0;",
       tags$div(
-        class = "card-body rag-dialogue-card-body flex-grow-1",
-        style = "min-width: 0;",
+        class = "card-body rag-dialogue-card-body",
         tags$h5(class = "card-title", "Antwort"),
         format_response(.result)
-      ),
-      tags$div(
-        class = paste(
-          "d-flex align-items-center justify-content-center",
-          "align-self-stretch flex-shrink-0 bg-primary rounded-end"
-        ),
-        style = paste(
-          "padding-left: var(--bs-card-spacer-y);",
-          "padding-right: var(--bs-card-spacer-y);"
-        ),
-        tags$i(class = "fa-solid fa-robot fa-2xl text-white")
       )
+    ),
+    tags$div(
+      class = paste(
+        "g-col-2 g-start-md-11 rag-dialogue-avatar d-flex align-items-center",
+        "justify-content-center bg-primary rounded-end"
+      ),
+      tags$i(class = "fa-solid fa-robot text-white")
     )
   )
 }
@@ -955,9 +953,12 @@ Zunächst liegt nur die Kundenfrage vor. Bevor der Assistent antwortet, sucht da
 Für dieses Beispiel lässt sich genau nachvollziehen, welche Textstellen in die Antwort eingeflossen sind. Aus der Wissensbasis kamen `r n_total` Textstellen als mögliche Quellen infrage; nach einer Relevanzprüfung wurden davon `r n_kept` tatsächlich genutzt und die übrigen aussortiert. Die verwendeten Stellen stammen aus `r n_docs` verschiedenen Dokumenten. So bleibt jederzeit überprüfbar, worauf eine Antwort beruht.
 
 ```{r}
-#| output: asis
-trace_source_cards |>
-  nd.util::nd_carousel(.title = "Genutzte Textstellen für die Antwort")
+nd.util::render_raw_html(
+  nd.util::nd_carousel(
+    trace_source_cards,
+    .title = "Genutzte Textstellen für die Antwort"
+  )
+)
 ```
 
 Die einzelnen Karten machen sichtbar, aus welchen Dokumenten und Abschnitten die genutzten Quellen stammen. Der Assistent stützt die spätere Antwort also nicht nur auf ein einzelnes Datenblatt, sondern gleicht mehrere Quellen gegeneinander ab.
