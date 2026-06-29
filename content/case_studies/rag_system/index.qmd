@@ -405,7 +405,7 @@ Die Chunk-Größe ist ein praktischer Kompromiss:
   {{{< fa-solid-li icon="layer-group" >}}} eine Überlappung verhindert, dass wichtige Sätze an Abschnittsgrenzen verloren gehen. {{{< /fa-solid-li >}}}
 {{{< /fa-ul >}}}
 
-Wie diese Zerlegung konkret aussieht, zeigt der direkte Vergleich am RF-500-Datenblatt: links der Ausschnitt aus der Originalseite, rechts der daraus erzeugte Eintrag im Document Store – samt Herkunft (Dokument, Seite, Überschrift), die später für die Quellenangabe gebraucht wird. Aufklappbar für eine Tabellen- und eine Fließtextpassage:
+Wie diese Zerlegung konkret aussieht, zeigt der direkte Vergleich am RF-500-Datenblatt: links der Ausschnitt aus der Originalseite, rechts der daraus erzeugte Eintrag in der Wissensbasis – samt Herkunft (Dokument, Seite, Überschrift), die später für die Quellenangabe gebraucht wird. Aufklappbar für eine Tabellen- und eine Fließtextpassage:
 
 ```{r}
 #| cache: false
@@ -481,7 +481,7 @@ make_comparison <- function(.chunk, .box, .name) {
       class = "g-col-12 g-col-md-6",
       tags$div(
         class = "card h-100",
-        tags$div(class = "card-header", "Eintrag im Document Store"),
+        tags$div(class = "card-header", "Eintrag in der Wissensbasis"),
         tags$ul(
           class = "list-group list-group-flush",
           tags$li(tags$code("Dokument:"), doc_name, class = "list-group-item"),
@@ -950,9 +950,9 @@ nd.util::render_raw_html(
 )
 ```
 
-Zunächst liegt nur die Kundenfrage vor. Bevor der Assistent antwortet, sucht das System passende Textstellen aus der Wissensbasis und begrenzt den Kontext auf die Quellen, die die Antwort tatsächlich tragen sollen.
+Zunächst liegt nur die Kundenfrage vor. Bevor der Assistent antwortet, sucht das System passende Textstellen aus der Wissensbasis und wählt daraus die aus, die die Antwort tatsächlich tragen sollen.
 
-Für dieses Beispiel zeigt der Trace, welche Textstellen ausgewählt wurden. Die Suchfrage `r trace_query_summary`. Insgesamt wurden `r n_total` Textstellen als mögliche Quellen gefunden; `r n_kept` davon wurden für die Antwort genutzt. Diese Textstellen stammen aus `r n_docs` verschiedenen Dokumenten. Das ist keine Offenlegung interner Modellgedanken, sondern eine prüfbare Dokumentation der verwendeten Quellenbasis.
+Für dieses Beispiel lässt sich genau nachvollziehen, welche Textstellen in die Antwort eingeflossen sind. Aus der Wissensbasis kamen `r n_total` Textstellen als mögliche Quellen infrage; nach einer Relevanzprüfung wurden davon `r n_kept` tatsächlich genutzt und die übrigen aussortiert. Die verwendeten Stellen stammen aus `r n_docs` verschiedenen Dokumenten. So bleibt jederzeit überprüfbar, worauf eine Antwort beruht.
 
 ```{r}
 #| output: asis
@@ -962,7 +962,7 @@ trace_source_cards |>
 
 Die einzelnen Karten machen sichtbar, aus welchen Dokumenten und Abschnitten die genutzten Quellen stammen. Der Assistent stützt die spätere Antwort also nicht nur auf ein einzelnes Datenblatt, sondern gleicht mehrere Quellen gegeneinander ab.
 
-Mit dieser Quellenbasis hat der Assistent alles, was er für die Antwortgenerierung braucht. Die Antwort hilft fachlich, verspricht aber nicht mehr, als die Quellen hergeben. Über die Info-Symbole an den Quellenmarken lässt sich nachvollziehen, aus welchem Dokument und welcher Seite jede Aussage stammt; `r trace_cited_statement_count` von `r trace_statement_count` Aussagen tragen eine solche Quellenmarke.
+Mit dieser Quellenbasis hat der Assistent alles, was er für die Antwort braucht. Die Antwort hilft fachlich, verspricht aber nicht mehr, als die Quellen hergeben. Über die Info-Symbole an den Quellenmarken lässt sich nachvollziehen, aus welchem Dokument und welcher Seite jede Aussage stammt; `r trace_cited_statement_count` von `r trace_statement_count` Aussagen tragen eine solche Quellenmarke.
 
 ```{r}
 nd.util::render_raw_html(
