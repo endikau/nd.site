@@ -267,10 +267,25 @@ dialogue_style <- tags$style(
     ".nd-article .rag-dialogue-table-scroll {",
     "  width: 100%;",
     "  max-width: 100%;",
-    "  overflow-x: auto;",
+    "  overflow-x: scroll;",
     "  overflow-y: hidden;",
     "  margin-bottom: 1rem;",
+    "  padding-bottom: 0.25rem;",
+    "  scrollbar-color: var(--bs-primary) var(--bs-border-color);",
+    "  scrollbar-width: thin;",
     "  -webkit-overflow-scrolling: touch;",
+    "}",
+    ".nd-article .rag-dialogue-table-scroll::-webkit-scrollbar {",
+    "  height: 0.75rem;",
+    "}",
+    ".nd-article .rag-dialogue-table-scroll::-webkit-scrollbar-track {",
+    "  background-color: var(--bs-border-color);",
+    "  border-radius: 999px;",
+    "}",
+    ".nd-article .rag-dialogue-table-scroll::-webkit-scrollbar-thumb {",
+    "  background-color: var(--bs-primary);",
+    "  border: 3px solid var(--bs-border-color);",
+    "  border-radius: 999px;",
     "}",
     ".nd-article .rag-dialogue-table-scroll table {",
     "  width: max-content;",
@@ -621,12 +636,15 @@ chat_cached_history <- memoise::memoize(
   cache = cachem::cache_disk(fs::path(data_path, "rag_chat_cache"))
 )
 
-rag_results <- purrr::map(rag_queries[c(
-  "worked_example",
-  "semantic",
-  "gap",
-  "guardrail"
-)], chat_cached)
+rag_results <- purrr::map(
+  rag_queries[c(
+    "worked_example",
+    "semantic",
+    "gap",
+    "guardrail"
+  )],
+  chat_cached
+)
 
 rag_history_worked_example <- list(
   list(role = "user", content = rag_queries$worked_example),
@@ -918,6 +936,8 @@ render_dialogue <- function(...) {
 
 Die folgenden Dialoge zeigen, wie der Assistent in typischen Situationen reagieren soll: bei einer anforderungsorientierten Produktempfehlung mit Folgefrage, bei einer semantischen Suche ohne Produktnamen, bei fehlenden Daten und bei Fragen außerhalb der Wissensbasis.
 
+Alle hier gezeigten Dialoge, Trefferlisten und Auswertungen sind **echte Ausgaben eines lauffähigen RAG-Systems** – keine nachgestellten Screenshots. Womit dieses System konkret umgesetzt ist, beschreibt der Abschnitt {{{< crossref path="#technische-umsetzung" label="Technische Umsetzung" >}}} weiter unten.
+
 #### Produktempfehlung bei unvollständigen Anforderungen
 
 Die Frage beschreibt Fördergut, Gewicht und Betriebsmodell, aber noch nicht alle Auslegungsdaten. Der Assistent soll deshalb eine fachliche Richtung geben und zugleich klar benennen, welche Angaben für eine belastbare Auswahl noch fehlen.
@@ -1041,6 +1061,22 @@ business_value |>
   nd.util::nd_gt_tab_options() |>
   nd.util::nd_gt_to_html()
 ```
+
+## Technische Umsetzung
+
+Die hier gezeigte Pipeline ist kein Geflecht proprietärer Cloud-Bausteine, sondern lässt sich vollständig mit quelloffener Software realisieren. Im Hintergrund arbeiten:
+
+{{{< fa-ul >}}}
+  {{{< fa-solid-li icon="file-import" >}}} **Docling** parst die Dokumente (PDF, HTML) in saubere, strukturierte Abschnitte. {{{< /fa-solid-li >}}}
+  {{{< fa-solid-li icon="vector-square" >}}} **EmbeddingGemma** erzeugt die Embeddings für Chunks und Anfragen. {{{< /fa-solid-li >}}}
+  {{{< fa-solid-li icon="database" >}}} **Qdrant** speichert die Vektoren und liefert die semantische Suche. {{{< /fa-solid-li >}}}
+  {{{< fa-solid-li icon="diagram-project" >}}} **LlamaIndex** orchestriert die RAG-Pipeline – Retrieval, Prompt-Aufbau und Zitate. {{{< /fa-solid-li >}}}
+  {{{< fa-solid-li icon="robot" >}}} **Gemma 4 31B** formuliert als Sprachmodell die eigentlichen Antworten. {{{< /fa-solid-li >}}}
+{{{< /fa-ul >}}}
+
+Entscheidend ist: Alle diese Komponenten sind **Open Source** und laufen gemeinsam auf einem **einzelnen Rechner mit einer handelsüblichen Grafikkarte**. Das hat einen handfesten Vorteil: Dokumente und Anfragen verlassen nie das eigene Haus. Gerade bei sensiblen Unternehmensdaten ist das ein starkes Argument für **Datenschutz und Compliance** (z. B. DSGVO) – es fließen keine Inhalte an externe Cloud-Dienste ab, und es fallen keine laufenden Gebühren pro Anfrage an.
+
+Wer keine eigene Hardware betreiben oder den Betrieb nicht selbst übernehmen möchte, kann dieselben Bausteine ebenso als gehostete bzw. eingekaufte Services beziehen. Die Architektur bleibt dabei identisch; lediglich Betrieb und Datenhaltung verlagern sich – so lässt sich je nach Anforderung zwischen maximaler Datenhoheit und minimalem Betriebsaufwand abwägen.
 
 ## Qualitätssicherung und Grenzen
 
