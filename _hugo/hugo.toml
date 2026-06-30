@@ -38,6 +38,12 @@ publishDir = "../_public"
         url = "/methods/ner/"
     [[menu.main]]
         weight = 3
+        identifier = "ner"
+        parent = "methods"
+        name = "RAG-System"
+        url = "/methods/rag_system/"
+    [[menu.main]]
+        weight = 3
         identifier = "case_studies"
         name = "Fallstudien"
         pre = "fa-solid fa-earth-americas"

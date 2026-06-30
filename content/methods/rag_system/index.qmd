@@ -1,0 +1,17 @@
+---
+title: "RAG-Wissensassistent"
+subtitle: "..."
+figtitle: "🤖"
+toc_show: true
+draft: false
+html-table-processing: none
+---
+
+## Ausprobieren
+
+```{r}
+nd.util:::nd_iframe_app(
+  .url = "https://nd_apps.dsjlu.wirtschaft.uni-giessen.de/apps/rag_system/",
+  .height = "4rem"
+)
+```

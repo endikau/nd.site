@@ -2570,9 +2570,9 @@
     },
     "gridExtra": {
       "Package": "gridExtra",
-      "Version": "2.3",
+      "Version": "2.3.1",
       "Source": "Repository",
-      "Authors@R": "c(person(\"Baptiste\", \"Auguie\", email = \"baptiste.auguie@gmail.com\", role = c(\"aut\", \"cre\")), person(\"Anton\", \"Antonov\", email = \"tonytonov@gmail.com\", role = c(\"ctb\")))",
+      "Authors@R": "c(person(\"Baptiste\", \"Auguie\", email = \"baptiste.auguie@vuw.ac.nz\", role = c(\"aut\", \"cre\")), person(\"Anton\", \"Antonov\", email = \"tonytonov@gmail.com\", role = c(\"ctb\")))",
       "License": "GPL (>= 2)",
       "Title": "Miscellaneous Functions for \"Grid\" Graphics",
       "Type": "Package",
@@ -2595,7 +2595,7 @@
       "RoxygenNote": "6.0.1",
       "NeedsCompilation": "no",
       "Author": "Baptiste Auguie [aut, cre], Anton Antonov [ctb]",
-      "Maintainer": "Baptiste Auguie <baptiste.auguie@gmail.com>",
+      "Maintainer": "Baptiste Auguie <baptiste.auguie@vuw.ac.nz>",
       "Repository": "https://p3m.dev/cran/__linux__/manylinux_2_28/latest",
       "Encoding": "UTF-8"
     },
@@ -3117,7 +3117,7 @@
     },
     "igraph": {
       "Package": "igraph",
-      "Version": "2.3.2",
+      "Version": "2.3.3",
       "Source": "Repository",
       "Title": "Network Analysis and Visualization",
       "Authors@R": "c( person(\"Gábor\", \"Csárdi\", , \"csardi.gabor@gmail.com\", role = \"aut\", comment = c(ORCID = \"0000-0001-7098-9676\")), person(\"Tamás\", \"Nepusz\", , \"ntamas@gmail.com\", role = \"aut\", comment = c(ORCID = \"0000-0002-1451-338X\")), person(\"Vincent\", \"Traag\", role = \"aut\", comment = c(ORCID = \"0000-0003-3170-3879\")), person(\"Szabolcs\", \"Horvát\", , \"szhorvat@gmail.com\", role = \"aut\", comment = c(ORCID = \"0000-0002-3100-523X\")), person(\"Fabio\", \"Zanini\", , \"fabio.zanini@unsw.edu.au\", role = \"aut\", comment = c(ORCID = \"0000-0001-7097-8539\")), person(\"Daniel\", \"Noom\", role = \"aut\"), person(\"Kirill\", \"Müller\", , \"kirill@cynkra.com\", role = c(\"aut\", \"cre\"), comment = c(ORCID = \"0000-0002-1416-3412\")), person(\"Michael\", \"Antonov\", role = \"ctb\"), person(\"Chan Zuckerberg Initiative\", role = \"fnd\", comment = c(ROR = \"02qenvm24\")), person(\"David\", \"Schoch\", , \"david.schoch@cynkra.com\", role = \"aut\", comment = c(ORCID = \"0000-0003-2952-4812\")), person(\"Maëlle\", \"Salmon\", , \"maelle@cynkra.com\", role = \"aut\", comment = c(ORCID = \"0000-0002-2815-0399\")), person(\"R Consortium\", role = \"fnd\", comment = c(ROR = \"01z833950\")) )",
@@ -3941,7 +3941,6 @@
       "License": "GPL (>= 3)",
       "Encoding": "UTF-8",
       "Roxygen": "list(markdown = TRUE)",
-      "RoxygenNote": "7.3.2",
       "Imports": [
         "R6",
         "bslib",
@@ -3961,13 +3960,14 @@
         "vctrs",
         "xml2"
       ],
+      "Config/roxygen2/version": "8.0.0",
       "Author": "Moritz Pilarski [aut, cre]",
       "Maintainer": "Moritz Pilarski <moritz.pilarski@example.com>",
       "RemoteType": "github",
       "RemoteUsername": "endikau",
       "RemoteRepo": "nd.util",
       "RemoteRef": "main",
-      "RemoteSha": "af016d7add55b0f255ef38489098f7a712e23932",
+      "RemoteSha": "ec17f2ad96b1573b65a433e00efa2033235918d7",
       "RemoteHost": "api.github.com"
     },
     "openssl": {
@@ -6874,7 +6874,6 @@
       "Roxygen": "list(markdown = TRUE)",
       "RoxygenNote": "7.3.3",
       "Imports": [
-        "V8",
         "checkmate",
         "crayon",
         "dplyr",
@@ -6883,7 +6882,6 @@
         "fst",
         "methods",
         "purrr",
-        "readr",
         "reticulate",
         "rlang",
         "stringi",
@@ -6891,8 +6889,7 @@
         "tidyr",
         "utils",
         "vctrs",
-        "zeallot",
-        "xml2"
+        "zeallot"
       ],
       "Depends": [
         "R (>= 2.10)"
@@ -6901,7 +6898,7 @@
       "RemoteUsername": "m-pilarski",
       "RemoteRepo": "vns",
       "RemoteRef": "main",
-      "RemoteSha": "299ea0b40be67124d95ace474d2656bd2b446a1d",
+      "RemoteSha": "a813bcd40defe370d8e324cb570369599ad51673",
       "RemoteHost": "api.github.com"
     },
     "vns.data": {
