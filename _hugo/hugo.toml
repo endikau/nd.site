@@ -37,8 +37,8 @@ publishDir = "../_public"
         name = "Entitätsanalyse"
         url = "/methods/ner/"
     [[menu.main]]
-        weight = 3
-        identifier = "ner"
+        weight = 4
+        identifier = "rag_system"
         parent = "methods"
         name = "RAG-System"
         url = "/methods/rag_system/"
