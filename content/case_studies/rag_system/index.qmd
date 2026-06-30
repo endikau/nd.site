@@ -12,6 +12,7 @@ execute:
   warning: false
   message: false
   cache: false
+  # freeze: false
 ---
 
 ```{r}
@@ -45,7 +46,8 @@ ggplot2::theme_set(`+`(
   )
 ))
 
-data_path <- here::here("content", "case_studies", "rag_system", "data")
+style_path <- here::here("content", "case_studies", "rag_system", "style.scss")
+data_dir <- here::here("content", "case_studies", "rag_system", "data")
 
 rag_prompts <- list(
   system_prompt = stringi::stri_c(
@@ -146,8 +148,8 @@ init_rag_client <- function() {
 
   .know_base_data <-
     c(
-      fs::dir_ls(data_path, regexp = "\\.html$"),
-      fs::dir_ls(fs::path(data_path, "datenblaetter"), regexp = "\\.pdf$")
+      fs::dir_ls(data_dir, regexp = "\\.html$"),
+      fs::dir_ls(fs::path(data_dir, "datenblaetter"), regexp = "\\.pdf$")
     ) |>
     tibble::as_tibble_col("path") |>
     dplyr::mutate(
@@ -159,7 +161,7 @@ init_rag_client <- function() {
       )
     )
 
-  .store_cache_path <- fs::path(data_path, "store_cache.json")
+  .store_cache_path <- fs::path(data_dir, "store_cache.json")
 
   if (fs::file_exists(.store_cache_path)) {
     .rag_client$import_store(.path = .store_cache_path)
@@ -196,11 +198,6 @@ make_accordion <- function(.items, .id, .open_first = TRUE) {
   tags$div(
     class = "accordion py-0",
     id = .id,
-    tags$style(htmltools::HTML(stringi::stri_c(
-      "#",
-      .id,
-      " .accordion-body p { margin-bottom: 1em; text-indent: 0; }"
-    ))),
     !!!purrr::map2(.items, seq_along(.items), function(.item, .index) {
       .is_open <- .open_first && .index == 1
       .heading_id <- paste0(.id, "-heading-", .index)
@@ -252,90 +249,19 @@ make_accordion <- function(.items, .id, .open_first = TRUE) {
   )
 }
 
-# Stil für die Frage-/Antwort-Karten (wird einmal pro Seite injiziert).
-dialogue_style <- tags$style(
-  htmltools::HTML(paste(
-    ".nd-article .card-body.rag-dialogue-card-body > p {",
-    "  margin-top: 0;",
-    "  margin-bottom: 1rem;",
-    "  text-indent: 0;",
-    "}",
-    ".nd-article .card-body.rag-dialogue-card-body > p:last-of-type {",
-    "  margin-bottom: 0;",
-    "  padding-bottom: 0;",
-    "}",
-    ".nd-article .rag-dialogue-avatar {",
-    "  container-type: inline-size;",
-    "  overflow: hidden;",
-    "}",
-    ".nd-article .rag-dialogue-avatar > i,",
-    ".nd-article .rag-dialogue-avatar > svg {",
-    "  font-size: min(3.5rem, 60cqw);",
-    "  line-height: 1;",
-    "}",
-    ".nd-article .rag-dialogue-table-scroll {",
-    "  width: 100%;",
-    "  max-width: 100%;",
-    "  overflow-x: scroll;",
-    "  overflow-y: hidden;",
-    "  margin-bottom: 1rem;",
-    "  padding-bottom: 0.25rem;",
-    "  scrollbar-color: var(--bs-primary) var(--bs-border-color);",
-    "  scrollbar-width: thin;",
-    "  -webkit-overflow-scrolling: touch;",
-    "}",
-    ".nd-article .rag-dialogue-table-scroll::-webkit-scrollbar {",
-    "  height: 0.75rem;",
-    "}",
-    ".nd-article .rag-dialogue-table-scroll::-webkit-scrollbar-track {",
-    "  background-color: var(--bs-border-color);",
-    "  border-radius: 999px;",
-    "}",
-    ".nd-article .rag-dialogue-table-scroll::-webkit-scrollbar-thumb {",
-    "  background-color: var(--bs-primary);",
-    "  border: 3px solid var(--bs-border-color);",
-    "  border-radius: 999px;",
-    "}",
-    ".nd-article .rag-dialogue-table-scroll table {",
-    "  width: max-content;",
-    "  min-width: 42rem;",
-    "  max-width: none;",
-    "  margin-bottom: 0;",
-    "  border-collapse: collapse;",
-    "  table-layout: auto;",
-    "}",
-    ".nd-article .rag-dialogue-table-scroll th,",
-    ".nd-article .rag-dialogue-table-scroll td {",
-    "  padding: 0.35rem 0.5rem;",
-    "  border: 1px solid var(--bs-border-color);",
-    "  vertical-align: top;",
-    "}",
-    ".nd-article .rag-dialogue-table-scroll th:first-child,",
-    ".nd-article .rag-dialogue-table-scroll td:first-child {",
-    "  min-width: 8rem;",
-    "}",
-    ".nd-article .rag-dialogue-table-scroll th:not(:first-child),",
-    ".nd-article .rag-dialogue-table-scroll td:not(:first-child) {",
-    "  min-width: 14rem;",
-    "}",
-    sep = "\n"
-  ))
-)
-
 # Eine Nutzerfrage als linksbündige „Frage"-Karte.
 make_question_box <- function(.question) {
   tags$div(
-    class = "grid mb-3",
-    style = "--bs-gap: 0;",
+    class = "rag-dialogue-row rag-dialogue-row--q",
     tags$div(
       class = paste(
-        "g-col-2 rag-dialogue-avatar d-flex align-items-center",
+        "rag-dialogue-avatar d-flex align-items-center",
         "justify-content-center bg-primary rounded-start"
       ),
       tags$i(class = "fa-solid fa-user text-white")
     ),
     tags$div(
-      class = "g-col-10 g-col-md-8 card rounded-start-0",
+      class = "rag-dialogue-bubble card rounded-start-0",
       style = "min-width: 0;",
       tags$div(
         class = "card-body rag-dialogue-card-body",
@@ -345,6 +271,15 @@ make_question_box <- function(.question) {
     )
   )
 }
+```
+
+```{r}
+#| output: asis
+# Seiten-Styles einmalig aus der SCSS-Datei kompilieren und genau einmal
+# einbinden (statt sie bei jedem Chat erneut zu injizieren).
+nd.util::render_raw_html(
+  tags$style(htmltools::HTML(sass::sass(sass::sass_file(style_path))))
+)
 ```
 
 ## Warum Retrieval-Augmented Generation?
@@ -365,7 +300,7 @@ Am Beispiel von Endikau zeigen wir, wie aus Produktdatenblättern und Website-In
 #| out-width: "100%"
 #| fig-alt: "Fördertechnik in einer industriellen Produktionshalle"
 knitr::include_graphics(fs::path(
-  data_path,
+  data_dir,
   "img",
   "pexels-nc-farm-bureau-mark-11679691.jpg"
 ))
@@ -415,7 +350,7 @@ Wie diese Zerlegung konkret aussieht, zeigt der direkte Vergleich am RF-500-Date
 ```{r}
 #| cache: false
 # Document-Store-Einträge einmalig exportieren und cachen; danach offline nutzbar.
-documents_cache_path <- fs::path(data_path, "rag_documents_cache.rds")
+documents_cache_path <- fs::path(data_dir, "rag_documents_cache.rds")
 rag_documents <- if (fs::file_exists(documents_cache_path)) {
   readr::read_rds(documents_cache_path)
 } else {
@@ -434,7 +369,7 @@ doc_name <- stringi::stri_replace_first_regex(
   ""
 )
 pdf_path <- fs::path(
-  data_path,
+  data_dir,
   "datenblaetter",
   "KF_RF500_Datenblatt_Detailed.pdf"
 )
@@ -443,7 +378,7 @@ pdf_path <- fs::path(
 # als Data-URI zurückgeben. Gerendert wird nur beim ersten Lauf (poppler via
 # pdftools); die Koordinaten stammen aus pdftools::pdf_data().
 render_pdf_excerpt <- function(.page, .box, .name) {
-  .out <- fs::path(data_path, "img", paste0("rf500_", .name, ".png"))
+  .out <- fs::path(data_dir, "img", paste0("rf500_", .name, ".png"))
   if (!fs::file_exists(.out)) {
     .s <- 150 / 72
     .x <- round(.box$x * .s)
@@ -631,14 +566,14 @@ rag_queries <- list(
 
 chat_cached <- memoise::memoize(
   \(.question) rag_client$chat_stream(.question),
-  cache = cachem::cache_disk(fs::path(data_path, "rag_chat_cache"))
+  cache = cachem::cache_disk(fs::path(data_dir, "rag_chat_cache"))
 )
 
 chat_cached_history <- memoise::memoize(
   \(.question, .history = list()) {
     rag_client$chat_stream(.question, .history = .history)
   },
-  cache = cachem::cache_disk(fs::path(data_path, "rag_chat_cache"))
+  cache = cachem::cache_disk(fs::path(data_dir, "rag_chat_cache"))
 )
 
 rag_results <- purrr::map(
@@ -892,10 +827,9 @@ format_response <- function(.response) {
 # Eine Assistenten-Antwort als rechtsbündige „Antwort"-Karte.
 make_answer_box <- function(.result) {
   tags$div(
-    class = "grid mb-3",
-    style = "--bs-gap: 0;",
+    class = "rag-dialogue-row rag-dialogue-row--a",
     tags$div(
-      class = "g-col-10 g-col-md-8 g-start-md-3 card rounded-end-0",
+      class = "rag-dialogue-bubble card rounded-end-0",
       style = "min-width: 0;",
       tags$div(
         class = "card-body rag-dialogue-card-body",
@@ -905,7 +839,7 @@ make_answer_box <- function(.result) {
     ),
     tags$div(
       class = paste(
-        "g-col-2 g-start-md-11 rag-dialogue-avatar d-flex align-items-center",
+        "rag-dialogue-avatar d-flex align-items-center",
         "justify-content-center bg-primary rounded-end"
       ),
       tags$i(class = "fa-solid fa-robot text-white")
@@ -923,10 +857,7 @@ fmt_response <- function(.result) {
 
 # Eine beliebig lange Folge aus fmt_question()/fmt_response()-Elementen.
 render_dialogue <- function(...) {
-  do.call(
-    tags$div,
-    c(list(htmltools::singleton(dialogue_style)), list(...))
-  )
+  tags$div(...)
 }
 ```
 
