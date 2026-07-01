@@ -1,17 +1,136 @@
 ---
 title: "RAG-Wissensassistent"
-subtitle: "..."
+subtitle: "Fragen auf Basis eigener Dokumente beantworten – mit nachvollziehbaren Quellen"
 figtitle: "🤖"
 toc_show: true
 draft: false
 html-table-processing: none
 ---
 
-## Ausprobieren
+```{r}
+#| label: setup
+library(htmltools)
+
+tags <- htmltools::tags
+
+# Basis-URL der eingebetteten App. Die einzelnen Bausteine werden über den
+# Query-Parameter `ui_element` (ingest/documents/chat) ausgewählt; alle drei
+# teilen sich über `session_id` dieselbe RAG-Session (siehe Skript am Seitenende).
+rag_base <- "https://nd_apps.dsjlu.wirtschaft.uni-giessen.de/apps/rag_system/"
+
+# Ein einzelner Baustein: Ladeindikator + (zunächst quellenloses) iframe. Die
+# tatsächliche `src` inkl. gemeinsamer session_id setzt das Skript am Seitenende.
+rag_embed <- function(.element, .initial_height = "240px") {
+  .iframe_id <- paste0("rag-iframe-", .element)
+  .loader_id <- paste0("rag-loader-", .element)
+  tagList(
+    tags$div(
+      id = .loader_id,
+      class = "d-flex justify-content-center align-items-center my-3",
+      style = paste0("width: 100%; height: ", .initial_height, ";"),
+      tags$div(
+        class = "spinner-border text-primary",
+        role = "status",
+        tags$span(class = "visually-hidden", "Laden…")
+      )
+    ),
+    tags$iframe(
+      id = .iframe_id,
+      class = "rag-embed",
+      `data-rag-base` = rag_base,
+      `data-rag-element` = .element,
+      `data-rag-loader` = .loader_id,
+      scrolling = "no",
+      loading = "lazy",
+      style = "width: 100%; border: 0; height: 0; display: block;"
+    )
+  )
+}
+```
+
+Ein **RAG-Wissensassistent** (Retrieval-Augmented Generation) beantwortet Fragen
+nicht aus dem allgemeinen Modellwissen, sondern ausschließlich auf Basis der
+Dokumente, die Sie ihm zur Verfügung stellen. Die folgenden drei Bausteine
+bilden den kompletten Ablauf ab – sie sind einzeln eingebettet, gehören aber zur
+**selben Sitzung**: Was Sie oben aufnehmen, steht unten für den Chat bereit.
+
+## Wissensbasis aufbauen
+
+Nehmen Sie zunächst Inhalte in die Wissensbasis auf – wahlweise über eine
+**HTML-URL** oder ein **PDF**. Die Dokumente werden zerlegt, in Vektoren
+überführt und durchsuchbar abgelegt.
 
 ```{r}
-nd.util:::nd_iframe_app(
-  .url = "https://nd_apps.dsjlu.wirtschaft.uni-giessen.de/apps/rag_system/",
-  .height = "4rem"
-)
+#| label: embed-ingest
+rag_embed("ingest")
+```
+
+## Aufgenommene Dokumente
+
+Hier sehen Sie, was aktuell in der Wissensbasis liegt. Über **Aktualisieren**
+wird die Liste neu geladen – so erscheinen auch soeben aufgenommene Dokumente.
+
+```{r}
+#| label: embed-documents
+rag_embed("documents")
+```
+
+## Fragen stellen
+
+Stellen Sie nun Fragen zu den aufgenommenen Dokumenten. Die Antwort wird live
+erzeugt und mit **Quellenmarken** versehen: Über das Info-Symbol an einer Marke
+sehen Sie, aus welchem Dokument die jeweilige Aussage stammt.
+
+```{r}
+#| label: embed-chat
+rag_embed("chat", .initial_height = "420px")
+```
+
+```{r}
+#| label: rag-wire-script
+# Skript-Block: erzeugt einmalig eine gemeinsame session_id, hängt sie zusammen
+# mit dem jeweiligen ui_element an die iframe-src und startet den iframe-resizer.
+# So teilen sich alle Bausteine dieselbe RAG-Session.
+tags$script(htmltools::HTML(paste0(
+  "(function () {\n",
+  "  var domains = [\n",
+  "    'https://shiny.dsjlu.wirtschaft.uni-giessen.de',\n",
+  "    'https://nd_apps.dsjlu.wirtschaft.uni-giessen.de'\n",
+  "  ];\n",
+  "  function randomId() {\n",
+  "    return (window.crypto && crypto.randomUUID)\n",
+  "      ? crypto.randomUUID()\n",
+  "      : (Date.now() + '-' + Math.random().toString(36).slice(2));\n",
+  "  }\n",
+  "  function init() {\n",
+  "    var sessionId = 'web-' + randomId();\n",
+  "    document.querySelectorAll('iframe.rag-embed').forEach(function (frame) {\n",
+  "      if (frame.dataset.ragWired) { return; }\n",
+  "      frame.dataset.ragWired = '1';\n",
+  "      var base = frame.getAttribute('data-rag-base');\n",
+  "      var element = frame.getAttribute('data-rag-element');\n",
+  "      var loaderId = frame.getAttribute('data-rag-loader');\n",
+  "      var sep = base.indexOf('?') >= 0 ? '&' : '?';\n",
+  "      frame.addEventListener('load', function () {\n",
+  "        var loader = loaderId && document.getElementById(loaderId);\n",
+  "        if (loader) { loader.remove(); }\n",
+  "      });\n",
+  "      frame.src = base + sep +\n",
+  "        'session_id=' + encodeURIComponent(sessionId) +\n",
+  "        '&ui_element=' + encodeURIComponent(element);\n",
+  "    });\n",
+  "    if (window.iframeResize) {\n",
+  "      iframeResize(\n",
+  "        { waitForLoad: false, license: 'GPLv3', checkOrigin: domains },\n",
+  "        'iframe.rag-embed'\n",
+  "      );\n",
+  "    }\n",
+  "  }\n",
+  "  if (document.readyState === 'loading') {\n",
+  "    document.addEventListener('DOMContentLoaded', init);\n",
+  "  } else {\n",
+  "    init();\n",
+  "  }\n",
+  "})();"
+)))
 ```
