@@ -70,12 +70,33 @@ ggplot2::theme_set(`+`(
 data_dir <- here::here("content", "case_studies", "customer_reviews", "data")
 ```
 
-Kundenrezensionen bieten wertvolle Einblicke in die Nutzung und Bewertung von Produkten, oft jedoch in unstrukturierter Form. Mittels Methoden der Textanalyse lassen sich diese Informationen systematisch aufbereiten und helfen, Nutzerbedürfnisse gezielt zu erkennen. Ziel dieser Case Study ist es, ein differenziertes Bild der Kundenerfahrungen mit verschiedenen technischen Produktgruppen zu zeichnen und daraus Verbesserungspotenziale abzuleiten.
+## Warum Kundenrezensionen systematisch auswerten?
+
+Unternehmen sammeln längst tausende Kundenrezensionen — doch in der Praxis reduziert sich deren Auswertung meist auf die Sternebewertung. Der eigentliche Erkenntniswert steckt jedoch im Freitext: welche konkreten Aspekte (Preis, Qualität, Service, Funktionalität) eine Bewertung treiben, bleibt darin verborgen und lässt sich bei tausenden Rezensionen nicht mehr manuell erfassen.
+
+Genau hier setzen Methoden der Textanalyse an: Statt jede Rezension einzeln zu lesen, lassen sich Sentiment, wiederkehrende Themen und produktspezifische Problemmuster systematisch und in der Fläche extrahieren — objektiv, nachvollziehbar und wiederholbar. Der Reiz dieses Ansatzes besteht darin, dass es keine zusätzliche Kundenbefragung braucht. Kundenrezensionen bieten wertvolle Einblicke in die Nutzung und Bewertung von Produkten, oft jedoch in unstrukturierter Form. Mittels Methoden der Textanalyse lassen sich diese Informationen systematisch aufbereiten und helfen, Nutzerbedürfnisse gezielt zu erkennen. Ziel dieser Case Study ist es, ein differenziertes Bild der Kundenerfahrungen mit verschiedenen technischen Produktgruppen zu zeichnen und daraus Verbesserungspotenziale abzuleiten.
+
+{{{< div class="grid mt-0 mb-4" >}}} {{{< div class="g-col-12 g-col-md-6 g-start-md-4" >}}}
+
+```{r}
+#| out-width: "100%"
+#| fig-alt: "Kundenrezensionen Illustration"
+knitr::include_graphics(fs::path(
+  data_dir,
+  "img",
+  "rezensionen_no_bg.png"
+))
+```
+
+{{{< /div >}}} {{{< /div >}}}
 
 
-### Laden des Datensatzes
+## Das Beispiel: Amazon-Rezensionen zu Elektronikprodukten
 
-Die Analyse basiert auf 3.413 deutschsprachigen Amazon-Rezensionen, die jeweils das Datum, die Sternebewertung und den Link der Rezension enthalten. Ein Ausschnitt der ersten Beobachtungen ist in der folgenden Tabelle dargestellt.
+Als Datengrundlage dienen 3.413 deutschsprachige Amazon-Rezensionen zu Elektronikprodukten — reale Kundentexte, keine für diese Fallstudie konstruierten Beispiele. Jede Rezension enthält neben dem Freitext auch einen Titel, das Verfassungsdatum, die Sternebewertung sowie den Link zur zugehörigen Produktseite.
+
+Inhaltlich decken die Rezensionen drei Produktgruppen ab: **Smartphones**, **Kopfhörer** und **Telefonzubehör** (z. B. Anrufbeantworter, Router). Diese Auswahl eignet sich gut als Beispiel, weil die drei Gruppen zwar verwandt sind, sich aber in den Punkten unterscheiden, über die Kund:innen typischerweise schreiben — bei Kopfhörern etwa eher Klang und Tragekomfort, bei Telefonzubehör eher Reichweite und Kompatibilität. Da die Rezensionen zudem mehrere Jahre umspannen, lässt sich später auch prüfen, ob sich Stimmung und Themen im Zeitverlauf verschieben. Ein Ausschnitt der ersten Beobachtungen des Datensatzes ist in der folgenden Tabelle dargestellt.
+
 
 ```{r}
 reviews <-
@@ -229,10 +250,23 @@ reviews <-
   select(-rating)
 ```
 
+### Ausgangslage
 
-### Vorverarbeitung der Textdaten
+Für ein Unternehmen, das diese Produkte verkauft, sagt die durchschnittliche Sternebewertung allein wenig darüber aus, woran es im Detail liegt. Typische Fragen aus Produktmanagement oder Kundenservice bleiben damit unbeantwortet:
 
-In dieser Analyse kommen überwiegend **lexikon- und regelbasierte Verfahren** zum Einsatz, die empfindlich auf irrelevante Inhalte reagieren. Bevor sich jedoch das Signal erkennen lässt, muss das Rauschen entfernt werden.
+{{{< fa-ul >}}}
+  {{{< fa-solid-li icon="quote-left" >}}} Welche wiederkehrenden Probleme berichten Kund:innen, wenn sie schlecht bewerten und sind das Einzelfälle oder ein Muster? {{{< /fa-solid-li >}}}
+  {{{< fa-solid-li icon="quote-left" >}}} Hat sich die Stimmung zu einer Produktgruppe über die Zeit verändert, und wäre ein Einbruch früh erkennbar gewesen? {{{< /fa-solid-li >}}}
+  {{{< fa-solid-li icon="quote-left" >}}} Betrifft die Unzufriedenheit eher den Preis, die Qualität, die Funktionalität oder den Service? {{{< /fa-solid-li >}}}
+{{{< /fa-ul >}}}
+
+Diese Fragen lassen sich nicht aus einer einzelnen Kennzahl beantworten, sondern nur aus dem Text der Rezensionen selbst und zwar in mehreren aufeinander aufbauenden Schritten, die im Folgenden vorgestellt werden.
+
+### Ablauf der Umsetzung
+
+#### Vorverarbeitung der Textdaten
+
+In dieser Analyse kommen überwiegend **lexikon- und regelbasierte Verfahren** zum Einsatz, die empfindlich auf irrelevante Inhalte reagieren. Entsprechend muss das Rauschen entfernt werden, damit diese Methoden die Signale sauber herausarbeiten können.
 
 Als erster Schritt wird der Text daher so aufbereitet, dass aus der Vielzahl an Formulierungen, Füllwörtern und inhaltsarmen Begriffen jene sprachlichen Elemente herausgefiltert werden, die einen **bedeutungsvollen Mehrwert** bieten. Dieser Prozess ist als {{{< crossref path="/basics#textdaten-für-analysen-vorbereiten" label="Vorverarbeitung" >}}} bekannt und bildet die Grundlage für konsistente und aussagekräftige Ergebnisse.
 
@@ -331,9 +365,7 @@ reviews |>
 
 
 
-### Analyse
-
-#### Erste Einblicke: Vergleich der Produktkategorien
+#### Vergleich der Produktkategorien
 
 Wir beginnen mit einer rein **explorativen Betrachtung:** Gibt es Unterschiede in der durchschnittlichen Bewertung zwischen den Produktkategorien?
 
@@ -371,7 +403,7 @@ Ein Blick auf den Durchschnitt der Bewertungen nach Produktkategorie zeigt zusä
 
 #### Worthäufigkeiten
 
-Um ein erstes Gefühl für den Inhalt der Kundenrezensionen zu erhalten, bietet sich eine einfache **Häufigkeitsanalyse** der verwendeten Begriffe an. Die erste Grafik zeigt die häufigsten Wörter über alle Produktkategorien hinweg. Begriffe wie "super", "funktioniert" und "zufrieden" lassen bereits darauf schließen, dass Kund:innen grundsätzlich positive Erfahrungen mit den Produkten machen. Sie liefern jedoch wenig tiefergehende Erkenntnisse, da sie sehr allgemein sind.
+Um ein erstes Gefühl für den Inhalt der Kundenrezensionen zu erhalten, bietet sich eine einfache **Häufigkeitsanalyse** der verwendeten Begriffe an. Die erste Grafik zeigt die häufigsten Wörter über alle Produktkategorien hinweg. Begriffe wie "gut" und "leider" lassen bereits darauf schließen, dass Kund:innen sowohl positive als auch negative Erfahrungen mit den Produkten machen. Sie liefern jedoch wenig tiefergehende Erkenntnisse, da sie sehr allgemein sind.
 
 ```{r}
 #| fig-height: 3.173071
@@ -425,7 +457,7 @@ produkttyp_plot
 ```
 
 
-Während bei *Smartphones* und *Telefonzubehör* Begriffe wie „funktioniert“ oder „super“ dominieren, tauchen bei *Kopfhörern* vermehrt Wörter wie „kaputt“ oder „wackelkontakt“ auf. In Kombination mit der vergleichsweise niedrigen Durchschnittsbewertung deutet dies darauf hin, dass gerade bei Kopfhörern häufiger Probleme auftreten.
+Während bei *Smartphones* und *Telefonzubehör* das Wort "gut" an zweiter Stelle auftritt, tauchen bei *Kopfhörern* vermehrt Wörter wie "leider" oder "kaputt" auf. In Kombination mit der vergleichsweise niedrigen Durchschnittsbewertung deutet dies darauf hin, dass gerade bei Kopfhörern häufiger Probleme auftreten.
 
 Häufigkeitsanalysen zeigen dominante Begriffe, vernachlässigen jedoch deren Aussagekraft pro Kategorie. Die TF-IDF-Analyse hebt hingegen kategorietypische Begriffe hervor. Die {{{< crossref path="/basics#tf-idf" label="TF-IDF-Metrik" >}}} gewichtet Wörter nicht nur nach ihrer Häufigkeit, sondern berücksichtigt auch, wie exklusiv sie für eine bestimmte Kategorie sind.
 
@@ -474,7 +506,7 @@ In der Grafik wird deutlich:
   {{{< fa-solid-li icon="lightbulb" >}}} Die Kategorie *Telefonzubehör* ist geprägt von Begriffen wie „fritzbox“, „router“ und „reichweite“.{{{< /fa-solid-li >}}}
 {{{< /fa-ul >}}}
 
-Dadurch lassen sich erste Hinweise auf die zentralen Themen und Probleme pro Produktkategorie identifizieren. Dies stellt einen wichtiger Schritt dar, um die Inhalte der Rezensionen gezielter auszuwerten und in späteren Analysen (z.B. Sentiment oder Themenmodellierung) weiter zu untersuchen.
+Dadurch lassen sich erste Hinweise auf die zentralen Themen und Probleme pro Produktkategorie identifizieren. Dies stellt einen wichtigen Schritt dar, um die Inhalte der Rezensionen gezielter auszuwerten und in späteren Analysen (z.B. Sentiment oder Themenmodellierung) weiter zu untersuchen.
 
 
 
@@ -1009,7 +1041,7 @@ if (interactive()) {
 topic_plot
 ```
 
-Direkt anschließend betrachten wir, wie häufig diese Themen im Gesamtkorpus auftreten. Die Balkenhöhen geben die durchschnittliche Dokument‑Wahrscheinlichkeit je Thema an, was dem durchschnittlichen Anteil entspricht, den ein Thema an einer Rezension hat. Dadurch sehen wir nicht nur Beispiele, sondern die gewichtete Verteilung der Themen über alle Rezensionen hinweg.
+Direkt anschließend betrachten wir, wie häufig diese Themen im Gesamtkorpus auftreten. Die Balken geben die durchschnittliche Dokument‑Wahrscheinlichkeit je Thema an, was dem durchschnittlichen Anteil entspricht, den ein Thema an einer Rezension hat. Dadurch sehen wir nicht nur Beispiele, sondern die gewichtete Verteilung der Themen über alle Rezensionen hinweg.
 
 
 ```{r}
@@ -1213,9 +1245,68 @@ Die zeitliche Entwicklung der Themenanteile zeigt deutliche Verschiebungen in de
 
 
 
-### Fazit
+## Praktischer Nutzen
+
+Eine systematische Rezensionsanalyse ist vor allem dann nützlich, wenn ihre Ergebnisse in konkrete Arbeitsabläufe einfließen. Typische Einsatzfelder sind:
+
+```{r}
+business_value <- tibble::tribble(
+  ~Bereich, ~Nutzen,
+  "Produktmanagement", "Gezielte Produktverbesserungen statt pauschaler Reaktion auf die Sternebewertung.",
+  "Qualitätssicherung", "Konkrete Hinweise auf Material-, Verarbeitungs- oder Kompatibilitätsprobleme.",
+  "Kundenservice", "Priorisierung von Supportressourcen auf die Punkte, die Kund:innen am meisten stören.",
+  "Marketing & Vertrieb", "Zielgerichtete Kommunikation von Stärken und realistischere Erwartungssteuerung.",
+  "Geschäftsführung", "Frühwarnsignal für Stimmungseinbrüche, bevor sie sich in Rücksendequote oder Umsatz zeigen."
+)
+```
+
+```{r}
+business_value |>
+  gt::gt() |>
+  gt::tab_header(
+    title = "Praktischer Nutzen der Rezensionsanalyse"
+  ) |>
+  gt::tab_options(
+    table.width = gt::pct(100),
+    data_row.padding = gt::px(5)
+  ) |>
+  nd.util::nd_gt_tab_options() |>
+  nd.util::nd_gt_to_html()
+```
+
+## Technische Umsetzung
+
+Diese Fallstudie wurde mit frei verfügbaren, quelloffenen Textanalyse-Methoden umgesetzt. Welche konkrete Programmiersprache oder Softwareumgebung dafür zum Einsatz kommt, ist zweitrangig. Im Kern kommen folgende Bausteine zum Einsatz:
+
+{{{< fa-ul >}}}
+  {{{< fa-solid-li icon="scissors" >}}} **Tokenisierung und Bereinigung:** Die Rezensionstexte werden in einzelne Wörter zerlegt, von Füllwörtern befreit und so für die weitere Auswertung vorbereitet. {{{< /fa-solid-li >}}}
+  {{{< fa-solid-li icon="face-smile" >}}} **Lexikonbasierte Sentimentanalyse:** Ein deutschsprachiges Polaritätswörterbuch bewertet, ob einzelne Wörter positiv oder negativ konnotiert sind. {{{< /fa-solid-li >}}}
+  {{{< fa-solid-li icon="list-check" >}}} **Regelbasierte Aspekterkennung:** Stichwortlisten ordnen Sätze inhaltlichen Kategorien wie Preis, Qualität oder Service zu. {{{< /fa-solid-li >}}}
+  {{{< fa-solid-li icon="layer-group" >}}} **Themenmodellierung:** Ein statistisches Modell gruppiert die Rezensionen automatisch zu wiederkehrenden inhaltlichen Schwerpunkten. {{{< /fa-solid-li >}}}
+{{{< /fa-ul >}}}
+
+Entscheidend ist weniger das konkrete Werkzeug als das Prinzip dahinter: Alle eingesetzten Verfahren sind etabliert, gut dokumentiert und ohne kostenpflichtige Cloud-Dienste oder spezielle Hardware nutzbar. Die Auswertung mehrerer tausend Rezensionen läuft in wenigen Minuten auf einem gewöhnlichen Rechner, sodass die Daten dabei nie die eigene Infrastruktur verlassen.
+
+## Grenzen der Analyse
+
+Die in dieser Fallstudie eingesetzten Methoden sind bewusst **lexikon- und regelbasiert**, denn dadurch sie machen die Ergebnisse transparent und ohne Trainingsdaten reproduzierbar. Jedoch bringen sie aber handfeste Einschränkungen mit sich, die bei der Interpretation der Zahlen beachtet werden sollten:
+
+{{{< fa-ul >}}}
+  {{{< fa-solid-li icon="quote-right" >}}} **Kein Verständnis von Kontext, Verneinung oder Ironie:** Das Sentimentlexikon summiert die Polarität einzelner Wörter. Eine Formulierung wie „nicht schlecht“ oder ein sarkastisches „na super“ kann dadurch falsch bewertet, weil die Wortbedeutung unabhängig vom Satzzusammenhang erfasst wird. {{{< /fa-solid-li >}}}
+  {{{< fa-solid-li icon="list-check" >}}} **Grobe, feste Aspektzuordnung:** Ob ein Satz zu „Preis“, „Qualität“, „Funktionalität“ oder „Service“ zählt, entscheidet eine handkuratierte Stichwortliste. Sätze, die mehrere Aspekte gleichzeitig ansprechen, oder Formulierungen mit Begriffen, die in der Liste fehlen, werden dadurch nicht korrekt erfasst. {{{< /fa-solid-li >}}}
+  {{{< fa-solid-li icon="diagram-project" >}}} **Manuelle Entscheidungen bei der Themenmodellierung:** Die Anzahl von fünf Themen wurde vorgegeben statt datengetrieben ermittelt, und die Themenbezeichnungen („Langlebigkeit“, „Sound“ etc.) beruhen auf einer Einschätzung der jeweils typischsten Begriffe, nicht auf einer eindeutigen, automatisierten Zuordnung. {{{< /fa-solid-li >}}}
+  {{{< fa-solid-li icon="filter-circle-xmark" >}}} **Verzerrung durch die Datenbasis:** Wer eine Rezension schreibt, trifft selbst diese Entscheidung – erfahrungsgemäß eher bei sehr guten oder sehr schlechten Erfahrungen. {{{< /fa-solid-li >}}}
+  {{{< fa-solid-li icon="magnifying-glass" >}}} **Keine Validierung gegen von Menschen gelabelte Referenzdaten:** In dieser Fallstudie wurden die automatisch berechneten Sentiment-, Aspekt- und Themenzuordnungen nicht stichprobenartig gegen manuell geprüfte Bewertungen abgeglichen. Wie genau die Verfahren tatsächlich liegen, lässt sich damit an dieser Stelle nicht beziffern. {{{< /fa-solid-li >}}}
+{{{< /fa-ul >}}}
+
+Für das Erkennen erster Muster in großen Textmengen sind diese Einschränkungen vertretbar. Sollen aus den Ergebnissen jedoch konkrete Geschäftsentscheidungen abgeleitet werden, lohnt sich eine Ergänzung um kontextsensitivere Verfahren (z. B. trainierte oder LLM-gestützte Klassifikatoren) sowie eine stichprobenartige menschliche Prüfung der auffälligsten Fälle.
+
+
+## Fazit
 
 In dieser Fallstudie haben wir gezeigt, welches Potenzial in der **systematischen Auswertung von Kundenrezensionen** steckt. Der freie Text in Rezensionen liefert wertvolle Informationen, ohne dass zusätzliche Befragungen oder aufwändige Erhebungen notwendig sind, wodurch **Ressourcen gespart** und anders eingesetzt werden können. Mithilfe geeigneter Analysemethoden lassen sich daraus konkrete Hinweise auf Produktqualität, Nutzererwartungen und mögliche Verbesserungspotenziale ableiten. Darüber hinaus kann die Analyse als **Echtzeit-Stimmungsbarometer** dienen. Unternehmen können frühzeitig erkennen, wenn sich negative Trends abzeichnen, und zeitnah reagieren, etwa durch Qualitätsverbesserungen, gezielte Kundenkommunikation oder Anpassung des Serviceangebots. So lassen sich Schwachstellen schneller beheben und die Produkte noch konsequenter an den Bedürfnissen der Kund:innen ausrichten.
+
+Die gezeigten lexikon- und regelbasierten Verfahren sind dabei bewusst als **Einstieg, nicht als Endpunkt** zu verstehen: Sie liefern schnell und nachvollziehbar eine erste, belastbare Orientierung, ersetzen aber keine sorgfältige Einzelfallprüfung bei kritischen Entscheidungen. Richtig eingesetzt entfalten sie dennoch genau den Mehrwert, den ein Blick auf die durchschnittliche Sternebewertung allein nicht bieten kann.
 
 ```{r}
 review_tokens_clean |>
