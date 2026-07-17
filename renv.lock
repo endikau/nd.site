@@ -366,6 +366,37 @@
       "Encoding": "UTF-8",
       "Platform": "x86_64-pc-linux-gnu-manylinux_2_27"
     },
+    "RcppParallel": {
+      "Package": "RcppParallel",
+      "Version": "5.1.11-2",
+      "Source": "Repository",
+      "Priority": null,
+      "Depends": [
+        "R (>= 3.0.2)"
+      ],
+      "Imports": [
+        null
+      ],
+      "LinkingTo": [
+        null
+      ],
+      "Suggests": [
+        "Rcpp",
+        "RUnit",
+        "knitr",
+        "rmarkdown"
+      ],
+      "Enhances": [
+        null
+      ],
+      "License": "GPL (>= 3)",
+      "License_is_FOSS": null,
+      "License_restricts_use": null,
+      "OS_type": null,
+      "NeedsCompilation": "yes",
+      "Repository": "CRAN",
+      "Type": "source"
+    },
     "RcppTOML": {
       "Package": "RcppTOML",
       "Version": "0.2.3",
@@ -4642,6 +4673,41 @@
       "Repository": "https://p3m.dev/cran/__linux__/manylinux_2_28/latest",
       "Platform": "x86_64-pc-linux-gnu-manylinux_2_24"
     },
+    "qs2": {
+      "Package": "qs2",
+      "Version": "0.2.2",
+      "Source": "Repository",
+      "Priority": null,
+      "Depends": [
+        "R (>= 3.5.0)"
+      ],
+      "Imports": [
+        "Rcpp",
+        "RcppParallel",
+        "stringfish (>= 0.18.0)"
+      ],
+      "LinkingTo": [
+        "Rcpp",
+        "RcppParallel"
+      ],
+      "Suggests": [
+        "knitr",
+        "rmarkdown",
+        "dplyr",
+        "data.table",
+        "stringi"
+      ],
+      "Enhances": [
+        null
+      ],
+      "License": "GPL-3",
+      "License_is_FOSS": null,
+      "License_restricts_use": null,
+      "OS_type": null,
+      "NeedsCompilation": "yes",
+      "Repository": "CRAN",
+      "Type": "source"
+    },
     "quadprog": {
       "Package": "quadprog",
       "Version": "1.5-8",
@@ -5756,6 +5822,37 @@
       "Author": "Kenneth Benoit [aut, cre], David Muhr [aut], Kohei Watanabe [aut]",
       "Maintainer": "Kenneth Benoit <kbenoit@lse.ac.uk>",
       "Repository": "https://p3m.dev/cran/__linux__/manylinux_2_28/latest"
+    },
+    "stringfish": {
+      "Package": "stringfish",
+      "Version": "0.19.0",
+      "Source": "Repository",
+      "Priority": null,
+      "Depends": [
+        "R (>= 3.6.0)"
+      ],
+      "Imports": [
+        "Rcpp",
+        "RcppParallel"
+      ],
+      "LinkingTo": [
+        "Rcpp (>= 0.12.18.3)",
+        "RcppParallel (>= 5.1.4)"
+      ],
+      "Suggests": [
+        "knitr",
+        "rmarkdown"
+      ],
+      "Enhances": [
+        null
+      ],
+      "License": "GPL-3",
+      "License_is_FOSS": null,
+      "License_restricts_use": null,
+      "OS_type": null,
+      "NeedsCompilation": "yes",
+      "Repository": "CRAN",
+      "Type": "source"
     },
     "stringi": {
       "Package": "stringi",
