@@ -47,3 +47,5 @@ ggplot2::theme_set(`+`(
     legend.position = "bottom"
   )
 ))
+```
+
