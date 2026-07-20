@@ -78,6 +78,12 @@ publishDir = "../_public"
         parent = "case_studies"
         name = "FAQ-Automation"
         url = "/case_studies/faq_automation"
+    [[menu.main]]
+        weight = 6
+        identifier = "case_studies-meeting_summaries"
+        parent = "case_studies"
+        name = "Meeting-Protokolle"
+        url = "/case_studies/meeting_summaries"
 
 [module]
     [[module.mounts]]

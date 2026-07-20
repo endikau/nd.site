@@ -62,21 +62,41 @@ ggplot2::theme_set(`+`(
     legend.position = "bottom"
   )
 ))
+
+data_dir <- here::here("content", "case_studies", "support_tickets", "data")
 ```
 
-  
-Täglich erreichen Unternehmen zahlreiche Anfragen, Beschwerden oder sonstige Mitteilungen. Um diese effizient zu verwalten, kommen Support-Systeme zum Einsatz, die Kundenanliegen strukturieren und kategorisieren. Doch selbst mit diesen Systemen vergeht oftmals wertvolle Zeit, bis dringende Kundenanliegen an die richtige Stelle gelangen, mit längeren Ausfallzeiten und sinkender Kundenzufriedenheit als mögliche Folgen.
+## Warum Support-Tickets automatisiert nach Dringlichkeit klassifizieren?
 
-In diesem Fallbeispiel zeigen wir, wie sich Methoden der Textanalyse und des maschinellen Lernens nutzen lassen, um Support-Tickets automatisiert nach ihrer Dringlichkeit zu klassifizieren. Ziel ist es, besonders wichtige Anfragen frühzeitig zu erkennen und die Kundenzufriedenheit gezielt zu steigern.
+Täglich erreichen Unternehmen zahlreiche Anfragen, Beschwerden oder sonstige Mitteilungen. Support-Systeme helfen zwar, diese zu strukturieren und zu kategorisieren, doch selbst damit vergeht oft wertvolle Zeit, bis ein wirklich dringendes Anliegen erkannt und an die richtige Stelle weitergeleitet wird. Die Folge sind längere Ausfallzeiten und sinkende Kundenzufriedenheit, gerade dort, wo schnelles Handeln am wichtigsten wäre.
 
-Dabei konzentrieren wir uns bewusst vor allem auf textbasierte Variablen, um zu demonstrieren, dass bereits auf dieser Basis leistungsfähige Klassifikationsmodelle entwickelt werden können.
+Hier setzen Methoden der Textanalyse und des maschinellen Lernens an: Anstatt jedes Ticket manuell zu sichten, lässt sich die Dringlichkeit bereits aus dem Text der Anfrage automatisiert einschätzen, denn Wortwahl, Tonfall und sprachliche Signale wie Fragen oder Ausrufezeichen liefern dafür überraschend aussagekräftige Hinweise.
+
+Der Reiz dieses Ansatzes: Es braucht dafür kein aufwendiges neues Datenerfassungsprojekt. Support-Tickets fallen ohnehin im Tagesgeschäft an, und wir konzentrieren uns bewusst vor allem auf textbasierte Variablen, um zu zeigen, dass sich bereits auf dieser Basis ein leistungsfähiges Klassifikationsmodell entwickeln lässt.
+
+{{{< div class="grid mt-0 mb-4" >}}} {{{< div class="g-col-12 g-col-md-6 g-start-md-4" >}}}
+
+```{r}
+#| out-width: "100%"
+#| fig-alt: "Ticket Illustration"
+knitr::include_graphics(fs::path(
+  data_dir,
+  "img",
+  "support_tickets_illustration.png"
+))
+```
+
+{{{< /div >}}} {{{< /div >}}}
 
 
-### Laden des Datensatzes 
 
-Der Datensatz umfasst 8.867 deutschsprachige Support-Tickets eines Unternehmens. Dabei enthält jede Beobachtung  strukturierte Informationen über, Betreff, Nachrichtentext der Kundenanfrage, Fachbereich (z.B. IT-Support) und der Dringlichkeitsstufe des Tickets (kategorisiert als "gering" oder "hoch").
+## Das Beispiel: Support-Tickets eines Unternehmens
 
-Diese Datenstruktur ermöglicht es, sowohl den Inhalt der Anfragen als auch deren Priorisierung zu analysieren. Für die nachfolgende Textanalyse mittels Machine Learning-Verfahren werden die Textdaten zunächst in ein maschinenlesbares Format transformieren. Dieser Prozess, wird im nächsten Abschnitt detailliert erläutert. 
+Als Datengrundlage dienen 8.867 deutschsprachige Support-Tickets eines Unternehmens. Jedes Ticket enthält neben dem Nachrichtentext auch einen Betreff sowie den zuständigen Fachbereich (z. B. IT-Support oder Rückgaben und Umtausch).
+
+Die Zielgröße **Dringlichkeit** steht dabei nicht direkt im Datensatz, sondern wird aus der ursprünglichen Ticket-Art abgeleitet: Tickets vom Typ „Incident“ oder „Problem“ gelten als **hoch dringlich**, alle anderen (z. B. allgemeine Anfragen oder Feature-Wünsche) als **gering dringlich**. Diese Vereinfachung auf zwei Klassen macht das Problem greifbar, ersetzt aber keine im Unternehmen tatsächlich gelebte Priorisierungslogik.
+
+Ein Ausschnitt der ersten Beobachtungen ist in der folgenden Tabelle dargestellt.
 
 ```{r}
 #| echo: false
@@ -169,7 +189,21 @@ support |>
 ```
 
 
-### Vorverarbeitung
+### Ausgangslage
+
+Für ein Unternehmen mit hohem Ticketaufkommen ist nicht jede Anfrage gleich dringend. Mitarbeitende im Support stehen aber ständig vor der Frage, welches Ticket zuerst bearbeitet werden sollte. Typische Fragen aus dem Tagesgeschäft bleiben dabei ohne Unterstützung offen:
+
+{{{< fa-ul >}}}
+  {{{< fa-solid-li icon="quote-left" >}}} Lässt sich die Dringlichkeit eines Tickets bereits am Text erkennen, bevor es überhaupt gelesen wurde? {{{< /fa-solid-li >}}}
+  {{{< fa-solid-li icon="quote-left" >}}} Welche sprachlichen Signale — Wortwahl, Tonfall, Satzzeichen — unterscheiden dringende von weniger dringenden Anliegen? {{{< /fa-solid-li >}}}
+  {{{< fa-solid-li icon="quote-left" >}}} Kann ein Modell diese Einschätzung zuverlässig automatisieren, ohne für Mitarbeitende zur unnachvollziehbaren Blackbox zu werden? {{{< /fa-solid-li >}}}
+  {{{< fa-solid-li icon="quote-left" >}}} Reicht dafür bereits der Nachrichtentext, oder braucht es zusätzliche, aufwendig zu pflegende Metadaten? {{{< /fa-solid-li >}}}
+{{{< /fa-ul >}}}
+
+
+### Ablauf der Umsetzung
+
+#### Vorverarbeitung
 
 Bevor der Text für weitere Analysen genutzt werden kann, muss er, wie in den {{{< crossref path="/basics#textdaten-für-analysen-vorbereiten" label="Grundlagen" >}}} beschrieben, in ein geeignetes Format überführt werden.
 
@@ -187,7 +221,7 @@ custom_stopwords <-
   # fmt: skip
   c(
     "sehr", "geehrtes", "support", "kundensupport", "team", "kundendienstteam",
-    "kundenservice", "nachricht", "kundendienst", "hoffe", "erreicht" 
+    "kundenservice", "nachricht", "kundendienst", "hoffe", "erreicht"
   ) |>
   unique() |>
   tibble::as_tibble_col("word")
@@ -288,13 +322,11 @@ tags$div(
 )
 ```
 
-### Analyse
-
 #### Worthäufigkeiten
 
 Bevor wir mit der Modellierung beginnen, schauen wir uns den Datensatz etwas genauer an, um ein besseres Verständnis für die enthaltenen Texte zu gewinnen. Insbesondere bei textbasierten Daten bietet es sich an, zunächst **Worthäufigkeiten** zu betrachten, um zentrale Begriffe und mögliche Muster zu erkennen.
 
-Die zehn häufigsten Begriffe im Datensatz deuten darauf hin, dass der Kundenservice vor allem bei technischen Problemen oder Fragen zur Software kontaktiert wird. 
+Die zehn häufigsten Begriffe im Datensatz deuten darauf hin, dass der Kundenservice vor allem bei technischen Problemen oder Fragen zur Software kontaktiert wird.
 
 ```{r}
 # word freq
@@ -319,7 +351,7 @@ freq_plot
 ```
 
 
-Allerdings wird hiermit noch nicht deutlich, welche Begriffe dringendere Nachrichten darstellen. Dazu betrachten wir in der nächsten Abbildung die häufigsten Begriffe nach Dringlichkeit. 
+Allerdings wird hiermit noch nicht deutlich, welche Begriffe dringendere Nachrichten darstellen. Dazu betrachten wir in der nächsten Abbildung die häufigsten Begriffe nach Dringlichkeit.
 
 ```{r}
 
@@ -502,9 +534,9 @@ Ein Vergleich sprachlicher Merkmale zeigt deutliche Unterschiede zwischen dringe
 Andere Merkmale wie Zeichen- und Wortanzahl oder der Einsatz von Ausrufezeichen unterscheiden sich dagegen kaum, und der Anteil an Nachrichten mit Betreff ist nahezu identisch. Diese Erkenntnisse sind für das Klassifikationsmodell entscheidend: Ein hoher Fragenanteil in Kombination mit leicht komplexerer Sprache, erkennbar an der höheren Wortlänge, kann als starker Indikator für Dringlichkeit genutzt werden.
 
 
-#### Sentimentanalyse 
+#### Sentimentanalyse
 
-Ein weiteres Merkmal, das für die Modellierung interessant sein könnte, ist die **sprachliche Stimmung (Sentiment):** Ist der Ton der Nachricht eher positiv oder negativ? Dazu führen wir eine einfache **lexikonbasierte Sentimentanalyse** durch. Dabei wird jeder Nachricht ein Wert zugewiesen, der die Summe der positiven und negativen Begriffe widerspiegelt. 
+Ein weiteres Merkmal, das für die Modellierung interessant sein könnte, ist die **sprachliche Stimmung (Sentiment):** Ist der Ton der Nachricht eher positiv oder negativ? Dazu führen wir eine einfache **lexikonbasierte Sentimentanalyse** durch. Dabei wird jeder Nachricht ein Wert zugewiesen, der die Summe der positiven und negativen Begriffe widerspiegelt.
 
 
 ```{r}
@@ -605,7 +637,7 @@ overall_sentiment_plot
 
 Mit einem Anteil von 55.4% sind die Nachrichten überwiegend sprachlich negativ geladen. Es zeigt sich auch, dass die Nachrichten eher positiv oder negativ sind, denn nur rund 3% der Nachrichten sind sprachlich neutral. Das deutet darauf hin, dass Support-Nachrichten oft emotional aufgeladen sind.
 
-Ein Blick auf den durchschnittlichen Sentimentwert für dringende und weniger dringende Nachrichten zeigt bedeutungsvolle Unterschiede: 
+Ein Blick auf den durchschnittlichen Sentimentwert für dringende und weniger dringende Nachrichten zeigt bedeutungsvolle Unterschiede:
 
 ```{r}
 #| fig-height: 3
@@ -650,16 +682,15 @@ if (interactive()) {
 }
 
 sentiment_per_urgency_plot
-
 ```
 
 
 Hoch dringliche Nachrichten enthalten häufiger negativ formulierte Texte, etwa bei Problemen oder Störungen. Weniger dringliche Anfragen sind oft neutral oder positiv, z.B. bei allgemeinen Rückfragen oder Wünschen. Die Stimmung im Text kann also ein guter Hinweis auf die Dringlichkeit sein.
 
 
-### Klassifikation 
+#### Klassifikation
 
-Unser finaler Datensatz besteht aus einigen Merkmalen, die nun für das trainieren eines Modelles genutzt werden können, um damit zukünftige Nachrichten anhand des Textes in "dringend" oder "weniger dringend" zu klassifizieren. 
+Unser finaler Datensatz besteht aus einigen Merkmalen, die nun für das trainieren eines Modelles genutzt werden können, um damit zukünftige Nachrichten anhand des Textes in "dringend" oder "weniger dringend" zu klassifizieren.
 
 
 ```{r}
@@ -680,27 +711,59 @@ support_model_data <- support_summary |>
   mutate(across(c(Dringlichkeit, Bereich, Frage, `Betreff vorhanden`), factor))
 
 
-tibble(
+var_rows <- tibble(
   Variable = names(support_model_data),
-  Typ = map_chr(support_model_data, ~ class(.x)[1]),
   Beispiel = map_chr(support_model_data, ~ as.character(.x[1]))
 ) |>
-  gt() |>
-  tab_caption("Variablenbeschreibung des Modell-Datensatzes") |>
-  cols_label(
-    Variable = "Variable",
-    Typ = "Datentyp",
-    Beispiel = "Beispielwert"
-  ) |>
-  tab_options(
-    table.width = pct(100),
-    table.font.size = px(13),
-    data_row.padding = px(4),
-    ihtml.use_pagination = FALSE
-  ) |>
-  nd.util::nd_gt_tab_options() |>
-  nd.util::nd_gt_to_html()
+  pmap(function(Variable, Beispiel) {
+    tags$li(
+      class = "list-group-item d-flex justify-content-between align-items-start gap-3",
+      tags$code(Variable),
+      tags$div(
+        style = "max-width: 70%; text-align: left;",
+        Beispiel
+      )
+    )
+  })
 
+accordion_id <- "support-var-accordion"
+heading_id <- paste0(accordion_id, "-heading")
+collapse_id <- paste0(accordion_id, "-collapse")
+
+tags$div(
+  class = "accordion py-0 mb-4",
+  id = accordion_id,
+  tags$div(
+    class = "accordion-item",
+    tags$div(
+      class = "accordion-header",
+      id = heading_id,
+      tags$button(
+        class = "accordion-button collapsed",
+        type = "button",
+        `data-bs-toggle` = "collapse",
+        `data-bs-target` = paste0("#", collapse_id),
+        `aria-expanded` = "false",
+        `aria-controls` = collapse_id,
+        "Variablenbeschreibung des Modell-Datensatzes"
+      )
+    ),
+    tags$div(
+      id = collapse_id,
+      class = "accordion-collapse collapse",
+      `data-bs-parent` = paste0("#", accordion_id),
+      `aria-labelledby` = heading_id,
+      tags$div(
+        class = "accordion-body",
+        style = "min-width: 0; overflow-x: hidden;",
+        tags$ul(
+          class = "list-group list-group-flush",
+          var_rows
+        )
+      )
+    )
+  )
+)
 ```
 
 
@@ -1013,14 +1076,67 @@ nd.util::nd_carousel(
   card_items,
   .title = "Dringlichkeits-Hinweise des Klassifikationsmodells"
 )
-
 ```
 
 
 Damit wird sichtbar, dass das Modell z. B. bei Formulierungen wie „Fehler“, „Problem“ oder „Schwierigkeiten“ eher zu einer hohen Dringlichkeit tendiert. Tickets mit neutraleren oder allgemeineren Formulierungen landen dagegen häufiger in der gering dringlich-Kategorie.
 
 
-### Fazit
+## Praktischer Nutzen
+
+Eine automatisierte Dringlichkeits-Einschätzung ist vor allem dann nützlich, wenn ihre Ergebnisse in konkrete Arbeitsabläufe einfließen. Typische Einsatzfelder sind:
+
+```{r}
+business_value <- tibble::tribble(
+  ~Bereich, ~Nutzen,
+  "Support / Kundenservice", "Automatisierte Vorpriorisierung eingehender Tickets, damit dringende Fälle nicht in der Warteschlange untergehen.",
+  "IT-Support", "Schnellere Erkennung kritischer Störungen und Sicherheitsvorfälle direkt bei Ticketeingang.",
+  "Teamleitung / Workforce Management", "Bessere Personalplanung, weil absehbar wird, wie viele dringende Fälle zu erwarten sind.",
+  "Qualitätsmanagement", "Konsistente, nachvollziehbare Priorisierung statt subjektiver Einschätzung einzelner Mitarbeitender.",
+  "Geschäftsführung", "Kürzere Reaktionszeiten bei kritischen Anliegen als messbarer Hebel für Kundenzufriedenheit."
+)
+```
+
+```{r}
+business_value |>
+  gt::gt() |>
+  gt::tab_header(
+    title = "Praktischer Nutzen der Dringlichkeits-Klassifikation"
+  ) |>
+  gt::tab_options(
+    table.width = gt::pct(100),
+    data_row.padding = gt::px(5)
+  ) |>
+  nd.util::nd_gt_tab_options() |>
+  nd.util::nd_gt_to_html()
+```
+
+## Technische Umsetzung
+
+Auch diese Fallstudie wurde mit frei verfügbaren, quelloffenen Methoden umgesetzt. Welche konkrete Programmiersprache oder Softwareumgebung dafür zum Einsatz kommt, ist zweitrangig — die gezeigten Prinzipien lassen sich mit vergleichbaren Werkzeugen ebenso gut umsetzen. Im Kern kommen folgende Bausteine zum Einsatz:
+
+{{{< fa-ul >}}}
+  {{{< fa-solid-li icon="scissors" >}}} **Tokenisierung und Bereinigung:** Die Ticket-Texte werden in einzelne Wörter zerlegt und von Füllwörtern sowie wiederkehrenden Floskeln befreit. {{{< /fa-solid-li >}}}
+  {{{< fa-solid-li icon="ruler" >}}} **Regelbasierte Merkmalsextraktion:** Sprachliche Signale wie Fragen, Ausrufezeichen oder Wortlänge werden über Suchmuster (Regular Expressions) aus dem Text gewonnen. {{{< /fa-solid-li >}}}
+  {{{< fa-solid-li icon="face-smile" >}}} **Lexikonbasierte Sentimentanalyse:** Ein deutschsprachiges Polaritätswörterbuch bewertet, ob einzelne Wörter positiv oder negativ konnotiert sind. {{{< /fa-solid-li >}}}
+  {{{< fa-solid-li icon="network-wired" >}}} **Klassifikationsmodell:** Ein Random-Forest-Modell verknüpft Textmerkmale, sprachliche Signale und Sentiment zu einer automatisierten Dringlichkeits-Einschätzung. {{{< /fa-solid-li >}}}
+{{{< /fa-ul >}}}
+
+Entscheidend ist weniger das konkrete Werkzeug als das Prinzip dahinter: Alle eingesetzten Verfahren sind etabliert, gut dokumentiert und ohne kostenpflichtige Cloud-Dienste oder spezielle Hardware nutzbar. Training und Anwendung des Modells laufen auf einem gewöhnlichen Rechner — die Ticket-Inhalte verlassen dabei nie die eigene Infrastruktur, was bei potenziell sensiblen Kundenanliegen unter Datenschutzgesichtspunkten relevant ist.
+
+## Grenzen der Analyse
+
+Die in dieser Fallstudie eingesetzten Methoden sind bewusst einfach und nachvollziehbar gehalten, denn das macht sie transparent. Dies bringt aber Einschränkungen mit sich, die bei der Interpretation und vor allem vor einem produktiven Einsatz mitgedacht werden sollten:
+
+{{{< fa-ul >}}}
+  {{{< fa-solid-li icon="quote-right" >}}} **Kein Verständnis von Kontext, Verneinung oder Sarkasmus:** Die lexikonbasierte Sentimentanalyse summiert die Polarität einzelner Wörter, unabhängig vom Satzzusammenhang. Eine Formulierung wie „kein Problem mehr“ oder ein sarkastisches „super, schon wieder kaputt“ könnte dadurch falsch eingeordnet werden. {{{< /fa-solid-li >}}}
+  {{{< fa-solid-li icon="filter" >}}} **Regelbasierte Merkmale erfassen nur Oberflächensignale:** Satzzeichen, Wortlänge oder feste Stichwortlisten messen, *wie* etwas geschrieben ist, nicht zwingend, *was* gemeint ist. Ironisch gemeinte Fragen, ungewöhnliche Formulierungen oder ganz neue Ausdrucksweisen, die nicht in den vordefinierten Mustern vorkommen, bleiben dem Verfahren verborgen. {{{< /fa-solid-li >}}}
+{{{< /fa-ul >}}}
+
+Für eine erste automatisierte Vorpriorisierung sind diese Einschränkungen vertretbar. Bevor ein solches Modell jedoch produktiv über die Bearbeitungsreihenfolge realer Kundenanliegen entscheidet, lohnt sich eine Validierung auf neuen, noch ungesehenen Tickets sowie eine Rücksprache mit dem Support-Team, ob die verwendete Dringlichkeits-Definition tatsächlich die betriebliche Realität abbildet.
+
+## Fazit
 
 In dieser Fallstudie haben wir gezeigt, wie sich Support-Tickets allein anhand der Nachricht automatisiert nach Dringlichkeit klassifizieren lassen. Schon **einfache sprachliche Merkmale** wie Wortwahl, Fragen oder Stimmung liefern ausreichend Informationen, um ein leistungsfähiges Modell zu trainieren. Dadurch können Unternehmen **kritische Anliegen schneller identifizieren**, **Bearbeitungszeiten verkürzen** und die **Kundenzufriedenheit gezielt steigern**. Zudem schafft die Hervorhebung wichtiger Textsignale **Transparenz** und erleichtert die **Akzeptanz** solcher Systeme im Arbeitsalltag.
 
+Wie die {{{< crossref path="#grenzen-der-analyse" label="Grenzen der Analyse" >}}} zeigen, sind die eingesetzten Methoden bewusst einfach gehalten und stoßen an Grenzen, etwa bei Sarkasmus oder ungewöhnlichen Formulierungen. Das trainierte Modell ist daher als **vielversprechender erster Prototyp** zu verstehen, nicht als sofort einsatzbereites Produktivsystem. Richtig eingeordnet, liefert der Ansatz dennoch einen starken Ausgangspunkt, um Priorisierung im Support spürbar zu beschleunigen.

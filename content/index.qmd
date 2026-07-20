@@ -13,11 +13,11 @@ toc_show: false
   {{{< div class="container-xxl py-4 grid row-gap-0 nd-article" >}}}
     {{{< div class="g-col-12 pb-4" >}}} {{{< span class="h1" >}}} Einsatz neuer Daten in Kommunikationszusammenhängen auf Unternehmensebene {{{< /span >}}} <br> {{{< span class="lead" >}}} ***Förderprogramm Distr@l Digitalisierung*** {{{< /span >}}} {{{< /div >}}}
     {{{< div class="g-col-12 g-col-md-8 order-md-1" >}}}
-      {{{< p >}}} 
-        **Kommunikationsdaten** entstehen durch E-Mails, Berichte, soziale Medien oder Kundenanfragen und enthalten wertvolle Informationen für Unternehmen. Doch oft bleiben sie ungenutzt, da sie unstrukturiert sind und ihre Analyse aufwendig erscheint. Computergestützte Verfahren ermöglichen jedoch die automatisierte Auswertung großer Datenmengen in kurzer Zeit – für bessere Einblicke und fundierte Entscheidungen. 
-      {{{< /p >}}} 
-      {{{< p class="pb-4 pb-md-0" >}}} 
-        Hier setzt das **EnDiKaU-Projekt** der Justus-Liebig-Universität Gießen im Rahmen des **Förderprogramms Distr@l Digitalisierung** an. Ziel des Projekts ist es, **kleinen und mittelständischen Unternehmen (KMU)** Methoden der **computergestützten Textanalyse** zugänglich zu machen und **praxisnahe Anwendungsmöglichkeiten** aufzuzeigen, um eine fundierte Grundlage für den Einsatz dieser Methoden im eigenen Unternehmen zu schaffen. 
+      {{{< p >}}}
+        **Kommunikationsdaten** entstehen durch E-Mails, Berichte, soziale Medien oder Kundenanfragen und enthalten wertvolle Informationen für Unternehmen. Doch oft bleiben sie ungenutzt, da sie unstrukturiert sind und ihre Analyse aufwendig erscheint. Computergestützte Verfahren ermöglichen jedoch die automatisierte Auswertung großer Datenmengen in kurzer Zeit – für bessere Einblicke und fundierte Entscheidungen.
+      {{{< /p >}}}
+      {{{< p class="pb-4 pb-md-0" >}}}
+        Hier setzt das **EnDiKaU-Projekt** der Justus-Liebig-Universität Gießen im Rahmen des **Förderprogramms Distr@l Digitalisierung** an. Ziel des Projekts ist es, **kleinen und mittelständischen Unternehmen (KMU)** Methoden der **computergestützten Textanalyse** zugänglich zu machen und **praxisnahe Anwendungsmöglichkeiten** aufzuzeigen, um eine fundierte Grundlage für den Einsatz dieser Methoden im eigenen Unternehmen zu schaffen.
         {{{< popover title="Mehr Informationen" >}}}
           {{{< p class="mb-2" >}}}
             Langer Text. Du kannst auch <a href="/methods/sentiment">Links</a> verwenden.
@@ -27,7 +27,7 @@ toc_show: false
             {{{< fa-solid-li icon="thumbs-down" color="#cf597e" >}}} Die Anwendung dieser Methode erfordert jedoch deutlich mehr Rechenkapazität, was besonders bei großen Datenmengen zu Herausforderungen führen kann. {{{< /fa-solid-li >}}}            {{{< fa-solid-li icon="thumbs-down" color="#cf597e" >}}} Die Anwendung dieser Methode erfordert jedoch deutlich mehr Rechenkapazität, was besonders bei großen Datenmengen zu Herausforderungen führen kann. {{{< /fa-solid-li >}}}            {{{< fa-solid-li icon="thumbs-down" color="#cf597e" >}}} Die Anwendung dieser Methode erfordert jedoch deutlich mehr Rechenkapazität, was besonders bei großen Datenmengen zu Herausforderungen führen kann. {{{< /fa-solid-li >}}}            {{{< fa-solid-li icon="thumbs-down" color="#cf597e" >}}} Die Anwendung dieser Methode erfordert jedoch deutlich mehr Rechenkapazität, was besonders bei großen Datenmengen zu Herausforderungen führen kann. {{{< /fa-solid-li >}}}            {{{< fa-solid-li icon="thumbs-down" color="#cf597e" >}}} Die Anwendung dieser Methode erfordert jedoch deutlich mehr Rechenkapazität, was besonders bei großen Datenmengen zu Herausforderungen führen kann. {{{< /fa-solid-li >}}}            {{{< fa-solid-li icon="thumbs-down" color="#cf597e" >}}} Die Anwendung dieser Methode erfordert jedoch deutlich mehr Rechenkapazität, was besonders bei großen Datenmengen zu Herausforderungen führen kann. {{{< /fa-solid-li >}}}            {{{< fa-solid-li icon="thumbs-down" color="#cf597e" >}}} Die Anwendung dieser Methode erfordert jedoch deutlich mehr Rechenkapazität, was besonders bei großen Datenmengen zu Herausforderungen führen kann. {{{< /fa-solid-li >}}}            {{{< fa-solid-li icon="thumbs-down" color="#cf597e" >}}} Die Anwendung dieser Methode erfordert jedoch deutlich mehr Rechenkapazität, was besonders bei großen Datenmengen zu Herausforderungen führen kann. {{{< /fa-solid-li >}}}
           {{{< /fa-ul >}}}
         {{{< /popover >}}}
-      {{{< /p >}}} 
+      {{{< /p >}}}
       <!-- {{{< div class="text-white text-bg-primary rounded p-3" >}}} -->
       <!--   {{{< p class="p-0" >}}} Unsere Website bietet Ihnen eine Übersicht der vielfältigen Werkzeuge, mit denen Kommunikationsdaten analysiert und genutzt werden können. Von den Grundlagen dieser Daten über Methoden, diese zu strukturieren und auszuwerten, bis hin zu praktischen Anwendungen – entdecken Sie, wie diese Methoden dazu beitragen können, wertvolle Erkenntnisse aus Kommunikationsdaten zu gewinnen. {{{< /p >}}} -->
       <!-- {{{< /div >}}} -->
@@ -83,31 +83,34 @@ readr::read_rds(here::here("content", "data", "wordcloud_data.rds")) |>
         {{{< bs_card card_img_src="/assets/img/topic_cover.svg" card_img_bg="#9c9c9c" card_title="Themenmodellierung" card_text="Die Themenmodellierung extrahiert automatisiert Hauptthemen aus Texten. Dies ermöglicht die Extraktion semantisch verwandter Begriffe, sowie die Gruppierung thematisch ähnlicher Dokumente." card_href="/methods/topic" >}}}
       {{{< /div >}}}
       {{{< div class="m-col-12 m-col-md-6 m-col-xl-4 pe-md-4 pb-md-2" >}}}
-        {{{< bs_card card_img_src="/assets/img/ner_cover.svg" card_img_bg="#9c9c9c" card_title="Entitätsanalyse" card_text="Automatisierte Identifikation und Klassifikation von Entitäten und Eigennamen. …" card_href="/methods/ner" >}}}
+        {{{< bs_card card_img_src="/assets/img/ner_cover.svg" card_img_bg="#9c9c9c" card_title="Entitätsanalyse" card_text="Die Entitätsanalyse erkennt und klassifiziert wichtige Begriffe wie Personen, Organisationen oder Orte in unstrukturierten Texten, um zentrale Akteure und Zusammenhänge gezielt aus großen Textmengen zu extrahieren." card_href="/methods/ner" >}}}
       {{{< /div >}}}
     {{{< /div >}}}
   {{{< /div >}}}
 {{{< /div >}}}
 
 
-{{{< div class="container-fluid" >}}} 
+{{{< div class="container-fluid" >}}}
   {{{< div class="container-xxl py-4 nd-article" >}}}
-    {{{< div class="masonry py-2" >}}} 
-      {{{< div class="m-col-12 m-col-md-6 m-col-xl-4 pe-md-4 pb-md-2" >}}} 
+    {{{< div class="masonry py-2" >}}}
+      {{{< div class="m-col-12 m-col-md-6 m-col-xl-4 pe-md-4 pb-md-2" >}}}
         {{{< span class="h2" >}}} Fallstudien {{{< /span >}}}
         {{{< p class="nd-article pt-2 pb-0" >}}} Unsere Fallstudien veranschaulichen, wie Technologien der Textanalyse auf reale Daten angewendet werden. Entdecken Sie konkrete Beispiele für den Einsatz von Sentimentanalyse, Themenmodellierung und weiteren Methoden. {{{< /p >}}}
-      {{{< /div >}}} 
-      {{{< div class="m-col-12 m-col-md-6 m-col-xl-4" >}}} 
+      {{{< /div >}}}
+      {{{< div class="m-col-12 m-col-md-6 m-col-xl-4" >}}}
         {{{< bs_card card_img_src="/assets/img/customer_reviews_cover.svg" card_img_bg="#9c9c9c" card_title="Kundenrezensionen" card_text="In dieser Case Study zeigen wir, wie unstrukturierte Kundenrezensionen mithilfe von Textanalyse systematisch ausgewertet werden können, um differenzierte Einblicke in die Nutzung technischer Produkte zu gewinnen und gezielt Verbesserungspotenziale zu identifizieren." card_href="/case_studies/customer_reviews" >}}}
-      {{{< /div >}}} 
-      {{{< div class="m-col-12 m-col-md-6 m-col-xl-4" >}}} 
+      {{{< /div >}}}
+      {{{< div class="m-col-12 m-col-md-6 m-col-xl-4" >}}}
         {{{< bs_card card_img_src="/assets/img/support_tickets_cover.svg" card_img_bg="#9c9c9c" card_title="Support-Tickets" card_text="Dieses Fallbeispiel zeigt, wie sich Support-Anfragen allein anhand der Texte automatisiert nach Dringlichkeit klassifizieren lassen. Durch den gezielten Einsatz von Textanalyse und Machine Learning werden besonders kritische Anliegen frühzeitig erkannt, um den Kundenservice effizienter zu gestalten." card_href="/case_studies/support_tickets" >}}}
-      {{{< /div >}}} 
-      {{{< div class="m-col-12 m-col-md-6 m-col-xl-4" >}}} 
-        {{{< bs_card card_img_src="/assets/img/network_analysis_cover.svg" card_img_bg="#9c9c9c" card_title="Netzwerkanalyse" card_text="Eine Netzwerkanalyse basierend auf der ORG-Entität: Justus Liebig Universität. …" card_href="/case_studies/network_analysis" >}}} 
+      {{{< /div >}}}
+      {{{< div class="m-col-12 m-col-md-6 m-col-xl-4" >}}}
+        {{{< bs_card card_img_src="/assets/img/network_analysis_cover.svg" card_img_bg="#9c9c9c" card_title="Netzwerkanalyse" card_text="Diese Fallstudie zeigt am Beispiel der Justus-Liebig-Universität, wie sich aus Nachrichtenartikeln per Named Entity Recognition ein Netzwerk aus Personen, Organisationen und Orten aufbauen lässt, um zentrale Akteure im eigenen medialen Umfeld sichtbar zu machen." card_href="/case_studies/network_analysis" >}}}
       {{{< /div >}}}
       {{{< div class="m-col-12 m-col-md-6 m-col-xl-4 pb-md-2" >}}}
         {{{< bs_card_emoji emoji_code="1f916" emoji_bg="#9c9c9c" card_title="RAG-System" card_text="Diese Fallstudie zeigt Schritt für Schritt, wie aus unternehmensspezifischen Dokumenten – Produktdatenblättern und Website-Inhalten – ein RAG-Wissensassistent entsteht, der Fragen ausschließlich auf Basis belegbarer Quellen beantwortet." card_href="/case_studies/rag_system" >}}}
+      {{{< /div >}}}
+      {{{< div class="m-col-12 m-col-md-6 m-col-xl-4 pb-md-2" >}}}
+        {{{< bs_card_emoji emoji_code="2753" emoji_bg="#9c9c9c" card_title="FAQ-Automatisierung" card_text="Diese Fallstudie zeigt, wie sich mithilfe großer Sprachmodelle wiederkehrende Kundenanfragen automatisch erkennen, thematisch bündeln und in strukturierte FAQ-Einträge überführen lassen – inklusive Frühindikator für neu entstehende Probleme." >}}}
       {{{< /div >}}}
     {{{< /div >}}}
   {{{< /div >}}}
