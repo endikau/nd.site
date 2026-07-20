@@ -564,16 +564,35 @@ rag_queries <- list(
   guardrail = "Was kostet der KF Rollenförderer RF-500?"
 )
 
+# Disk-Cache für memoise, der die Ergebnisse via qs2 statt als .rds ablegt.
+# Die Cache-Schlüssel bleiben identisch zu cachem::cache_disk (memoise bildet
+# sie aus Funktionsrumpf und Argumenten), sodass bestehende Einträge weiter
+# genutzt werden – nur das Dateiformat wechselt zu .qs2.
+cache_disk_qs2 <- function(.dir) {
+  fs::dir_create(.dir)
+  .path <- function(.key) fs::path(.dir, .key, ext = "qs2")
+  list(
+    get = function(.key) {
+      .p <- .path(.key)
+      if (fs::file_exists(.p)) qs2::qs_read(.p) else cachem::key_missing()
+    },
+    set = function(.key, .value) {
+      qs2::qs_save(.value, .path(.key))
+      invisible(TRUE)
+    }
+  )
+}
+
 chat_cached <- memoise::memoize(
   \(.question) rag_client$chat_stream(.question),
-  cache = cachem::cache_disk(fs::path(data_dir, "rag_chat_cache"))
+  cache = cache_disk_qs2(fs::path(data_dir, "rag_chat_cache"))
 )
 
 chat_cached_history <- memoise::memoize(
   \(.question, .history = list()) {
     rag_client$chat_stream(.question, .history = .history)
   },
-  cache = cachem::cache_disk(fs::path(data_dir, "rag_chat_cache"))
+  cache = cache_disk_qs2(fs::path(data_dir, "rag_chat_cache"))
 )
 
 rag_results <- purrr::map(
