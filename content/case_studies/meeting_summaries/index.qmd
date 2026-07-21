@@ -3,7 +3,7 @@ title: "Meetings effizient nachbereiten"
 subtitle: "Von PDF's zu strukturierten Output mittels LLMs"
 figtitle: "📋"
 date: "2024-11-25T14:25:49+01:00"
-draft: true
+draft: false
 toc_show: true
 execute:
   echo: false
