@@ -89,7 +89,7 @@ publishDir = "../_public"
         identifier = "case_studies-informationextraction"
         parent = "case_studies"
         name = "Informationsextraktion"
-        url = "/case_studies/informationextraction"
+        url = "/case_studies/information_extraction"
 
 
 [module]
