@@ -7,10 +7,15 @@ format: hugo-md
 toc_show: true
 ---
 
-## Datenquellen im Überblick
+## Warum Textdaten wichtig sind
 
-Viele Unternehmen verfügen über eine Fülle an Kommunikationsdaten, die wertvolle Einblicke bieten können. Doch oft werden diese Datenquellen nicht systematisch erfasst und bleiben deshalb ungenutzt. Im Folgenden finden Sie eine Übersicht über interne und externe Textdatenquellen, die oftmals zur Verfügung stehen, sowie deren Relevanz als Informationsbasis für Unternehmen:
+Ihr Unternehmen produziert und sammelt täglich enorme Mengen an Textdaten – oft ohne dass diese systematisch genutzt werden. E-Mails, Kundenbewertungen, Support-Anfragen oder interne Berichte enthalten wertvolles Wissen über Kundinnen und Kunden, Märkte und die eigene Organisation, das in reinen Kennzahlen nicht sichtbar wird. Wer dieses Wissen erschließt, gewinnt einen direkten Einblick in das, was Kundinnen und Kunden tatsächlich bewegt, und kann fundierter entscheiden als auf Basis von Zahlen allein.
 
+Textdaten durchziehen nahezu **alle Bereiche eines Unternehmens** – von Vertrieb und Marketing über den Kundenservice bis hin zum Qualitätsmanagement. Das systematische Erfassen und Auswerten dieser Daten ist deshalb ein erster Schritt, um sie als **Grundlage für fundierte Entscheidungen** zu nutzen.
+
+## Interne & externe Datenquellen
+
+Bevor Textdaten ausgewertet werden können, lohnt sich ein Blick darauf, wo im Unternehmen sie überhaupt anfallen. Man unterscheidet dabei grob zwischen internen und externen Textdatenquellen:
 
 ### Interne Textdaten
 
@@ -27,7 +32,6 @@ Interne Datenquellen bieten Einblicke in Ihre Betriebsabläufe und die Bedürfni
   {{{< fa-solid-li icon="check" >}}}	**Qualitätsmanagement-Daten**: Identifikation von Schwachstellen in Produkten oder Prozessen durch die Analyse von Berichten und Protokollen. {{{< /fa-solid-li >}}}
 {{{< /fa-ul >}}}
 
-
 ### Externe Textdaten
 
 Externe Quellen helfen, Kundenwünsche und Marktveränderungen zu identifizieren:
@@ -39,16 +43,46 @@ Externe Quellen helfen, Kundenwünsche und Marktveränderungen zu identifizieren
   {{{< fa-solid-li icon="newspaper" >}}}	**Nachrichten und Blogs**: Analysieren Sie Berichte oder Presseartikel, um Ihr Markenimage und die öffentliche Wahrnehmung zu verstehen. {{{< /fa-solid-li >}}}
 {{{< /fa-ul >}}}
 
+## NLP-Pipeline
 
-Textdaten durchziehen nahezu **alle Bereiche Ihres Unternehmens**. Das systematische Erfassen solcher Daten ist daher ein erster Schritt, um diese als **Grundlage für fundierte Entscheidungen** zu verwenden.
+So verschieden die einzelnen Methoden im Umgang mit Textdaten auch sind – sie folgen in der Regel demselben Grundgerüst, der sogenannten **NLP-Pipeline**. Rohe Textdaten durchlaufen dabei mehrere aufeinander aufbauende Schritte, bevor am Ende verwertbare Erkenntnisse stehen:
 
+```{=html}
+<style>
+.nd-nlp-pipeline { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; margin: 1.5rem 0; }
+.nd-nlp-pipeline .pipeline-row { display: flex; flex-wrap: wrap; align-items: stretch; justify-content: center; gap: 0.5rem; }
+.nd-nlp-pipeline .stage { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.3rem; background: #837591; border: 1.5px solid #2e2933; border-radius: 10px; padding: 0.9rem 1.1rem; width: 9.5rem; text-align: center; }
+.nd-nlp-pipeline .stage .title { font-weight: 700; color: #ffffff; }
+.nd-nlp-pipeline .stage .desc { font-size: 0.78rem; color: #ffffff; }
+.nd-nlp-pipeline .arrow { display: flex; align-items: center; font-size: 1.4rem; color: #000000; }
+</style>
+<div class="nd-nlp-pipeline">
+<div class="pipeline-row">
+<div class="stage"><div class="title">Rohtext</div><div class="desc">z. B. E-Mails, Reviews</div></div>
+<div class="arrow">&rarr;</div>
+<div class="stage"><div class="title">Vorverarbeitung</div><div class="desc">bereinigen &amp; strukturieren</div></div>
+<div class="arrow">&rarr;</div>
+<div class="stage"><div class="title">Repräsentation</div><div class="desc">Text als Zahlen</div></div>
+</div>
+<div class="pipeline-row">
+<div class="arrow">&rarr;</div>
+<div class="stage"><div class="title">Modell / Analyse</div><div class="desc">Muster erkennen</div></div>
+<div class="arrow">&rarr;</div>
+<div class="stage"><div class="title">Ergebnis</div><div class="desc">Erkenntnis &amp; Entscheidung</div></div>
+</div>
+</div>
+```
 
-## Aus unstrukturierten Daten Wissen schöpfen
+Zunächst wird der **Rohtext** durch {{{< crossref path="/methods/preprocessing" label="Vorverarbeitung" >}}} bereinigt und strukturiert. Anschließend wird der bereinigte Text in eine **numerische Repräsentation** überführt, denn Computer können nur mit Zahlen, nicht mit Sprache direkt rechnen. Erst auf Basis dieser numerischen Darstellung können Analyseverfahren Zusammenhänge erkennen und daraus wertvolle Erkenntnisse gewinnen. Am Ende steht ein **Ergebnis**, das sich in eine konkrete unternehmerische Erkenntnis oder Entscheidung übersetzen lässt.
 
-Textdaten wie E-Mails, Kundenrezensionen oder interne Dokumente stellen viele Unternehmen vor eine Herausforderung – sie sind unstrukturiert und dadurch vermeintlich schwer auswertbar. Das Hauptproblem von Textdaten ist, dass sie nicht von Computern gelesen werden können, da Computer nur mit Zahlen arbeiten können. Dementsprechend müssen Texte numerisch umgewandelt werden. Im folgenden Abschnitt werden Technologien näher vorgestellt, die diese Umwandlung von Text- zu numerischen Daten ermöglichen, um damit Texte als Datenquelle für weitere Analysen nutzen zu können.
+Welche der im Folgenden vorgestellten Methoden dabei jeweils zum Einsatz kommen, hängt vom konkreten Anwendungsfall ab – die grundlegende Pipeline bleibt jedoch meist dieselbe.
+
+## NLP vs Text Mining
+
+Textdaten wie E-Mails, Kundenrezensionen oder interne Dokumente stellen viele Unternehmen vor eine Herausforderung, denn sie sind unstrukturiert und dadurch vermeintlich schwer auswertbar. Das Hauptproblem von Textdaten ist, dass sie nicht von Computern gelesen werden können, da Computer nur mit Zahlen arbeiten können. Dementsprechend müssen Texte numerisch umgewandelt werden. Im folgenden Abschnitt werden zwei eng verwandte Technologien vorgestellt, die diese Umwandlung von Text- zu numerischen Daten ermöglichen, um Texte als Datenquelle für weitere Analysen nutzen zu können.
 
 {{{< p class="pb-0" >}}}
-**Natural Language Processing (NLP)** ist eine Technologie, die Computern ermöglicht, schriftliche oder gesprochene Sprache zu verstehen und zu analysieren. Sie kommt ins Spiel, wenn unstrukturierte Texte – wie E-Mails, Kundenrezensionen oder Social-Media-Beiträge – verarbeitet werden sollen. NLP wandelt diese Textdaten in strukturierte Daten um, die einfacher auszuwerten sind als in ihrer unstrukturierten Form.
+**Natural Language Processing (NLP)** umfasst Methoden, die es Computern ermöglichen, schriftliche oder gesprochene Sprache zu verstehen und zu analysieren. Es kommt zum Einsatz, wenn unstrukturierte Texte, wie E-Mails, Kundenrezensionen oder Social-Media-Beiträge, verarbeitet werden sollen. NLP ermöglicht die Analyse von Texten, indem diese in numerische Repräsentationen überführt werden, mit denen Computer weiterarbeiten können.
 {{{< /p >}}}
 
 {{{< div class="grid my-4" >}}} {{{< div class="g-col-12 g-col-md-8 g-start-md-3" >}}}
@@ -63,7 +97,6 @@ knitr::include_graphics(here::here("content/assets/img/nlp.svg"))
 **Text Mining** ergänzt NLP, indem es darauf abzielt, Muster, Zusammenhänge und Trends in den nun strukturierten Textdaten aufzudecken. Ähnlich wie beim „Mining“ – auf Deutsch Bergbau – werden Texte nach wertvollen Inhalten durchforstet, um nützliche Erkenntnisse zu fördern. Während NLP auf das Verstehen und die Aufbereitung der Sprache fokussiert ist, nutzt Text Mining diese aufbereiteten Daten, um relevante Muster und Strukturen zu extrahieren. Gemeinsam bilden sie ein leistungsstarkes Duo: NLP bringt die Texte in eine nützliche Form, und Text Mining hebt das verborgene Wissen ans Licht.
 {{{< /p >}}}
 
-
 {{{< div class="grid my-4" >}}} {{{< div class="g-col-8 g-start-3 g-col-md-6 g-start-md-4" >}}}
 
 ```{r}
@@ -74,148 +107,30 @@ knitr::include_graphics(here::here("content/assets/img/text_mining.svg"))
 
 Die Kombination dieser Methoden eröffnet eine **Vielzahl von Möglichkeiten für Unternehmen**: Von der Optimierung des Kundenservice über die Entwicklung neuer Produkte bis hin zur Identifizierung von Markttrends.
 
-<!-- Das evtl. als eigene Seite anlegen? -->
+## Was kann man mit NLP machen?
 
+NLP ist kein Selbstzweck, sondern eine Basistechnologie, auf der zahlreiche konkrete Anwendungen aufbauen. Zu den wichtigsten Einsatzmöglichkeiten für Unternehmen zählen:
 
-<!-- ## Textdaten für Analysen vorbereiten
+{{{< fa-ul >}}}
+  {{{< fa-solid-li icon="tags" >}}} **Textklassifikation**: Texte automatisch Kategorien zuordnen, z. B. Sentiment-Bewertung, Spam-Erkennung oder Dringlichkeit von Support-Anfragen. {{{< /fa-solid-li >}}}
+  {{{< fa-solid-li icon="magnifying-glass" >}}} **Informationsextraktion**: Konkrete Begriffe wie Personen, Organisationen, Orte oder Daten aus Texten herausfiltern. {{{< /fa-solid-li >}}}
+  {{{< fa-solid-li icon="compress" >}}} **Textzusammenfassung**: Lange Dokumente automatisch auf die wichtigsten Kernaussagen verdichten. {{{< /fa-solid-li >}}}
+  {{{< fa-solid-li icon="object-group" >}}} **Themenerkennung & Clustering**: Große Textmengen automatisch nach thematischer Ähnlichkeit gruppieren. {{{< /fa-solid-li >}}}
+  {{{< fa-solid-li icon="comments" >}}} **Frage-Antwort-Systeme & Chatbots**: Nutzeranfragen automatisiert und kontextbezogen beantworten. {{{< /fa-solid-li >}}}
+  {{{< fa-solid-li icon="pen-nib" >}}} **Textgenerierung**: Neue Texte erzeugen, etwa Antwortentwürfe, Zusammenfassungen oder Berichte. {{{< /fa-solid-li >}}}
+{{{< /fa-ul >}}}
 
-Der Ausgangspunkt jeder Textanalyse ist eine **Sammlung von Dokumenten bzw. Texten**, welche auch als **Korpus** bezeichnet wird. Dieser kann in der Form noch nicht für Analysen verwendet werden, denn die Texte liegen weiterhin in einem unstrukturierten Format vor. Das Hauptziel des **„Preprocessing“** (deutsch: Vorverarbeitung) ist es, den Aufwand für Computer zu reduzieren, indem man den Korpus auf das Wesentliche reduziert. Dies erlaubt für effizientere Analysen.Um aus Texten relevante Informationen zu extrahieren, müssen diese zunächst in eine für Computer leserliche Struktur gebracht werden. Hierfür werden verschiedene Schritte genommen, sodass zum Schluss eine strukturierte Version des Textes vorliegt, die für weitere Analysen genutzt werden kann.
+Um diese Anwendungen technisch umzusetzen, steht eine Reihe etablierter Methoden zur Verfügung, die im Folgenden im Überblick vorgestellt werden.
 
-{{{< p class="pb-0" >}}}
-In den nächsten Abschnitten werden eine Reihe von Vorverarbeitungsschritten erläutert, die je nach der verwendeten Methode unterschiedlich kombiniert werden können. Eine typische Maßnahme ist, die vorliegenden Texte in ihre einzelnen Elemente zu unterteilen, zum Beispiel in Sätze oder einzelne Wörter. Diese kleinsten Einheiten werden in der NLP-Sprache auch als **Tokens** (deutsch: Zeichen oder Symbol), bezeichnet. Entsprechend wird dieser Vorgang auch als **Tokenisierung** bezeichnet.
-{{{< /p >}}}
+## Überblick über die Methoden
 
-{{{< div class="grid my-4" >}}} {{{< div class="g-col-12" >}}}
+Die folgenden Methoden greifen die einzelnen Schritte der NLP-Pipeline auf – von der Vorverarbeitung über die numerische Repräsentation bis hin zu konkreten Analyseverfahren. Jede Methode wird auf einer eigenen Seite innerhalb dieser Webapp im Detail vorgestellt:
 
-```{r}
-knitr::include_graphics(here::here("content/assets/img/token.svg"))
-```
-
-{{{< /div >}}} {{{< /div >}}}
-
-Um die Texte weiter zu vereinfachen können zum Beispiel auch alle Wörter **kleingeschrieben** werden, sodass „Heute“ und „heute“ nicht als zwei verschiedene Begriffe kategorisiert werden. Außerdem könnte man auch alle **Symbole**, wie Punkt, Komma, @, usw., entfernen. Um die Anzahl einzelner Begriffe zu reduzieren, ist es ebenfalls üblich so genannte **Stopwords** zu entfernen. Stopwords sind Begriffe, die sehr häufig in Texten verwendet werden, die jedoch wenig zum Kontext oder der Bedeutung des Textes beitragen, wie Artikel (der, die, das), Konjunktionen (und, oder, aber, ...), und viele mehr.
-
-{{{< p class="pb-0" >}}}
-Um verschiedene Formen von Wörtern auf den jeweiligen Stamm, die sie miteinander Teilen zu reduzieren, können zwei Methoden verwendet werden: **Stemming** und/oder **Lemmatisierung**. Die Methoden können einzeln oder kombiniert werden, mit dem Ziel Wortstämme zu identifizieren und damit die Anzahl einzelner Begriffe in den Texten weiter zu reduzieren. **Stemming** identifiziert die **gemeinsame Basis verschiedener Wörter**, um sie damit auf diese zu reduzieren. Hierfür werden entsprechend Präfixe, Suffixe, etc. entfernt oder abgeschnitten, sodass nur der Wortstamm übrigbleibt. **Lemmatisierung** hingegen, zielt darauf ab Lemmas, also die **Grundform des Wortes**, die in einem Wörterbuch vorzufinden ist, zu identifizieren und Wörter darauf zu reduzieren. Anders als beim Stemming resultiert entsprechend immer ein lexikographisch korrektes Wort bei der Lemmatisierung, da Wörter identifiziert werden und nicht Prä- bzw. Suffixe einfach entfernt werden.
-{{{< /p >}}}
-
-{{{< div class="grid my-4" >}}} {{{< div class="g-col-12 g-col-md-8 g-start-md-3" >}}}
-
-```{r}
-knitr::include_graphics(here::here("content/assets/img/stemm_lemm.svg"))
-```
-
-{{{< /div >}}} {{{< /div >}}}
-
-
-Die interaktive Demo zeigt, wie sich **gängige Vorverarbeitungsschritte** auf Textdaten auswirken. Sie können einen Text auswählen und anschließend die einzelnen Schritte nach Belieben anwenden, um den Effekt direkt zu sehen.
-
-```{r}
-nd.util:::nd_iframe_app(
-  .url = "https://nd_apps.dsjlu.wirtschaft.uni-giessen.de/apps/preprocessing_demo/",
-  .height = "4rem"
-)
-``
-` -->
-
-
-## Texte numerisch darstellen
-
-Die Vorverarbeitung der Texte allein genügt nicht, um sie vollständig in eine computerlesbare Struktur zu überführen. Es sind weitere Methoden erforderlich, die Wörter numerisch darstellen. Hier gibt es verschiedene Verfahren, die für unterschiedliche Methoden geeignet sind.
-
-
-### Häufigkeitsbasierte Verfahren
-
-#### Bag of Words
-
-Das **Bag-of-Words-Modell** (BoW) ist eine der einfachsten Methoden, um Texte in eine numerische Form zu überführen. Dabei wird für jeden Text gezählt, wie oft bestimmte Wörter vorkommen, unabhängig von ihrer Reihenfolge oder ihrem Kontext. Jeder Text wird dadurch zu einem sogenannten **Wortvektor**, in dem jedes Element die Häufigkeit eines bestimmten Begriffs angibt.
-
-
-`
-``
-{
-  r
-}
-library(tidyverse)
-
-texts <- tibble(
-  doc_id = paste0(1:3),
-  text = c(
-    "Das Essen war gut.",
-    "Der Service war gut.",
-    "Das Restaurant war sauber."
-  )
-)
-
-bow <- texts |>
-  tidytext::unnest_tokens(word, text) |>
-  count(doc_id, word) |>
-  pivot_wider(
-    names_from = word,
-    values_from = n,
-    values_fill = 0
-  )
-
-bow_with_text <- bow |>
-  left_join(texts, by = "doc_id") |>
-  relocate(text, .after = doc_id) |>
-  select(-doc_id)
-
-bow |>
-  left_join(texts, by = "doc_id") |>
-  relocate(text, .after = doc_id) |>
-  select(-doc_id) |>
-  gt::gt() |>
-  gt::fmt_number(columns = 2:8, decimals = 0) |>
-  gt::cols_label(
-    text = "",
-  ) |>
-  gt::tab_options(
-    table.width = gt::pct(100)
-  ) |>
-  nd.util::nd_gt_tab_options() |>
-  nd.util::nd_gt_to_html()
-```
-
-Dieses Verfahren ist besonders einfach zu implementieren und funktioniert gut für erste Analysen, z.B. für die Analyse von Worthäufigkeiten. Allerdings geht die Bedeutung von Sprache verloren, da weder Satzstruktur noch Wortbedeutung berücksichtigt werden.
-
-
-#### TF-IDF
-
-**TF-IDF** ist eine Weiterentwicklung des Bag-of-Words-Modells. Es zählt nicht nur, wie **oft ein Wort in einem Text vorkommt** (TF = Term Frequency), sondern prüft auch, wie **selten es im gesamten Textkorpus ist** (IDF = Inverse Document Frequency).
-
-
-Alltägliche Wörter wie „ist“ oder „und“ erscheinen in vielen Dokumenten und erhalten deshalb eine niedrige Gewichtung. Fachbegriffe oder thematisch wichtige Wörter, die nur in wenigen Dokumenten auftauchen, werden dagegen stärker gewichtet. So erkennt TF-IDF, welche Begriffe für den jeweiligen Text besonders aussagekräftig sind.
-
-<!-- TODO: Illustration? -->
-
-### Kontextuelle Verfahren
-
-Moderne Verfahren basieren auf sogenannte **Word Embeddings** (Worteinbettungen). Dabei werden Wörter in einem numerischen Raum so eingebettet, dass semantische Ähnlichkeiten messbar werden.
-
-
-#### Word2Vec
-
-Ein früherer Vertreter solcher Einbettungen ist die Word2Vec Methode. Im Gegensatz zu BoW oder TF-IDF, die Wörter nur zählen, ist Word2Vec ein von Google trainiertes Modell, welches anhand von **neuronalen Netzwerken** lernte, welche Wörter in **ähnlichen Kontexten** verwendet werden und gibt ihnen **ähnliche Vektoren**.
-
-{{{< p class="pb-0" >}}}
-In der Grafik sieht man, dass das Modell nicht nur erkennt, dass „König“ und „Königin“ zusammengehören, sondern auch die Beziehung zwischen „Mann“ und „Frau“ versteht. Die Richtung und Länge der Pfeile zeigen, dass die Bedeutung von „König“ zu „Königin“ ähnlich ist wie von „Mann“ zu „Frau“. So lassen sich Bedeutungen im Raum nicht nur erkennen, sondern auch rechnerisch ableiten, wie zum Beispiel *König – Mann + Frau = Königin*.
-{{{< /p >}}}
-
-{{{< div class="grid my-4" >}}} {{{< div class="g-col-12 g-col-md-6 g-start-md-4" >}}}
-
-```{r}
-knitr::include_graphics(here::here("content/assets/img/embeddings.svg"))
-```
-
-{{{< /div >}}} {{{< /div >}}}
-
-#### BERT
-
-Anders als frühere Verfahren wie Word2Vec, bei denen jedes Wort einen festen Vektor erhält, berechnet **BERT** für jedes Vorkommen eines Wortes einen **eigenen, kontextabhängigen Vektor**. Das Modell betrachtet dabei den gesamten Satz, um die **Wortbedeutung im Zusammenhang** zu verstehen.
-
-**Beispiel:** Das Wort „Bank" bekommt in „Ich sitze auf der Bank" eine andere Repräsentation als in „Die Bank hat heute geschlossen", weil BERT aus dem Kontext die unterschiedlichen Bedeutungen erkennt.
-
-Möglich wird das durch die **Transformer-Architektur**, bei der alle Wörter eines Satzes gleichzeitig betrachtet und ihre Beziehungen zueinander gewichtet werden. So entstehen präzise Vektoren, die sich für anspruchsvolle Aufgaben eignen.
-
-<!-- TODO: very basic illustration of transformers architecture? or how it respects context? -->
+{{{< fa-ul >}}}
+  {{{< fa-solid-li icon="broom" >}}} {{{< crossref path="/methods/preprocessing" label="Vorverarbeitung" >}}}: Textdaten bereinigen und in eine strukturierte Form bringen. {{{< /fa-solid-li >}}}
+  {{{< fa-solid-li icon="puzzle-piece" >}}} {{{< crossref path="/methods/embeddings" label="Worteinbettungen" >}}}: Wörter und Texte als bedeutungstragende Vektoren darstellen. {{{< /fa-solid-li >}}}
+  {{{< fa-solid-li icon="temperature-half" >}}} {{{< crossref path="/methods/sentiment" label="Sentimentanalyse" >}}}: Automatisiert Meinungen und Stimmungen in Texten erkennen. {{{< /fa-solid-li >}}}
+  {{{< fa-solid-li icon="newspaper" >}}} {{{< crossref path="/methods/topic" label="Themenmodellierung" >}}}: Automatisch zugrunde liegende Themen in großen Textmengen identifizieren. {{{< /fa-solid-li >}}}
+  {{{< fa-solid-li icon="tag" >}}} {{{< crossref path="/methods/ner" label="Entitätsanalyse" >}}}: Personen, Organisationen, Orte und andere Eigennamen in Texten identifizieren. {{{< /fa-solid-li >}}}
+  {{{< fa-solid-li icon="robot" >}}} {{{< crossref path="/methods/rag_system" label="RAG-System" >}}}: Sprachmodelle mit eigenen Dokumenten kombinieren, um Fragen mit nachvollziehbaren Quellen zu beantworten. {{{< /fa-solid-li >}}}
+{{{< /fa-ul >}}}
