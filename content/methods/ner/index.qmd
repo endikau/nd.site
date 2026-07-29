@@ -10,16 +10,51 @@ html-table-processing: none
 
 ```{r}
 library(tidyverse)
+source(here::here("scripts/nd_inline_svg.R"))
 ```
 
 ## Was ist Entitätsanalyse?
 
 Die Entitätsanalyse ist eine NLP-Methode zur automatischen Erkennung und Klassifizierung wichtiger Begriffe (z.B. Personen, Orte, Organisationen) in unstrukturierten Texten. Als Entität bezeichnet man dabei die Information, die aus dem Text extrahiert werden soll. Eine Entität stellt dabei einen Begriff dar, der in einem Text konsequent das gleiche bezeichnet. So lassen sich mittels Entitätsanalyse beispielsweise Namen von Personen, Firmennamen, Orte, Ereignisse oder Zeitangaben erkennen und extrahieren. Dafür sind zwei Schritte grundlegend: Die Identifikation von Entitäten im Text und deren Zuordnung zu vordefinierten Kategorien.
 
-{{{< div class="grid" >}}} {{{< div class="g-col-12" >}}} 
+{{{< div class="grid" >}}} {{{< div class="g-col-12" >}}}
 
-```{r}
-knitr::include_graphics(here::here("content/assets/img/ner.svg"))
+```{=html}
+<style>
+.nd-ner-example {
+  margin: 1rem 0;
+  text-align: center;
+  line-height: 2.4;
+  hyphens: none;
+  word-break: normal;
+}
+.nd-ner-example .ent {
+  border: 1.5px solid;
+  border-radius: 8px;
+  padding: 0.2em 0.5em;
+  color: #000;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+.nd-ner-example .ent .tag {
+  margin-left: 0.4em;
+  font-size: 0.7em;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  vertical-align: 0.1em;
+}
+.nd-ner-example .org { background: #c7e7e3; border-color: #1f9493; }
+.nd-ner-example .org .tag { color: #12615f; }
+.nd-ner-example .ort { background: #f9f7c7; border-color: #9c996e; }
+.nd-ner-example .ort .tag { color: #6b6845; }
+.nd-ner-example .jahr { background: #f1cdd8; border-color: #cf587d; }
+.nd-ner-example .jahr .tag { color: #8f3253; }
+.nd-ner-example .per { background: #d2e4c4; border-color: #a1b88f; }
+.nd-ner-example .per .tag { color: #566b45; }
+</style>
+<div class="nd-ner-example">
+Die <span class="ent org">Justus-Liebig-Universität<span class="tag">ORG</span></span> in <span class="ent ort">Gießen<span class="tag">ORT</span></span> wurde <span class="ent jahr">1607<span class="tag">JAHR</span></span> gegründet. Damals hieß sie <span class="ent org">Ludiviciana<span class="tag">ORG</span></span>, benannt nach ihrem Gründer <span class="ent per">Ludwig V. von Hessen-Darmstadt<span class="tag">PER</span></span>.
+</div>
 ```
 
 {{{< /div >}}} {{{< /div >}}}
@@ -105,7 +140,9 @@ Besonders empfehlenswert sind Modelle aus der BERT-Familie, da sie speziell für
 Um den Unterschied der beiden Methoden zu verdeutlichen, zeigen wir, wie jede Methode den folgendenen Sätze klassifizieren würde: 
 
 ```{r}
-knitr::include_graphics(here::here("content/assets/img/context_ner.svg"))
+#| label: svg-context-ner
+nd_inline_svg(here::here("content/assets/img/context_ner.svg")) |>
+  nd.util::render_raw_html()
 ```
 
 Der kontextuelle Ansatz berücksichtigt die Wörter um den zentralen Begriff und entscheidet so, ob es sich bei "Bank" um eine Parkbank oder ein Finanzinstitut handelt. Grundsätzlich könnte auch ein regelbasierter Ansatz die Ambiguität von "Bank" auflösen, etwa über spezifisch formulierte Regeln. Solche Regeln funktionieren in kontrollierten Szenarien, skalieren jedoch schlecht, sind anfällig für Formulierungsvarianten und erfordern kontinuierliche Wartung. Kontextuelle Verfahren lernen diese Muster aus Daten und treffen die Unterscheidung in neuen Sätzen zuverlässiger.

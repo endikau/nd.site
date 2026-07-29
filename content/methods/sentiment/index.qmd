@@ -8,6 +8,10 @@ draft: false
 html-table-processing: none
 ---
 
+```{r}
+source(here::here("scripts/nd_inline_svg.R"))
+```
+
 ## Was ist Sentimentanalyse?
 
 Die Sentimentanalyse, auch bekannt als Stimmungsanalyse oder Opinion Mining, ist eine Methode zur automatisierten Erkennung und Bewertung der Emotionen und Meinungen, die in Textdaten zum Ausdruck kommen. Dabei ist das Ziel die Wahrnehmung eines Textes zu quantifizieren – also zu beurteilen, ob ein Text, wie beispielsweise eine Produktbewertung, ein Kundenfeedback oder ein Social-Media-Beitrag, positiv, negativ oder neutral ist. Dies wird üblicherweise auf einer Skala von -1 bis 1, also von sehr negativ bis sehr positiv.
@@ -36,12 +40,12 @@ Diese Lexika enthalten Wörter, die mit positiven oder negativen Gefühlen assoz
 
 Zur Bewertung werden die Wörter des Textes mit den Einträgen des Lexikons (bspw. SentiWS oder German Polarity Clues) abgeglichen. Die aggregierten Gewichte der Wörter aus dem Lexikon geben schließlich die Gesamtstimmung des Textes wieder.
 
-{{{< div class="grid" >}}} {{{< div class="g-col-12 g-col-md-8 g-start-md-3" >}}} 
+{{{< div class="grid" >}}} {{{< div class="g-col-12" >}}} 
 
 ```{r}
-knitr::include_graphics(here::here(
-  "content/assets/img/dict_senti.svg"
-))
+#| label: svg-dict-senti
+nd_inline_svg(here::here("content/assets/img/dict_senti.svg")) |>
+  nd.util::render_raw_html()
 ```
 
 {{{< /div >}}} {{{< /div >}}}
@@ -74,12 +78,12 @@ Im Gegensatz zu lexikonbasierten Ansätzen bieten vortrainierte Modelle, die auf
 Diese Modelle lernen aus einer Vielzahl von Beispielen und liefern auch in unbekannten Domänen oder bei komplexen sprachlichen Strukturen, wie Sarkasmus, verlässlichere Ergebnisse. Sie sind nicht auf spezifische Lexika angewiesen und können durch Fine-Tuning flexibel an unterschiedliche Anwendungsfälle angepasst werden, was sie besonders leistungsstark und vielseitig macht.
 
 
-{{{< div class="grid" >}}} {{{< div class="g-col-12 g-col-md-6 g-start-md-4" >}}} 
+{{{< div class="grid" >}}} {{{< div class="g-col-12" >}}} 
 
 ```{r}
-knitr::include_graphics(here::here(
-  "content/assets/img/ml_senti.svg"
-))
+#| label: svg-ml-senti
+nd_inline_svg(here::here("content/assets/img/ml_senti.svg")) |>
+  nd.util::render_raw_html()
 ```
 
 {{{< /div >}}} {{{< /div >}}}
