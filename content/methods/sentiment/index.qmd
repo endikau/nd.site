@@ -36,7 +36,7 @@ Diese Lexika enthalten Wörter, die mit positiven oder negativen Gefühlen assoz
 
 Zur Bewertung werden die Wörter des Textes mit den Einträgen des Lexikons (bspw. SentiWS oder German Polarity Clues) abgeglichen. Die aggregierten Gewichte der Wörter aus dem Lexikon geben schließlich die Gesamtstimmung des Textes wieder.
 
-{{{< div class="grid mb-4" >}}} {{{< div class="g-col-12 g-col-md-8 g-start-md-3" >}}} 
+{{{< div class="grid" >}}} {{{< div class="g-col-12 g-col-md-8 g-start-md-3" >}}} 
 
 ```{r}
 knitr::include_graphics(here::here(
@@ -65,8 +65,6 @@ nd.util:::nd_iframe_app(
 )
 ```
 
-{{{< div class="pb-4" >}}} {{{< /div >}}}
-
 ### Machine-Learning-Basierte Sentimentanalyse
 
 Im Gegensatz zu lexikonbasierten Ansätzen bieten vortrainierte Modelle, die auf allgemeinen Sprachmodellen wie BERT (Bidirectional Encoder Representations from Transformers) basieren, eine fortschrittliche Möglichkeit zur Sentimentanalyse.
@@ -76,7 +74,7 @@ Im Gegensatz zu lexikonbasierten Ansätzen bieten vortrainierte Modelle, die auf
 Diese Modelle lernen aus einer Vielzahl von Beispielen und liefern auch in unbekannten Domänen oder bei komplexen sprachlichen Strukturen, wie Sarkasmus, verlässlichere Ergebnisse. Sie sind nicht auf spezifische Lexika angewiesen und können durch Fine-Tuning flexibel an unterschiedliche Anwendungsfälle angepasst werden, was sie besonders leistungsstark und vielseitig macht.
 
 
-{{{< div class="grid mb-4" >}}} {{{< div class="g-col-12 g-col-md-6 g-start-md-4" >}}} 
+{{{< div class="grid" >}}} {{{< div class="g-col-12 g-col-md-6 g-start-md-4" >}}} 
 
 ```{r}
 knitr::include_graphics(here::here(

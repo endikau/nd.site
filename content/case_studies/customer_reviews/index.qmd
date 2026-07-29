@@ -76,7 +76,7 @@ Unternehmen sammeln längst tausende Kundenrezensionen — doch in der Praxis re
 
 Genau hier setzen Methoden der Textanalyse an: Statt jede Rezension einzeln zu lesen, lassen sich Sentiment, wiederkehrende Themen und produktspezifische Problemmuster systematisch und in der Fläche extrahieren — objektiv, nachvollziehbar und wiederholbar. Der Reiz dieses Ansatzes besteht darin, dass es keine zusätzliche Kundenbefragung braucht. Kundenrezensionen bieten wertvolle Einblicke in die Nutzung und Bewertung von Produkten, oft jedoch in unstrukturierter Form. Mittels Methoden der Textanalyse lassen sich diese Informationen systematisch aufbereiten und helfen, Nutzerbedürfnisse gezielt zu erkennen. Ziel dieser Case Study ist es, ein differenziertes Bild der Kundenerfahrungen mit verschiedenen technischen Produktgruppen zu zeichnen und daraus Verbesserungspotenziale abzuleiten.
 
-{{{< div class="grid mt-0 mb-4" >}}} {{{< div class="g-col-12 g-col-md-6 g-start-md-4" >}}}
+{{{< div class="grid" >}}} {{{< div class="g-col-12 g-col-md-6 g-start-md-4" >}}}
 
 ```{r}
 #| out-width: "100%"

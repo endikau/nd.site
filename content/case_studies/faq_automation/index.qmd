@@ -87,7 +87,7 @@ data_dir <- here::here("content", "case_studies", "faq_automation", "data")
 
 Kundenanfragen gehören zum Tagesgeschäft jedes Unternehmens. In der Praxis werden ähnliche Fragen jedoch immer wieder neu beantwortet: Antworten unterscheiden sich je nach Bearbeiter:in, Wissen bleibt im Kopf einzelner Personen, und bei steigendem Volumen wachsen Bearbeitungszeiten und Kosten. **Dabei liegen in den bestehenden Supportdaten bereits alle Informationen, um diese Muster sichtbar zu machen**.
 
-{{{< div class="grid mt-0 mb-4" >}}} {{{< div class="g-col-12 g-col-md-6 g-start-md-4" >}}}
+{{{< div class="grid" >}}} {{{< div class="g-col-12 g-col-md-6 g-start-md-4" >}}}
 
 ```{r}
 #| out-width: "100%"

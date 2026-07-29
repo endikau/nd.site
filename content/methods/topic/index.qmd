@@ -37,11 +37,9 @@ Es gibt verschiedene Ansätze zur Themenmodellierung, die je nach Anwendungsfall
 
 Probabilistische Modelle verwenden statistische Verfahren, um Dokumente als Mischung verschiedener Themen zu modellieren. Diese Modelle haben sich insbesondere in der automatischen Textklassifikation bewährt.
 
-{{{< p class="pb-0" >}}}
 Latent Dirichlet Allocation (LDA) ist eines der bekanntesten probabilistischen Modelle für die Themenmodellierung. Es geht davon aus, dass jedes Dokument eine Mischung aus verschiedenen Themen ist und jedes Wort mit einer bestimmten Wahrscheinlichkeit zu einem dieser Themen gehört. Dies bedeutet, dass Dokumente nicht auf ein einziges Thema beschränkt ist, sondern vielmehr aus unterschiedlichen thematischen Anteilen bestehen können. So könnte etwa ein Dokument zu 10% dem Thema "Digitalisierung" und zu 90% dem Thema "Kundenservice" zugeordnet sein, während ein anderes Dokument dieselben Themen in einem Verhältnis von 65% zu 35% behandelt. LDA wird häufig zur automatischen Dokumentenkategorisierung und -zusammenfassung eingesetzt.
-{{{< /p >}}}
 
-{{{< div class="grid my-4" >}}} {{{< div class="g-col-12 g-col-md-10 g-start-md-2" >}}}
+{{{< div class="grid" >}}} {{{< div class="g-col-12 g-col-md-10 g-start-md-2" >}}}
 
 ```{r}
 knitr::include_graphics(here::here("content/assets/img/lda_topic.svg"))
@@ -77,7 +75,7 @@ Die Themenmodellierung erfolgt dabei in vier aufeinander aufbauenden Schritten:
 {{{< /fa-ul >}}}
 
 
-{{{< div class="grid my-4" >}}} {{{< div class="g-col-12 g-col-md-10 g-start-md-2" >}}}
+{{{< div class="grid" >}}} {{{< div class="g-col-12 g-col-md-10 g-start-md-2" >}}}
 
 ```{r}
 knitr::include_graphics(here::here("content/assets/img/bertopic.svg"))

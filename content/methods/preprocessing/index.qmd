@@ -18,7 +18,7 @@ data_dir <- here::here("content", "methods", "preprocessing")
 
 Stellen Sie sich vor, Ihr Unternehmen erhält täglich Hunderte E-Mails, Supportanfragen oder Kundenbewertungen. Für Menschen ist schnell erkennbar, worum es in den Nachrichten geht – für Computer sind dies zunächst lediglich Zeichenfolgen. Damit Texte automatisch analysiert werden können, müssen sie zunächst in eine strukturierte Form überführt werden. Dieser Schritt wird als Textvorverarbeitung (Preprocessing) bezeichnet und bildet die Grundlage vieler klassischer Verfahren des Text Minings.
 
-{{{< div class="grid mt-0 mb-4" >}}} {{{< div class="g-col-12 g-col-md-8 g-start-md-3" >}}}
+{{{< div class="grid" >}}} {{{< div class="g-col-12 g-col-md-8 g-start-md-3" >}}}
 
 ```{r}
 #| out-width: "100%"
@@ -39,13 +39,11 @@ Wie viel Vorverarbeitung dafür nötig ist, hängt allerdings stark von der Meth
 
 Der Ausgangspunkt jeder Textanalyse ist eine **Sammlung von Dokumenten bzw. Texten**, welche auch als **Korpus** bezeichnet wird. Dieser kann in dieser Form noch nicht für Analysen verwendet werden, denn die Texte liegen weiterhin in einem unstrukturierten Format vor. Das Hauptziel des **„Preprocessing“** (deutsch: Vorverarbeitung) ist es, den Aufwand für Computer zu reduzieren, indem man den Korpus auf das Wesentliche reduziert. Dies erlaubt effizientere Analysen.
 
-{{{< p class="pb-0" >}}}
 Preprocessing ist dabei kein festes Rezept, das sich unverändert auf jeden Text und jede Methode anwenden lässt, sondern eine Reihe von Entscheidungen mit jeweils eigenen Trade-offs. Jeder einzelne Schritt vereinfacht den Text und entfernt dabei zwangsläufig auch Information. Ob sich das lohnt, hängt davon ab, was die anschließende Analyse mit dem Text vorhat – ein Bag-of-Words-Modell profitiert von einem reduzierten Vokabular, ein Sprachmodell verliert dadurch womöglich genau die Nuancen, auf die es angewiesen ist. Diesen Unterschied greifen wir im Abschnitt {{{< crossref path="#und-bei-llms" label="Und bei LLMs?" >}}} wieder auf.
-{{{< /p >}}}
 
 Ein typischer erster Schritt ist, die vorliegenden Texte in ihre einzelnen Elemente zu unterteilen, zum Beispiel in Sätze oder einzelne Wörter. Diese kleinsten Einheiten werden in der NLP-Sprache auch als **Tokens** (deutsch: Zeichen oder Symbol) bezeichnet. Entsprechend wird dieser Vorgang auch als **Tokenisierung** bezeichnet.
 
-{{{< div class="grid my-4" >}}} {{{< div class="g-col-12 text-center" >}}}
+{{{< div class="grid" >}}} {{{< div class="g-col-12 text-center" >}}}
 
 {{{< p class="fw-semibold text-center" >}}}
 „Die Tokenisierung zerlegt Sätze in einzelne Elemente.“
@@ -154,11 +152,9 @@ Viele Wörter kommen in nahezu jedem deutschen Text vor, tragen jedoch nur wenig
 
 #### Stemming vs. Lemmatisierung
 
-{{{< p class="pb-0" >}}}
 Um verschiedene Formen von Wörtern auf den jeweiligen Stamm, die sie miteinander teilen, zu reduzieren, können zwei Methoden verwendet werden: **Stemming** und/oder **Lemmatisierung**. Die Methoden können einzeln oder kombiniert werden, mit dem Ziel, Wortstämme zu identifizieren und damit die Anzahl einzelner Begriffe in den Texten weiter zu reduzieren. **Stemming** identifiziert die **gemeinsame Basis verschiedener Wörter**, um sie darauf zu reduzieren. Hierfür werden entsprechend Präfixe, Suffixe usw. entfernt oder abgeschnitten, sodass nur der Wortstamm übrigbleibt. **Lemmatisierung** hingegen zielt darauf ab, Lemmas, also die **Grundform des Wortes**, die in einem Wörterbuch vorzufinden ist, zu identifizieren und Wörter darauf zu reduzieren. Anders als beim Stemming resultiert entsprechend immer ein lexikographisch korrektes Wort bei der Lemmatisierung, da Wörter identifiziert werden und nicht Prä- bzw. Suffixe einfach entfernt werden.
-{{{< /p >}}}
 
-{{{< div class="grid my-4" >}}} {{{< div class="g-col-12 g-col-md-10 g-start-md-2" >}}}
+{{{< div class="grid" >}}} {{{< div class="g-col-12 g-col-md-10 g-start-md-2" >}}}
 
 ```{=html}
 <style>
@@ -471,7 +467,7 @@ LLMs verwenden keine Wort-, sondern eine **Subword-Tokenisierung**, meist auf Ba
 
 **Vereinfachtes Beispiel:** Ein klassischer Tokenizer behandelt „Unternehmensberatung“ als ein einziges, seltenes Token. Ein Subword-Tokenizer zerlegt das Wort dagegen in bekannte Bausteine, die auch in vielen anderen Wörtern vorkommen und dadurch wiederverwendet werden können:
 
-{{{< div class="grid my-4" >}}} {{{< div class="g-col-12 g-col-md-10 g-start-md-2" >}}}
+{{{< div class="grid" >}}} {{{< div class="g-col-12 g-col-md-10 g-start-md-2" >}}}
 
 ```{=html}
 <style>

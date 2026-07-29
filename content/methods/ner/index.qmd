@@ -16,7 +16,7 @@ library(tidyverse)
 
 Die Entitätsanalyse ist eine NLP-Methode zur automatischen Erkennung und Klassifizierung wichtiger Begriffe (z.B. Personen, Orte, Organisationen) in unstrukturierten Texten. Als Entität bezeichnet man dabei die Information, die aus dem Text extrahiert werden soll. Eine Entität stellt dabei einen Begriff dar, der in einem Text konsequent das gleiche bezeichnet. So lassen sich mittels Entitätsanalyse beispielsweise Namen von Personen, Firmennamen, Orte, Ereignisse oder Zeitangaben erkennen und extrahieren. Dafür sind zwei Schritte grundlegend: Die Identifikation von Entitäten im Text und deren Zuordnung zu vordefinierten Kategorien.
 
-{{{< div class="grid my-4" >}}} {{{< div class="g-col-12" >}}} 
+{{{< div class="grid" >}}} {{{< div class="g-col-12" >}}} 
 
 ```{r}
 knitr::include_graphics(here::here("content/assets/img/ner.svg"))

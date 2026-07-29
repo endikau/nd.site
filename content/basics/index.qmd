@@ -81,11 +81,9 @@ Welche der im Folgenden vorgestellten Methoden dabei jeweils zum Einsatz kommen,
 
 Textdaten wie E-Mails, Kundenrezensionen oder interne Dokumente stellen viele Unternehmen vor eine Herausforderung, denn sie sind unstrukturiert und dadurch vermeintlich schwer auswertbar. Das Hauptproblem von Textdaten ist, dass sie nicht von Computern gelesen werden können, da Computer nur mit Zahlen arbeiten können. Dementsprechend müssen Texte numerisch umgewandelt werden. Im folgenden Abschnitt werden zwei eng verwandte Technologien vorgestellt, die diese Umwandlung von Text- zu numerischen Daten ermöglichen, um Texte als Datenquelle für weitere Analysen nutzen zu können.
 
-{{{< p class="pb-0" >}}}
 **Natural Language Processing (NLP)** umfasst Methoden, die es Computern ermöglichen, schriftliche oder gesprochene Sprache zu verstehen und zu analysieren. Es kommt zum Einsatz, wenn unstrukturierte Texte, wie E-Mails, Kundenrezensionen oder Social-Media-Beiträge, verarbeitet werden sollen. NLP ermöglicht die Analyse von Texten, indem diese in numerische Repräsentationen überführt werden, mit denen Computer weiterarbeiten können.
-{{{< /p >}}}
 
-{{{< div class="grid my-4" >}}} {{{< div class="g-col-12 g-col-md-8 g-start-md-3" >}}}
+{{{< div class="grid" >}}} {{{< div class="g-col-12 g-col-md-8 g-start-md-3" >}}}
 
 ```{r}
 knitr::include_graphics(here::here("content/assets/img/nlp.svg"))
@@ -93,11 +91,9 @@ knitr::include_graphics(here::here("content/assets/img/nlp.svg"))
 
 {{{< /div >}}} {{{< /div >}}}
 
-{{{< p class="pb-0" >}}}
 **Text Mining** ergänzt NLP, indem es darauf abzielt, Muster, Zusammenhänge und Trends in den nun strukturierten Textdaten aufzudecken. Ähnlich wie beim „Mining“ – auf Deutsch Bergbau – werden Texte nach wertvollen Inhalten durchforstet, um nützliche Erkenntnisse zu fördern. Während NLP auf das Verstehen und die Aufbereitung der Sprache fokussiert ist, nutzt Text Mining diese aufbereiteten Daten, um relevante Muster und Strukturen zu extrahieren. Gemeinsam bilden sie ein leistungsstarkes Duo: NLP bringt die Texte in eine nützliche Form, und Text Mining hebt das verborgene Wissen ans Licht.
-{{{< /p >}}}
 
-{{{< div class="grid my-4" >}}} {{{< div class="g-col-8 g-start-3 g-col-md-6 g-start-md-4" >}}}
+{{{< div class="grid" >}}} {{{< div class="g-col-8 g-start-3 g-col-md-6 g-start-md-4" >}}}
 
 ```{r}
 knitr::include_graphics(here::here("content/assets/img/text_mining.svg"))

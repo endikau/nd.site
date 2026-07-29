@@ -46,7 +46,7 @@ Genau diese zweite Frage lässt sich mit einer **Netzwerkanalyse** beantworten. 
 
 Was hier am Beispiel der JLU gezeigt wird, lässt sich auf jede Organisation anwenden — auch auf ein KMU, das wissen möchte, in welchem öffentlichen Umfeld es wahrgenommen wird. An die Stelle der „JLU" tritt dann der eigene Firmenname, während an die Stelle regionaler Politiker oder Partneruniversitäten mögliche Geschäftspartner, Lieferanten oder Wettbewerber treten.
 
-{{{< div class="grid mt-0 mb-4" >}}} {{{< div class="g-col-12 g-col-md-6 g-start-md-4" >}}}
+{{{< div class="grid" >}}} {{{< div class="g-col-12 g-col-md-6 g-start-md-4" >}}}
 
 ```{r}
 #| out-width: "100%"
