@@ -1,3 +1,9 @@
+# xml2 serialisiert per Default mit `options = "format"` und schiebt dabei
+# Einrückungen zwischen Kindelemente. In einem <text xml:space="preserve"> wird
+# diese Einrückung zu sichtbarem Text und verschiebt die Zeilen -- deshalb ohne
+# Formatierung ausgeben.
+.as_svg <- function(.doc) as.character(.doc, options = character())
+
 #' SVG direkt in die Seite schreiben statt über <img> einbinden
 #'
 #' Ein über `<img src="...svg">` eingebundenes SVG ist ein eigenständiges
@@ -32,7 +38,7 @@ nd_inline_svg <- function(.file) {
     xml2::xml_attr(.svg, "viewBox"), "[\\s,]+"
   )[[1]])
   .sizes <- stringi::stri_match_all_regex(
-    as.character(.doc), "font-size:\\s*([0-9.]+)px"
+    .as_svg(.doc), "font-size:\\s*([0-9.]+)px"
   )[[1]][, 2]
   .font_size <- as.numeric(names(which.max(table(.sizes))))
   xml2::xml_attr(.svg, "style") <- sprintf(
@@ -46,7 +52,7 @@ nd_inline_svg <- function(.file) {
     htmltools::tags$div(
       class = "nd-inline-svg",
       htmltools::HTML(
-        stringi::stri_replace_first_regex(as.character(.doc), "(?s)\\A.*?(?=<svg)", "")
+        stringi::stri_replace_first_regex(.as_svg(.doc), "(?s)\\A.*?(?=<svg)", "")
       )
     )
   )
