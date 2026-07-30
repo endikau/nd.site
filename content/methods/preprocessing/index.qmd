@@ -4,7 +4,7 @@ subtitle: "Von unstrukturiertem Text zu analysierbaren Daten"
 figtitle: "⚙️"
 date: "2024-11-25T14:25:49+01:00"
 toc_show: true
-draft: true
+draft: false
 html-table-processing: none
 ---
 

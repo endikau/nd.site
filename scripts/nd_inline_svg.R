@@ -18,6 +18,13 @@
 #' @return Ein `htmltools`-Tag zur Weitergabe an `nd.util::render_raw_html()`.
 nd_inline_svg <- function(.file) {
   .doc <- xml2::read_xml(.file)
+  .svg <- xml2::xml_find_first(.doc, "/*")
+
+  # draw.io legt seine editierbare Diagrammquelle (samt eingebetteter Bilder) im
+  # Attribut `content` des Wurzelelements ab. Für die Anzeige ist sie nutzlos,
+  # macht aber bei manchen Dateien über 95 % der Größe aus. Sie wird nur aus der
+  # eingebetteten Kopie entfernt -- die Quelldatei bleibt in draw.io editierbar.
+  xml2::xml_attr(.svg, "content") <- NULL
 
   # Hugos --minify entfernt sonst die bedeutungstragenden Leerzeichen zwischen
   # den <tspan>-Elementen ("auf derBankim Park"). Geschützte Leerzeichen
@@ -33,17 +40,35 @@ nd_inline_svg <- function(.file) {
   # häufigste Größe, nicht die größte -- sie steht für den Grundtext der
   # Grafik, während Überschriften darin größer gesetzt sind. Passt die Grafik
   # so nicht in die Spalte, greift max-width und sie wird proportional kleiner.
-  .svg <- xml2::xml_find_first(.doc, "/*")
   .view_box <- as.numeric(stringi::stri_split_regex(
     xml2::xml_attr(.svg, "viewBox"), "[\\s,]+"
   )[[1]])
-  .sizes <- stringi::stri_match_all_regex(
-    .as_svg(.doc), "font-size:\\s*([0-9.]+)px"
-  )[[1]][, 2]
-  .font_size <- as.numeric(names(which.max(table(.sizes))))
-  xml2::xml_attr(.svg, "style") <- sprintf(
-    "width:%.4fem", .view_box[3] / .font_size
+  # Schriftgrößen stehen je nach Werkzeug im style-Attribut (Inkscape) oder als
+  # Präsentationsattribut (draw.io) -- beide Formen berücksichtigen. Größe 0
+  # kommt in draw.io-Exporten für unsichtbare Hilfstexte vor und darf die
+  # Auswahl nicht verfälschen; bei Gleichstand gewinnt die größere Angabe, da
+  # kleine Werte typischerweise zu ausgeblendeten Fallback-Texten gehören.
+  # <foreignObject> wird in diesen Exporten nie gezeichnet (der umgebende
+  # <switch> überspringt ihn), seine Schriftgrößen würden die Zählung nur
+  # verfälschen -- nur für die Erkennung ausblenden, nicht in der Ausgabe.
+  .visible <- stringi::stri_replace_all_regex(
+    .as_svg(.doc), "(?s)<foreignObject.*?</foreignObject>", ""
   )
+  .sizes <- as.numeric(stringi::stri_match_all_regex(
+    .visible, "font-size\\s*[:=]\\s*\"?\\s*([0-9.]+)px"
+  )[[1]][, 2])
+  .sizes <- .sizes[!is.na(.sizes) & .sizes > 0]
+  if (length(.sizes) > 0) {
+    .counts <- table(.sizes)
+    .font_size <- max(as.numeric(names(.counts)[.counts == max(.counts)]))
+    .width <- sprintf("width:%.4fem", .view_box[3] / .font_size)
+  } else {
+    # Setzt das SVG keine eigene Schriftgröße, erbt sein Text die der Seite.
+    # Dann stimmt die Größe genau bei Maßstab 1:1 -- und sie wächst sogar mit,
+    # falls die Seite ihre Schriftgröße ändert.
+    .width <- sprintf("width:%.4fpx", .view_box[3])
+  }
+  xml2::xml_attr(.svg, "style") <- .width
 
   htmltools::tagList(
     htmltools::tags$style(htmltools::HTML(

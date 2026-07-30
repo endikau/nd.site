@@ -11,5 +11,5 @@
 </a>
 
 <template id="{{ $id }}">
-  {{ .Inner | safeHTML }}
+  {{ .Inner | markdownify }}
 </template>

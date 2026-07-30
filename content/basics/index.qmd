@@ -7,6 +7,10 @@ format: hugo-md
 toc_show: true
 ---
 
+```{r}
+source(here::here("scripts/nd_inline_svg.R"))
+```
+
 ## Warum Textdaten wichtig sind
 
 Ihr Unternehmen produziert und sammelt täglich enorme Mengen an Textdaten – oft ohne dass diese systematisch genutzt werden. E-Mails, Kundenbewertungen, Support-Anfragen oder interne Berichte enthalten wertvolles Wissen über Kundinnen und Kunden, Märkte und die eigene Organisation, das in reinen Kennzahlen nicht sichtbar wird. Wer dieses Wissen erschließt, gewinnt einen direkten Einblick in das, was Kundinnen und Kunden tatsächlich bewegt, und kann fundierter entscheiden als auf Basis von Zahlen allein.
@@ -83,10 +87,12 @@ Textdaten wie E-Mails, Kundenrezensionen oder interne Dokumente stellen viele Un
 
 **Natural Language Processing (NLP)** umfasst Methoden, die es Computern ermöglichen, schriftliche oder gesprochene Sprache zu verstehen und zu analysieren. Es kommt zum Einsatz, wenn unstrukturierte Texte, wie E-Mails, Kundenrezensionen oder Social-Media-Beiträge, verarbeitet werden sollen. NLP ermöglicht die Analyse von Texten, indem diese in numerische Repräsentationen überführt werden, mit denen Computer weiterarbeiten können.
 
-{{{< div class="grid" >}}} {{{< div class="g-col-12 g-col-md-8 g-start-md-3" >}}}
+{{{< div class="grid" >}}} {{{< div class="g-col-12" >}}}
 
 ```{r}
-knitr::include_graphics(here::here("content/assets/img/nlp.svg"))
+#| label: svg-nlp
+nd_inline_svg(here::here("content/assets/img/nlp.svg")) |>
+  nd.util::render_raw_html()
 ```
 
 {{{< /div >}}} {{{< /div >}}}
@@ -96,7 +102,9 @@ knitr::include_graphics(here::here("content/assets/img/nlp.svg"))
 {{{< div class="grid" >}}} {{{< div class="g-col-8 g-start-3 g-col-md-6 g-start-md-4" >}}}
 
 ```{r}
-knitr::include_graphics(here::here("content/assets/img/text_mining.svg"))
+#| label: svg-text-mining
+nd_inline_svg(here::here("content/assets/img/text_mining.svg")) |>
+  nd.util::render_raw_html()
 ```
 
 {{{< /div >}}} {{{< /div >}}}
