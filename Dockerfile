@@ -44,7 +44,12 @@ RUN --mount=type=cache,target=/root/.npm \
     npm ci
 
 
-FROM ghcr.io/endikau/nd_docker-runtime:${RUNTIME_TAG} AS build
+# Gemeinsame Basis fuer den Build und das Endimage: Quarto, Pandoc und Hugo
+# kommen aus .deb-Paketen und verteilen sich ueber /opt und /usr/local — sie
+# einzeln zwischen Stages zu kopieren waere bruechig. Stattdessen einmal hier
+# installieren; beide Seiten teilen sich denselben Layer, und das Endimage kann
+# damit auch selbst rendern.
+FROM ghcr.io/endikau/nd_docker-static_serve:${RUNTIME_TAG} AS serve-base
 
 ARG HUGO_VERSION=0.163.3
 ARG PANDOC_VERSION=3.10
@@ -61,23 +66,29 @@ RUN /rocker_scripts/install_pandoc.sh "${PANDOC_VERSION}" \
  && /rocker_scripts/install_quarto.sh "${QUARTO_VERSION}" \
  && /opt/nd-docker/scripts/install_hugo.sh
 
+
+FROM serve-base AS build
+
 WORKDIR /project
 
-COPY . .
+COPY --from=python-deps /opt/nd/venv/ /opt/nd/venv/
 COPY --from=r-deps /project/renv/library/ ./renv/library/
 COPY --from=node-deps /project/node_modules/ ./node_modules/
-COPY --from=python-deps /opt/nd/venv/ /opt/nd/venv/
+COPY . .
 
 RUN quarto render
 
 
-FROM ghcr.io/endikau/nd_docker-static_serve:${RUNTIME_TAG}
-
-ENV RENV_PATHS_CACHE=/tmp/renv-cache \
-    RENV_PYTHON=/opt/nd/venv/bin/python \
-    RETICULATE_PYTHON=/opt/nd/venv/bin/python
+FROM serve-base
 
 WORKDIR /project
 
-COPY --from=build /project/ /project/
+# Reihenfolge nach Aenderungshaeufigkeit, seltenstes zuerst: ein neuer Layer
+# invalidiert alle folgenden. Frueher lag alles in einem einzigen COPY, weshalb
+# eine Textaenderung auch renv-Library und node_modules neu uebertragen hat.
 COPY --from=python-deps /opt/nd/venv/ /opt/nd/venv/
+COPY --from=r-deps /project/renv/library/ ./renv/library/
+COPY --from=node-deps /project/node_modules/ ./node_modules/
+COPY . .
+COPY --from=build /project/_hugo/ ./_hugo/
+COPY --from=build /project/_public/ ./_public/
