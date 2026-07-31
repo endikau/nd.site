@@ -1301,6 +1301,6 @@
    </g>
   </g>
  </g>
- <text x="188.62636" y="15.408041" fill="#000000" font-family="'Open Sans'" font-size="14.667px" xml:space="preserve"><tspan x="188.62636" y="15.408041" font-family="'Open Sans'" font-size="14.667px" font-weight="600">NLP</tspan></text>
- <text transform="matrix(1.0274 0 0 1.0306 -26.229 10.019)" x="285.293" y="40.894619" fill="#000000" font-family="'Open Sans'" font-size="14.447px" font-weight="600" style="inline-size:103.995;white-space:pre" xml:space="preserve"><tspan x="285.293" y="40.894619">0101010101</tspan></text>
+ <text x="188.62636" y="15.408041" fill="#000000" font-family="'Open Sans'" font-size="14.667px" xml:space="preserve"><tspan x="188.62636" y="15.408041" font-family="'Open Sans'" font-size="14.667px" font-weight="400">NLP</tspan></text>
+ <text transform="matrix(1.0274 0 0 1.0306 -26.229 10.019)" x="285.293" y="40.894619" fill="#000000" font-family="'Open Sans'" font-size="14.447px" font-weight="400" style="inline-size:103.995;white-space:pre" xml:space="preserve"><tspan x="285.293" y="40.894619">0101010101</tspan></text>
 </svg>

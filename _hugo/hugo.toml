@@ -19,6 +19,12 @@ publishDir = "../_public"
         pre = "fa-solid fa-calculator"
         url = "/methods/"
     [[menu.main]]
+        weight = 0
+        identifier = "preprocessing"
+        parent = "methods"
+        name = "Textvorverarbeitung"
+        url = "/methods/preprocessing/"
+    [[menu.main]]
         weight = 1
         identifier = "sentiment"
         parent = "methods"
@@ -89,7 +95,7 @@ publishDir = "../_public"
         identifier = "case_studies-informationextraction"
         parent = "case_studies"
         name = "Informationsextraktion"
-        url = "/case_studies/informationextraction"
+        url = "/case_studies/information_extraction"
 
 
 [module]

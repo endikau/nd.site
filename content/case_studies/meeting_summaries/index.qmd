@@ -3,7 +3,7 @@ title: "Meetings effizient nachbereiten"
 subtitle: "Von PDF's zu strukturierten Output mittels LLMs"
 figtitle: "📋"
 date: "2024-11-25T14:25:49+01:00"
-draft: true
+draft: false
 toc_show: true
 execute:
   echo: false
@@ -74,7 +74,7 @@ Besprechungen gehören zum Arbeitsalltag in fast jedem Unternehmen. Trotzdem ver
 
 Hier setzen moderne Sprachmodelle (LLMs) an. Anders als klassische Verfahren der Textanalyse können sie nicht nur Informationen aus Texten extrahieren, sondern daraus direkt strukturierte Inhalte erzeugen, wie etwa Zusammenfassungen, Aufgabenlisten oder automatisch formulierte E-Mails.
 
-{{{< div class="grid mt-0 mb-4" >}}} {{{< div class="g-col-12 g-col-md-6 g-start-md-3" >}}}
+{{{< div class="grid" >}}} {{{< div class="g-col-12 g-col-md-6 g-start-md-3" >}}}
 
 ```{r}
 #| out-width: "130%"
@@ -247,13 +247,14 @@ Deshalb verwenden wir in dieser Fallstudie einen deutlich strukturierteren Ansat
 prompt_regeln <- c(
   "Erfinde keine Inhalte. Wenn eine Information fehlt, lass das Feld leer.",
   "Übernimm Daten, Eigennamen, Produktbezeichnungen und Fachbegriffe wortgetreu.",
-  "Korrigiere allerdings Tippfehler (z. B. „FEbruar“ statt „Februar“).",
+  "Korrigiere offensichtliche Tippfehler, aber verändere keine Eigennamen oder Fachbegriffe.",
   "Vertagungen oder Verschiebungen sind KEINE Beschlüsse — sie gehören unter 'offene Punkte'.",
-  "Wenn unklar ist, wer für eine Aufgabe verantwortlich ist, schreibe '' anstatt eine Person zu raten."
+  "Wenn unklar ist, wer für eine Aufgabe verantwortlich ist, lass das Feld leer anstatt eine Person zu raten.",
+  "Sortiere die Aufgaben chronologisch nach Frist — die früheste Frist zuerst, Aufgaben ohne Frist ans Ende."
 )
 
 tags$div(
-  class = "card",
+  class = "card mb-5",
   style = "width: 100%;",
   tags$div(
     class = "card-header",
@@ -282,6 +283,27 @@ tags$div(
     )
   )
 )
+```
+
+Zusätzlich zum Prompt wird die Ausgabestruktur technisch erzwungen: Jedes Feld ist typisiert vorgegeben, sodass das Modell das vorgegebene Format gar nicht verlassen kann. Damit entsteht ein direkt maschinenlesbarer, strukturierter Output statt freien Fließtexts:
+
+```{r}
+#| echo: false
+tibble::tribble(
+  ~Feld, ~Typ, ~Beschreibung,
+  "Datum", "Text", "Datum des Meetings, wie im Protokoll angegeben.",
+  "Kurzfassung", "Text", "Inhaltliche Zusammenfassung in 2–3 Sätzen.",
+  "Teilnehmende", "Liste (Name, Rolle)", "Teilnehmende Personen mit Rolle, sofern genannt.",
+  "Beschluesse", "Liste von Texten", "Tatsächlich gefasste Beschlüsse (keine Vertagungen).",
+  "Aufgaben", "Liste (Verantwortlich, Aufgabe, Frist)", "Konkret verteilte Aufgaben.",
+  "Offene Punkte", "Liste von Texten", "Vertagte oder offene Punkte ohne Entscheidung."
+) |>
+  gt::gt() |>
+  gt::tab_options(
+    table.width = gt::pct(100)
+  ) |>
+  nd.util::nd_gt_tab_options() |>
+  nd.util::nd_gt_to_html()
 ```
 
 Schon kleine Änderungen im Prompt können die Qualität deutlich beeinflussen. Besonders wichtig sind dabei:
@@ -316,6 +338,27 @@ tags$div(
 )
 ```
 
+Ebenso werden die **Teilnehmenden** des Meetings samt ihrer Rolle erkannt:
+
+```{r}
+#| echo: false
+teilnehmende_row <- summary_row$teilnehmende[[1]]
+
+tags$div(
+  style = "display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1rem;",
+  purrr::map(seq_len(nrow(teilnehmende_row)), \(.i) {
+    .name <- teilnehmende_row$name[.i]
+    .rolle <- teilnehmende_row$rolle[.i]
+    tags$span(
+      style = stringi::stri_c(
+        "background-color: #837591; color: #fefffc; padding: 3px 10px; ",
+        "border-radius: 12px; font-size: 0.875rem;"
+      ),
+      if (!is.na(.rolle) && nzchar(.rolle)) stringi::stri_c(.name, " (", .rolle, ")") else .name
+    )
+  })
+)
+```
 
 Aus demselben Text extrahiert das Modell außerdem die **konkreten Aufgaben** — jeweils mit verantwortlicher Person und Frist:
 
@@ -401,12 +444,212 @@ Dabei werden unter anderem folgende Informationen extrahiert:
 - Beschlüsse,
 - und offene Punkte.
 
-<!-- ```{r}
-nd.util:::nd_iframe_app(
-  .url = "https://nd_apps.dsjlu.wirtschaft.uni-giessen.de/apps/protocols/",
-  .height = "4rem"
+```{r}
+#| echo: false
+#| label: protokolle-demo-data
+
+protokolle_demo <- qs2::qs_read(here::here(
+  data_dir,
+  "protokolle_output",
+  "protokolle_summary.qs2"
+)) |>
+  dplyr::transmute(
+    titel,
+    branche,
+    datum,
+    protokoll_volltext,
+    kurzfassung,
+    teilnehmende = purrr::map(teilnehmende, \(.tbl) {
+      purrr::pmap(list(.tbl$name, .tbl$rolle), \(.name, .rolle) {
+        list(name = .name, rolle = .rolle)
+      })
+    }),
+    beschluesse = purrr::map(beschluesse, as.list),
+    offene_punkte = purrr::map(offene_punkte, as.list),
+    aufgaben = purrr::map(aufgaben, \(.tbl) {
+      purrr::pmap(
+        list(.tbl$verantwortlich, .tbl$aufgabe, .tbl$frist),
+        \(.wer, .was, .frist) {
+          list(verantwortlich = .wer, aufgabe = .was, frist = .frist)
+        }
+      )
+    })
+  )
+
+# "</" escapen, damit Protokolltext mit einer solchen Zeichenfolge das
+# umschließende <script>-Tag nicht vorzeitig beendet.
+protokolle_json <- jsonlite::toJSON(protokolle_demo, auto_unbox = TRUE) |>
+  stringi::stri_replace_all_fixed("</", "<\\/")
+
+htmltools::tagList(
+  tags$style(htmltools::HTML(
+    "
+    #protokolle-demo .protokoll-card { border: 1px solid #eee; border-radius: 12px; padding: 16px; }
+    #protokolle-demo .protokoll-title { margin: 0 0 4px 0; font-size: 1.2rem; line-height: 1.25; }
+    #protokolle-demo .protokoll-meta { font-size: 0.9rem; margin-bottom: 12px; color: #6c757d; }
+    #protokolle-demo .protokoll-text {
+      font-family: var(--bs-font-monospace);
+      font-size: 0.875rem;
+      background-color: #F2F1F4;
+      padding: 12px;
+      border-radius: 6px;
+      max-height: 400px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+    }
+    #protokolle-demo .summary-card { border: 1px solid #eee; border-radius: 12px; padding: 16px; margin-top: 1rem; }
+    #protokolle-demo .summary-section { margin-bottom: 1.25rem; }
+    #protokolle-demo .summary-section:last-child { margin-bottom: 0; }
+    #protokolle-demo .summary-section h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin: 0 0 0.5rem 0;
+      color: #2e2933;
+    }
+    #protokolle-demo .summary-kurzfassung {
+      font-style: italic;
+      margin-bottom: 1rem;
+      padding: 0.75rem;
+      background-color: #F2F1F4;
+      border-left: 3px solid #837591;
+      border-radius: 4px;
+    }
+    #protokolle-demo .summary-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    #protokolle-demo .chip {
+      background-color: #837591;
+      color: #fefffc;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 0.875rem;
+    }
+    #protokolle-demo .summary-list { padding-left: 1.25rem; margin: 0; }
+    #protokolle-demo .summary-list li { margin-bottom: 0.3rem; }
+    #protokolle-demo .summary-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    #protokolle-demo .summary-table th, #protokolle-demo .summary-table td {
+      text-align: left; padding: 6px 10px; border-bottom: 1px solid #eee; vertical-align: top;
+    }
+    #protokolle-demo .summary-table th { background-color: #eee; font-weight: 600; }
+    "
+  )),
+
+  tags$div(
+    id = "protokolle-demo",
+    class = "mb-5",
+
+    tags$script(
+      type = "application/json",
+      id = "protokolle-demo-data",
+      htmltools::HTML(protokolle_json)
+    ),
+
+    tags$div(
+      class = "d-grid mb-4",
+      tags$button(
+        id = "protokolle-demo-random-btn",
+        type = "button",
+        class = "btn btn-primary btn-lg text-white",
+        tags$i(class = "fa-solid fa-dice me-2"),
+        "Zufälliges Protokoll wählen"
+      )
+    ),
+
+    tags$div(id = "protokolle-demo-protokoll"),
+
+    tags$div(
+      id = "protokolle-demo-generate",
+      class = "d-grid mt-4",
+      style = "display: none;",
+      tags$button(
+        id = "protokolle-demo-generate-btn",
+        type = "button",
+        class = "btn btn-primary btn-lg text-white",
+        tags$i(class = "fa-solid fa-wand-magic-sparkles me-2"),
+        "Zusammenfassung generieren"
+      )
+    ),
+
+    tags$div(id = "protokolle-demo-summary")
+  ),
+
+  tags$script(htmltools::HTML(stringi::stri_c(
+    "(function () {\n",
+    "  var data = JSON.parse(document.getElementById('protokolle-demo-data').textContent);\n",
+    "  var current = null;\n",
+    "  var pendingTimeout = null;\n",
+    "  var protokollOut = document.getElementById('protokolle-demo-protokoll');\n",
+    "  var summaryOut = document.getElementById('protokolle-demo-summary');\n",
+    "  var generateWrap = document.getElementById('protokolle-demo-generate');\n",
+    "  var generateBtn = document.getElementById('protokolle-demo-generate-btn');\n",
+    "  var generateBtnDefaultHtml = generateBtn.innerHTML;\n",
+    "  function esc(str) {\n",
+    "    var div = document.createElement('div');\n",
+    "    div.textContent = str == null ? '' : str;\n",
+    "    return div.innerHTML;\n",
+    "  }\n",
+    "  function renderProtokoll(row) {\n",
+    "    protokollOut.innerHTML =\n",
+    "      '<div class=\"protokoll-card\">' +\n",
+    "        '<h3 class=\"protokoll-title\">' + esc(row.titel) + '</h3>' +\n",
+    "        '<div class=\"protokoll-meta\">' + esc(row.branche) + ' &middot; ' + esc(row.datum) + '</div>' +\n",
+    "        '<div class=\"protokoll-text\">' + esc(row.protokoll_volltext) + '</div>' +\n",
+    "      '</div>';\n",
+    "  }\n",
+    "  function renderChips(items) {\n",
+    "    if (!items || items.length === 0) { return ''; }\n",
+    "    return '<div class=\"summary-chips\">' + items.map(function (p) {\n",
+    "      var label = p.rolle ? (p.name + ' (' + p.rolle + ')') : p.name;\n",
+    "      return '<span class=\"chip\">' + esc(label) + '</span>';\n",
+    "    }).join('') + '</div>';\n",
+    "  }\n",
+    "  function renderList(items) {\n",
+    "    if (!items || items.length === 0) { return '<em>Keine Einträge.</em>'; }\n",
+    "    return '<ul class=\"summary-list\">' + items.map(function (x) {\n",
+    "      return '<li>' + esc(x) + '</li>';\n",
+    "    }).join('') + '</ul>';\n",
+    "  }\n",
+    "  function renderAufgaben(items) {\n",
+    "    if (!items || items.length === 0) { return '<em>Keine Aufgaben.</em>'; }\n",
+    "    var rows = items.map(function (a) {\n",
+    "      return '<tr><td>' + esc(a.verantwortlich) + '</td><td>' + esc(a.aufgabe) + '</td><td>' + esc(a.frist) + '</td></tr>';\n",
+    "    }).join('');\n",
+    "    return '<table class=\"summary-table\"><thead><tr><th>Wer</th><th>Was</th><th>Bis wann</th></tr></thead><tbody>' + rows + '</tbody></table>';\n",
+    "  }\n",
+    "  function renderSummary(row) {\n",
+    "    summaryOut.innerHTML =\n",
+    "      '<div class=\"summary-card\">' +\n",
+    "        '<div class=\"summary-kurzfassung\">' + esc(row.kurzfassung) + '</div>' +\n",
+    "        '<div class=\"summary-section\"><h4>Teilnehmende</h4>' + renderChips(row.teilnehmende) + '</div>' +\n",
+    "        '<div class=\"summary-section\"><h4>Beschlüsse</h4>' + renderList(row.beschluesse) + '</div>' +\n",
+    "        '<div class=\"summary-section\"><h4>Aufgaben</h4>' + renderAufgaben(row.aufgaben) + '</div>' +\n",
+    "        '<div class=\"summary-section\"><h4>Offene Punkte</h4>' + renderList(row.offene_punkte) + '</div>' +\n",
+    "      '</div>';\n",
+    "  }\n",
+    "  document.getElementById('protokolle-demo-random-btn').addEventListener('click', function () {\n",
+    "    if (pendingTimeout) { window.clearTimeout(pendingTimeout); pendingTimeout = null; }\n",
+    "    generateBtn.disabled = false;\n",
+    "    generateBtn.innerHTML = generateBtnDefaultHtml;\n",
+    "    current = data[Math.floor(Math.random() * data.length)];\n",
+    "    renderProtokoll(current);\n",
+    "    summaryOut.innerHTML = '';\n",
+    "    generateWrap.style.display = '';\n",
+    "  });\n",
+    "  generateBtn.addEventListener('click', function () {\n",
+    "    if (!current) { return; }\n",
+    "    var row = current;\n",
+    "    generateBtn.disabled = true;\n",
+    "    generateBtn.innerHTML = '<i class=\"fa-solid fa-sync fa-spin me-2\"></i>Zusammenfassung generieren';\n",
+    "    pendingTimeout = window.setTimeout(function () {\n",
+    "      pendingTimeout = null;\n",
+    "      renderSummary(row);\n",
+    "      generateWrap.style.display = 'none';\n",
+    "      generateBtn.disabled = false;\n",
+    "      generateBtn.innerHTML = generateBtnDefaultHtml;\n",
+    "    }, 3000);\n",
+    "  });\n",
+    "})();"
+  )))
 )
-``` -->
+```
 
 ## Praktischer Nutzen
 

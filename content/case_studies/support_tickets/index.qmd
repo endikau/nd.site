@@ -74,7 +74,7 @@ Hier setzen Methoden der Textanalyse und des maschinellen Lernens an: Anstatt je
 
 Der Reiz dieses Ansatzes: Es braucht dafür kein aufwendiges neues Datenerfassungsprojekt. Support-Tickets fallen ohnehin im Tagesgeschäft an, und wir konzentrieren uns bewusst vor allem auf textbasierte Variablen, um zu zeigen, dass sich bereits auf dieser Basis ein leistungsfähiges Klassifikationsmodell entwickeln lässt.
 
-{{{< div class="grid mt-0 mb-4" >}}} {{{< div class="g-col-12 g-col-md-6 g-start-md-4" >}}}
+{{{< div class="grid" >}}} {{{< div class="g-col-12 g-col-md-6 g-start-md-4" >}}}
 
 ```{r}
 #| out-width: "100%"
@@ -205,7 +205,7 @@ Für ein Unternehmen mit hohem Ticketaufkommen ist nicht jede Anfrage gleich dri
 
 #### Vorverarbeitung
 
-Bevor der Text für weitere Analysen genutzt werden kann, muss er, wie in den {{{< crossref path="/basics#textdaten-für-analysen-vorbereiten" label="Grundlagen" >}}} beschrieben, in ein geeignetes Format überführt werden.
+Bevor der Text für weitere Analysen genutzt werden kann, muss er, wie unter {{{< crossref path="/methods/preprocessing" label="Vorverarbeitung" >}}} beschrieben, in ein geeignetes Format überführt werden.
 
 Dazu entfernen wir unter anderem sogenannte **Stoppwörter**, also sehr häufige Wörter ohne inhaltliche Aussagekraft. Zusätzlich bereinigen wir die Texte um wiederkehrende Formulierungen wie „Sehr geehrtes Support-Team“ oder „Sehr geehrter Kundenservice“, da auch diese keinen Mehrwert für die inhaltliche Analyse bieten.
 
