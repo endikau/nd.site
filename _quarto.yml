@@ -1,7 +1,7 @@
 project:
   type: hugo
   output-dir: _hugo
-  post-render: /bin/sh -c "cd _hugo && hugo --cleanDestinationDir --minify"
+  post-render: hugo --source _hugo --cleanDestinationDir --minify
 format:
   hugo-md:
     code-fold: true
