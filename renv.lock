@@ -7009,11 +7009,11 @@
         "R (>= 2.10)"
       ],
       "RemoteType": "github",
-      "RemoteHost": "api.github.com",
       "RemoteUsername": "m-pilarski",
       "RemoteRepo": "vns",
       "RemoteRef": "main",
-      "RemoteSha": "8479b30ea861b8add69a07b59166a206c27cd335"
+      "RemoteSha": "8479b30ea861b8add69a07b59166a206c27cd335",
+      "RemoteHost": "api.github.com"
     },
     "vns.data": {
       "Package": "vns.data",
