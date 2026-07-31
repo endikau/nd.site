@@ -30,7 +30,7 @@ library(ellmer)
 
 library(tidyverse)
 library(gt)
-
+  
 tags <- htmltools::tags
 
 calc_panel_margin_y_in <- function(.plot_obj) {

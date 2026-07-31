@@ -134,23 +134,23 @@ apply_step_de <- function(
 }
 ```
 
-#### Spracherkennung
+### Spracherkennung
 
 Viele Unternehmen sammeln Textdaten aus mehrsprachigen Quellen, etwa internationale Kundenbewertungen oder Support-Anfragen in unterschiedlichen Sprachen. Bevor die folgenden Schritte überhaupt angewendet werden können, muss deshalb häufig zunächst die Sprache jedes einzelnen Dokuments erkannt werden. Erst auf dieser Basis lässt sich entscheiden, welcher Tokenizer, welche Stopword-Liste und welcher Lemmatisierer zum Einsatz kommen – ein deutsches Stopword-Lexikon nützt bei einem englischen oder französischen Text schließlich wenig.
 
-#### Kleinschreibung
+### Kleinschreibung
 
 Alle Wörter werden in Kleinbuchstaben umgewandelt. Dadurch werden beispielsweise „Heute" und „heute" als dasselbe Wort erkannt und nicht fälschlicherweise als zwei unterschiedliche Begriffe gezählt.
 
-#### Symbole und Satzzeichen entfernen
+### Symbole und Satzzeichen entfernen
 
 Satzzeichen und Sonderzeichen wie Punkt, Komma, Ausrufezeichen oder @ tragen für viele klassische Analyseverfahren nur wenig zur eigentlichen Bedeutung eines Textes bei. Sie werden deshalb häufig entfernt, um die Daten zu vereinfachen und die Anzahl unterschiedlicher Tokens zu reduzieren.
 
-#### Stopwords entfernen
+### Stopwords entfernen
 
 Viele Wörter kommen in nahezu jedem deutschen Text vor, tragen jedoch nur wenig zur inhaltlichen Unterscheidung bei. Dazu gehören unter anderem Artikel (*der*, *die*, *das*), Pronomen oder Konjunktionen (*und*, *oder*, *aber*). Solche Stopwords werden häufig entfernt, damit sich die Analyse stärker auf die inhaltlich relevanten Begriffe konzentriert.
 
-#### Stemming vs. Lemmatisierung
+### Stemming vs. Lemmatisierung
 
 Um verschiedene Formen von Wörtern auf den jeweiligen Stamm, die sie miteinander teilen, zu reduzieren, können zwei Methoden verwendet werden: **Stemming** und/oder **Lemmatisierung**. Die Methoden können einzeln oder kombiniert werden, mit dem Ziel, Wortstämme zu identifizieren und damit die Anzahl einzelner Begriffe in den Texten weiter zu reduzieren. **Stemming** identifiziert die **gemeinsame Basis verschiedener Wörter**, um sie darauf zu reduzieren. Hierfür werden entsprechend Präfixe, Suffixe usw. entfernt oder abgeschnitten, sodass nur der Wortstamm übrigbleibt. **Lemmatisierung** hingegen zielt darauf ab, Lemmas, also die **Grundform des Wortes**, die in einem Wörterbuch vorzufinden ist, zu identifizieren und Wörter darauf zu reduzieren. Anders als beim Stemming resultiert entsprechend immer ein lexikographisch korrektes Wort bei der Lemmatisierung, da Wörter identifiziert werden und nicht Prä- bzw. Suffixe einfach entfernt werden.
 
@@ -228,15 +228,15 @@ Um verschiedene Formen von Wörtern auf den jeweiligen Stamm, die sie miteinande
 
 {{{< /div >}}} {{{< /div >}}}
 
-#### Normalisierung: Zahlen, Datumsangaben, URLs, Emojis
+### Normalisierung: Zahlen, Datumsangaben, URLs, Emojis
 
 Reale Textdaten – etwa Support-Tickets oder E-Mails – enthalten viele Elemente, die für die meisten Analysen wenig zur Bedeutung beitragen, aber die Menge einzigartiger Tokens unnötig aufblähen: Zahlen, Datumsangaben, URLs, E-Mail-Adressen oder Emojis. Je nach Anwendungsfall werden diese entweder entfernt oder durch einheitliche Platzhalter ersetzt. Aus "Sie erreichen mich über max@firma.de bis 14.03.2024“ wird durch Normalisierung beispielsweise „Sie erreichen mich über \<EMAIL\> bis \<DATUM\>“. So bleibt erkennbar, dass an dieser Stelle eine E-Mail-Adresse bzw. ein Datum stand, ohne dass jede konkrete Ausprägung als eigenes Token gezählt wird.
 
-#### OCR- und Kodierungsfehler
+### OCR- und Kodierungsfehler
 
 Nicht jeder Text liegt von Anfang an sauber vor. Werden Dokumente etwa per OCR (optische Zeichenerkennung) aus gescannten PDFs oder Bildern extrahiert, entstehen häufig Erkennungsfehler wie vertauschte Zeichen oder falsch getrennte Wörter. Ein weiteres, sehr verbreitetes Problem sind fehlerhafte Zeichenkodierungen: Wird ein Text mit der falschen Kodierung eingelesen, werden aus Umlauten kryptische Zeichenfolgen – aus „Müller“ wird dann beispielsweise „MÃ¼ller“. Solche Fehler sollten vor der eigentlichen Analyse erkannt und korrigiert werden, da sie sonst als eigenständige, sinnlose Tokens im Vokabular landen und Analysen verfälschen können. Dieses Problem betrifft übrigens klassische wie moderne Verfahren gleichermaßen – auch bei LLMs gehört die Bereinigung solcher Kodierungsfehler zu den Aufgaben, die weiterhin notwendig bleiben.
 
-#### n-Gramme
+### n-Gramme
 
 Bei der Zerlegung in einzelne Tokens geht Kontext verloren, der sich erst aus der Kombination mehrerer Wörter ergibt. Der Begriff „künstliche Intelligenz“ hat als Ganzes eine andere Bedeutung als die Einzelwörter „künstliche“ und „Intelligenz“. Über sogenannte **n-Gramme** lassen sich solche Wortfolgen als zusammenhängende Einheit behandeln: Ein Bigramm fasst zwei aufeinanderfolgende Wörter zu einem Token zusammen, ein Trigramm entsprechend drei. So bleiben feste Begriffe und Fachausdrücke auch nach der Vorverarbeitung als eine Einheit erhalten.
 
@@ -461,7 +461,7 @@ Damit ist der Text endlich in eine numerische, computerlesbare Form gebracht. Wi
 
 Moderne Sprachmodelle (LLMs) verfolgen einen grundlegend anderen Ansatz. Viele klassische Vorverarbeitungsschritte sind für sie nicht mehr notwendig und können die Modellleistung sogar verschlechtern, da dabei wertvolle Sprachinformation bzw. Kontext verloren geht.
 
-#### Subword-Tokenisierung löst das Kompositum- und Flexionsproblem
+### Subword-Tokenisierung löst das Kompositum- und Flexionsproblem
 
 LLMs verwenden keine Wort-, sondern eine **Subword-Tokenisierung**, meist auf Basis von Byte Pair Encoding (BPE) oder ähnlichen Verfahren. Dabei wird ein Text nicht in ganze Wörter, sondern in kleinere, wiederverwendbare Bausteine zerlegt, aus denen sich auch unbekannte oder seltene Wörter zusammensetzen lassen.
 
@@ -530,15 +530,15 @@ Die einzelnen Bausteine kommen in vielen unterschiedlichen Wörtern vor. Das Mod
 
 Damit erledigt sich das im Abschnitt {{{< crossref path="#deutsch-als-herausforderung" label="Deutsch als Herausforderung" >}}} beschriebene Kompositum- und Flexionsproblem praktisch von selbst: Ein Sprachmodell benötigt weder Kompositazerlegung noch Stemming oder Lemmatisierung, weil der Tokenizer wiederkehrende Wortbestandteile ohnehin erkennt.
 
-#### Groß-/Kleinschreibung, Satzzeichen und Stopwords tragen Signal
+### Groß-/Kleinschreibung, Satzzeichen und Stopwords tragen Signal
 
 Anders als bei klassischen Verfahren enthalten Großschreibung, Satzzeichen und vermeintliche Füllwörter für ein Sprachmodell echte Information: Großschreibung markiert etwa Eigennamen oder Satzanfänge, Satzzeichen strukturieren Aussagen, und auch scheinbar unbedeutende Wörter wie „nicht", „aber" oder „nur" verändern die Bedeutung eines Satzes erheblich. Werden sie entfernt, geht dieses Signal verloren, statt Rauschen zu reduzieren.
 
-#### Kontextuelle Embeddings statt Vokabular-Reduktion
+### Kontextuelle Embeddings statt Vokabular-Reduktion
 
 Statt Texte auf einzelne Wortformen zu reduzieren, erzeugen LLMs für jedes Token eine kontextabhängige Repräsentation (Embedding). Das gleiche Wort kann deshalb je nach Satz unterschiedliche Bedeutungen annehmen. Eine künstliche Verkleinerung des Vokabulars ist hierfür entsprechend nicht erforderlich.
 
-#### Was stattdessen zählt
+### Was stattdessen zählt
 
 Preprocessing verschiebt sich bei LLMs von der Vokabular-Reduktion hin zu anderen Aufgaben:
 
