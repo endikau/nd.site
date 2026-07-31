@@ -1,0 +1,11 @@
+﻿Kundennummer,Datum,Text
+"1001,2026-03-02,""Seit dem Update auf Version 5.4 stürzt EnDi regelmäßig beim Öffnen größerer Projekte ab. Ich nutze Windows 11 Pro, einen AMD Ryzen 7 5800X, 16 GB RAM und eine Radeon RX 6700 XT. Nach etwa zwei Minuten friert die Anwendung ein und schließt sich."""
+"1002,2026-03-03,""Die Software startet zwar, reagiert aber extrem langsam. Bereits beim Laden eines Projekts dauert alles mehrere Minuten. Mein System besteht aus Windows 10, Intel Core i5-8400, 8 GB RAM und einer NVIDIA GTX 1060."""
+"1003,2026-03-04,""Beim Export einer PDF erscheint jedes Mal die Fehlermeldung 'Speicherzugriff fehlgeschlagen'. Ich arbeite mit Windows 11, Intel Core i7-12700, 32 GB RAM und NVIDIA RTX 3060."""
+"1004,2026-03-05,""Nach dem letzten Update stürzt das Programm beim Speichern regelmäßig ab. Hardware: Windows 11 Pro, AMD Ryzen 5 5600X, 16 GB RAM, Radeon RX 6600."""
+"1005,2026-03-06,""Seit einigen Tagen dauert das Öffnen unserer Projektdateien ungewöhnlich lange. Rechner: Windows 10, Intel Core i3-10100, 8 GB RAM, Intel UHD Graphics."""
+"1006,2026-03-07,""Beim Import großer Datensätze friert die Anwendung vollständig ein. Ich verwende Windows 11, AMD Ryzen 9 5900X, 32 GB RAM und eine Radeon RX 6700 XT."""
+"1007,2026-03-08,""Die Benutzeroberfläche reagiert verzögert und Eingaben werden erst nach mehreren Sekunden übernommen. Windows 10, Intel Core i5-9600K, 16 GB RAM, NVIDIA GTX 1660 Super."""
+"1008,2026-03-09,""Beim Öffnen mehrerer Projekte gleichzeitig beendet sich EnDi ohne Fehlermeldung. Mein PC nutzt Windows 11, AMD Ryzen 7 7700X, 32 GB RAM und eine Radeon RX 7800 XT."""
+"1009,2026-03-10,""Die Anwendung läuft grundsätzlich, allerdings kommt es beim Erstellen von Berichten zu sehr langen Ladezeiten. System: Windows 10, Intel Core i5-7400, 8 GB RAM, NVIDIA GTX 1050 Ti."""
+"1010,2026-03-11,""Nach dem Login erscheint kurz das Hauptfenster und anschließend stürzt die Software sofort ab. Windows 11 Pro, AMD Ryzen 5 7600X, 16 GB RAM, Radeon RX 7600."""
