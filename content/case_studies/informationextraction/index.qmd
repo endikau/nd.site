@@ -27,6 +27,7 @@ library(scales)
 library(tibble)
 library(tidyr)
 library(xml2)
+library(tidyverse)
 
 
 tags <- htmltools::tags
@@ -47,5 +48,162 @@ ggplot2::theme_set(`+`(
     legend.position = "bottom"
   )
 ))
+data_dir <- here::here(
+  "content",
+  "case_studies",
+  "informationextraction",
+  "data"
+)
 ```
+
+## Warum LLMs zur Mustererkennung und Informationsextraktion verwendet werden?
+In Unternehmen entstehen täglich große Mengen unstrukturierter Textdaten, beispielsweise in Form von Supporttickets, E-Mails oder Fehlerberichten. Insbesondere im technischen Kundensupport enthalten diese Dokumente wertvolle Informationen über wiederkehrende Probleme, Produktmängel oder Kundenanforderungen. Aufgrund der kontinuierlich wachsenden Datenmengen ist eine vollständige manuelle Auswertung jedoch kaum noch realisierbar. Mitarbeitende können einzelne Tickets zwar bearbeiten, die systematische Analyse tausender Dokumente hinsichtlich wiederkehrender Muster oder Zusammenhänge ist jedoch mit erheblichem Zeit- und Personalaufwand verbunden.
+
+Large Language Models (LLMs) bieten hier einen vielversprechenden Ansatz, da sie in der Lage sind, unstrukturierte Texte automatisiert zu analysieren und relevante Informationen zu extrahieren. Anders als klassische regelbasierte Verfahren verstehen LLMs den semantischen Kontext eines Textes und können Informationen auch dann zuverlässig identifizieren, wenn unterschiedliche Formulierungen oder Synonyme verwendet werden. Dadurch lassen sich beispielsweise Angaben zu Fehlerursachen, betroffenen Softwaremodulen, Prioritäten oder beschriebenen Lösungsansätzen aus Supporttickets automatisiert in eine strukturierte Form überführen.
+
+Neben der Informationsextraktion ermöglichen LLMs auch die Erkennung übergeordneter Muster innerhalb großer Dokumentensammlungen. Während einzelne Supportfälle für sich genommen häufig keine Auffälligkeiten erkennen lassen, werden durch die aggregierte Analyse tausender Tickets wiederkehrende Fehlerbilder, saisonale Häufungen oder Zusammenhänge zwischen bestimmten Softwareversionen und Fehlermeldungen sichtbar. Solche Muster wären für Menschen aufgrund der Datenmenge und der Vielzahl unterschiedlicher Formulierungen nur mit erheblichem Aufwand oder gar nicht erkennbar.
+
+Der Einsatz von LLMs unterstützt Unternehmen somit dabei, aus unstrukturierten Textdaten systematisch Wissen zu gewinnen. Dies ermöglicht eine frühzeitige Identifikation wiederkehrender Probleme, eine datenbasierte Priorisierung von Entwicklungs- und Supportmaßnahmen sowie eine effizientere Entscheidungsfindung. Insbesondere in mittelständischen Unternehmen, in denen personelle Ressourcen für umfangreiche Datenanalysen häufig begrenzt sind, bieten LLMs die Möglichkeit, große Mengen textbasierter Informationen automatisiert auszuwerten und daraus einen nachhaltigen Mehrwert für Produktqualität und Kundenservice zu generieren.
+
+## Das Beispiel: Supporttickets eines Softwareunternehmens 
+Für die nachfolgende Fallstudie wird ein fiktives Softwareunternehmen, die EnDi GmbH, betrachtet. Das Unternehmen entwickelt und vertreibt eine Desktop-Anwendung, die von einer Vielzahl gewerblicher Kunden auf unterschiedlichen Hard- und Softwarekonfigurationen eingesetzt wird. Der technische Kundensupport bearbeitet täglich eingehende Supporttickets, in denen Anwender Fehler, Leistungsprobleme oder Fragen zur Nutzung der Software schildern.
+
+Die für diese Fallstudie verwendeten Supporttickets bestehen ausschließlich aus drei Informationen: einer **Kundennummer**, dem **Erstellungsdatum** sowie einer **Freitextbeschreibung** des jeweiligen Anliegens. Der Freitext enthält die vom Kunden formulierte Problembeschreibung und stellt die zentrale Informationsquelle für die nachfolgende Analyse dar.
+
+Da die Software auf einer Vielzahl unterschiedlicher Systeme betrieben wird, enthalten viele Supporttickets zusätzlich Angaben zur eingesetzten Hardware, beispielsweise zum Prozessor, Arbeitsspeicher, der Grafikkarte oder zum verwendeten Betriebssystem. Diese Informationen werden von den Kunden häufig in unterschiedlicher Detailtiefe und Formulierung angegeben. Neben der Extraktion relevanter Informationen aus den Freitexten bietet dieser Datensatz daher die Möglichkeit, Zusammenhänge zwischen bestimmten Hardwarekonfigurationen und auftretenden Softwareproblemen zu identifizieren. Dies bildet die Grundlage für die anschließende Informationsextraktion sowie die Analyse wiederkehrender Muster innerhalb der Supporttickets.
+```{r}
+support_tickets <-
+  read_csv(fs::path(data_dir, "Supporttickets.csv"))
+```
+```{r}
+library(htmltools)
+
+tags <- htmltools::tags
+
+support_tickets |>
+  mutate(
+    Kundennummer = as.character(Kundennummer),
+    Datum = as.character(Datum)
+  ) |>
+  as.list() |>
+  list_transpose() |>
+  purrr::map(\(.row_list) {
+    tags$div(
+      class = "card",
+      style = "width: 100%;",
+      tags$ul(
+        class = "list-group list-group-flush",
+        !!!purrr::imap(.row_list, \(.value, .key) {
+          tags$li(
+            class = "list-group-item",
+            tags$div(
+              style = paste(
+                "overflow: hidden;",
+                "width: 100%;",
+                "display: -webkit-box;",
+                "-webkit-line-clamp: 8;",
+                "-webkit-box-orient: vertical;"
+              ),
+              tags$code(paste0(.key, ": ")),
+              .value
+            )
+          )
+        })
+      )
+    )
+  }) |>
+  nd.util::nd_carousel(
+    .title = "Beispielhafte Supporttickets der EnDi GmbH"
+  )
+```
+## Ablauf der Umsetzung
+### Extraktion der Informationen
+Bevor eine Analyse von Mustern innerhalb der Supporttickets durchgeführt werden kann, müssen die enthaltenen Informationen zunächst strukturiert und auf die relevanten Inhalte reduziert werden. Die ursprünglichen Supporttickets bestehen aus unstrukturierten Freitexten, die neben der eigentlichen Problembeschreibung zahlreiche zusätzliche Informationen enthalten können. Eine direkte Analyse der vollständigen Texte würde bei einer großen Anzahl an Tickets zu einer hohen Datenmenge führen und die effiziente Identifikation von wiederkehrenden Zusammenhängen erschweren.
+
+Large Language Models (LLMs) können eingesetzt werden, um die relevanten Informationen automatisiert aus den Supporttickets zu extrahieren und in eine strukturierte Form zu überführen. Dabei analysiert das Modell den Inhalt jedes Tickets und identifiziert gezielt die für die weitere Analyse wichtigen Kategorien. Für die vorliegende Fallstudie werden die Informationen Problem, Softwareversion und Hardwarespezifikationen extrahiert.
+
+Durch diese Vorverarbeitung werden die umfangreichen Freitexte auf die wesentlichen Merkmale reduziert. Beispielsweise wird aus einer ausführlichen Fehlerbeschreibung nicht mehr der gesamte Text analysiert, sondern nur die relevanten Eigenschaften wie ein auftretender Fehler, die verwendete Softwareversion sowie die technische Ausstattung des Kundensystems betrachtet. Dadurch entsteht ein strukturierter Datensatz, der sich wesentlich besser für die anschließende Mustererkennung eignet.
+
+Der Einsatz von LLMs ermöglicht hierbei eine flexible Extraktion unabhängig von der individuellen Formulierung der Kunden. Während klassische regelbasierte Verfahren auf fest definierte Begriffe und Strukturen angewiesen sind, können LLMs auch unterschiedliche Beschreibungen desselben Problems erkennen und zusammenführen. So können beispielsweise Formulierungen wie „Programm beendet sich unerwartet“, „Anwendung stürzt ab“ oder „Software friert ein“ als ähnliches Fehlerbild erkannt und einheitlich erfasst werden.
+
+Die Informationsextraktion stellt somit den ersten Schritt der Analysepipeline dar. Durch die Umwandlung unstrukturierter Supporttickets in strukturierte Informationen wird die nachfolgende Mustererkennung effizienter und ermöglicht es, größere Datenmengen gezielt nach wiederkehrenden Problemen und Zusammenhängen zu untersuchen.
+Die Extraktion der gewünschten Informationen kann bereits durch die Verwendung eines einfachen Prompts umgesetzt werden. Dabei wird dem LLM lediglich die gewünschte Struktur der Ausgabe vorgegeben und definiert, welche Informationen aus dem Supportticket identifiziert und extrahiert werden sollen.
+
+```{r}
+library(tidyverse)
+library(htmltools)
+
+support_extracted <-
+  read_csv(fs::path(data_dir, "SupportticketsExtraktion.csv"))
+
+support_extracted |>
+  as.list() |>
+  list_transpose() |>
+  purrr::map(\(.row_list) {
+    tags$div(
+      class = "card",
+      style = "width: 100%;",
+
+      tags$ul(
+        class = "list-group list-group-flush",
+
+        !!!purrr::imap(.row_list, \(.value, .key) {
+          tags$li(
+            class = "list-group-item",
+
+            tags$div(
+              style = paste(
+                "overflow: hidden;",
+                "width: 100%;",
+                "display: -webkit-box;",
+                "-webkit-line-clamp: 8;",
+                "-webkit-box-orient: vertical;"
+              ),
+
+              tags$code(paste0(.key, ": ")),
+              .value
+            )
+          )
+        })
+      )
+    )
+  }) |>
+  nd.util::nd_carousel(
+    .title = "Durch LLM extrahierte Informationen aus den Supporttickets"
+  )
+```
+
+
+### Verwendung von LLMs zur Mustererkennung in Supportdaten
+Nachdem die unstrukturierten Supporttickets durch ein LLM in strukturierte Informationen überführt wurden, können diese Daten für die Erkennung von wiederkehrenden Mustern genutzt werden. Das LLM analysiert dabei die extrahierten Kategorien und identifiziert Zusammenhänge, die bei einer manuellen Betrachtung großer Datenmengen nur schwer erkennbar wären.
+
+Beispielsweise kann das Modell erkennen, ob bestimmte Fehler häufiger mit bestimmten Softwareversionen, Hardwarekonfigurationen oder Systemmerkmalen auftreten. Dadurch lassen sich potenzielle Problemursachen, Häufungen von Fehlerbildern oder Zusammenhänge zwischen technischen Rahmenbedingungen und Supportfällen automatisiert identifizieren.
+
+Die Mustererkennung kann ebenfalls durch einen gezielten Prompt an ein LLM umgesetzt werden. Anders als bei der Informationsextraktion wird dem Modell hierbei nicht vorgegeben, welche einzelnen Informationen aus einem Text entnommen werden sollen. Stattdessen erhält das Modell bereits strukturierte Daten und die Aufgabe, darin enthaltene Zusammenhänge, Häufungen und mögliche Ursachen zu identifizieren.
+
+Ein Beispiel für einen geeigneten Prompt wäre:
+„Analysiere die folgenden Supportticket-Daten der EnDi GmbH. Identifiziere wiederkehrende Muster und Zusammenhänge zwischen den Kategorien Problem, Softwareversion und HardwareSpec. Beschreibe insbesondere häufig auftretende Fehlerbilder, mögliche Zusammenhänge mit bestimmten Hardwarekonfigurationen sowie Auffälligkeiten, die für die Verbesserung der Software oder des Supports relevant sein könnten. Fasse die Ergebnisse übersichtlich zusammen.“
+
+Für das bisher verwendete Beispiel wären in etwa folgende Antworten zu erwarten: 
+1. Häufung von Abstürzen bei Systemen mit AMD Radeon Grafikkarten
+ Mehrere Tickets beschreiben Programmabstürze bei Kunden mit AMD Radeon Grafikkarten (RX 6600, RX 6700 XT, RX 7600 und RX 7800 XT). Die Probleme treten unabhängig von der verwendeten CPU auf und könnten auf eine mögliche Inkompatibilität zwischen der Software und bestimmten Grafiktreibern oder GPU-Modellen hinweisen.
+2. Performanceprobleme bei Systemen mit 8 GB RAM
+Kunden mit lediglich 8 GB Arbeitsspeicher berichten häufiger von langen Ladezeiten und verzögerter Verarbeitung. Dies deutet darauf hin, dass größere Projekte oder umfangreiche Datenmengen mit dieser Speicherausstattung zu Leistungseinschränkungen führen können.
+3. Zusammenhang zwischen Softwareupdates und Abstürzen
+Ein Teil der Absturzprobleme tritt direkt nach Softwareupdates auf. Dies könnte darauf hinweisen, dass bestimmte Änderungen in neuen Versionen zusätzliche Tests mit unterschiedlichen Hardwarekonfigurationen erfordern.
+
+## Grenzen der Methode 
+Trotz der vielfältigen Möglichkeiten von LLMs zur Informationsextraktion und Mustererkennung müssen bei der praktischen Anwendung einige Einschränkungen berücksichtigt werden.
+
+Ein zentraler Aspekt ist der Datenschutz. Bei der Nutzung von Cloud-basierten LLM-Diensten werden die verarbeiteten Daten an externe Anbieter übertragen. Bei Supporttickets können dabei sensible Informationen wie Kundendaten, interne Systeminformationen oder gegebenenfalls personenbezogene Daten enthalten sein. Eine Alternative stellen lokal betriebene Modelle dar, bei denen die Daten innerhalb der eigenen Infrastruktur verarbeitet werden. Diese bieten höhere Kontrolle über die Daten, benötigen jedoch meist zusätzliche technische Ressourcen und können je nach Modell eine geringere Leistungsfähigkeit aufweisen.
+
+Ein weiterer Faktor sind die Kosten der Verarbeitung großer Datenmengen. Bei Cloud-Modellen entstehen Kosten häufig abhängig von der Anzahl der verarbeiteten Tokens. Durch die vorgeschaltete Informationsextraktion können die ursprünglichen langen Supporttexte bereits auf die relevanten Informationen reduziert werden, wodurch die Anzahl der Tokens für die anschließende Mustererkennung deutlich sinkt. Lokale Modelle verursachen hingegen keine direkten Tokenkosten, benötigen aber entsprechende Hardware und Wartungsaufwand für den Betrieb.
+
+Zusätzlich müssen die Ergebnisse eines LLMs weiterhin kritisch überprüft werden. Obwohl Modelle in der Lage sind, komplexe Zusammenhänge zu erkennen, können sie fehlerhafte Interpretationen erzeugen oder Muster erkennen, die fachlich nicht relevant sind. Eine abschließende Bewertung durch Experten bleibt daher notwendig.
+
+Auch die Qualität der Ergebnisse hängt stark von der Gestaltung der Eingaben ab. Die Formulierung des Prompts sowie mögliche Systemanweisungen beeinflussen, welche Informationen das Modell berücksichtigt und wie es die Ergebnisse strukturiert. Ein sorgfältig erstellter Prompt ist daher entscheidend, um konsistente und für den Anwendungsfall geeignete Ergebnisse zu erhalten.
+
+
+## Fazit 
+Die Anwendung von LLMs zur Analyse von Supporttickets zeigt, wie unstrukturierte Textdaten effizient für Unternehmen nutzbar gemacht werden können. Durch die Kombination aus automatisierter Informationsextraktion und anschließender Mustererkennung lassen sich große Mengen an Supportdaten schneller analysieren und wertvolle Zusammenhänge erkennen. Dadurch können Unternehmen wiederkehrende Probleme frühzeitig identifizieren, Supportprozesse verbessern und datenbasierte Entscheidungen treffen.
 
