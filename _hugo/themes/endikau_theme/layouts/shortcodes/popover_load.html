@@ -1,0 +1,43 @@
+{{- /*
+  Info-Popover, dessen Inhalt aus dem gemeinsamen Glossar kommt
+  (tooltip_glossary.yml in nd.assets, per module.mounts nach `data/` gemountet).
+
+  Gegenstück zu `popover`, das seinen Inhalt inline mitbringt:
+      {{< popover title="…" >}}Text{{< /popover >}}   eigener Text
+      {{< popover_load key="tf-idf" >}}               aus dem Glossar
+
+  Abweichender Anzeigetext:
+      {{< popover_load key="tf-idf" label="TF-IDF-Metrik" >}}
+
+  Das Label steht als normaler Text im Satz, Auslöser ist allein das Icon
+  dahinter — so bleibt die Regel aus CLAUDE.md gewahrt.
+
+  Jedes Vorkommen bekommt ein eigenes <template> mit eigener ID. Das dupliziert
+  kurze Texte, macht die Ausgabe aber unabhängig davon, wie oft und in welcher
+  Reihenfolge Hugo den Seiteninhalt rendert.
+
+  Unbekannter Schlüssel = Build-Abbruch mit Fundstelle (siehe errorf unten).
+
+  Die Whitespace-Trimmer verhindern ein Leerzeichen zwischen Auslöser und
+  Folgetext, das sonst vor Satzzeichen sichtbar würde.
+*/ -}}
+{{- $key := .Get "key" -}}
+{{- if not $key -}}
+  {{- errorf "popover_load: Parameter `key` fehlt (%s)" .Position -}}
+{{- end -}}
+{{- $entry := index hugo.Data.tooltip_glossary $key -}}
+{{- if not $entry -}}
+  {{- errorf "popover_load: unbekannter Glossareintrag %q (%s)" $key .Position -}}
+{{- end -}}
+{{- if not $entry.title -}}
+  {{- errorf "popover_load: Glossareintrag %q hat kein `title` (%s)" $key .Position -}}
+{{- end -}}
+{{- $label := .Get "label" | default $entry.title -}}
+{{- $id := printf "tip-%s-%d" (anchorize $key) .Ordinal -}}
+{{- $label }}<a tabindex="0" role="button" aria-label="{{ $entry.title }}" data-bs-toggle="popover" data-bs-template-id="{{ $id }}" data-bs-title="{{ $entry.title }}"><i class="fa-solid fa-circle-info"></i></a>
+{{- "" -}}
+<template id="{{ $id }}">
+  {{ $entry.body | markdownify }}
+  {{- with $entry.href }}<p class="mb-0"><a href="{{ . }}">Mehr dazu</a></p>{{ end -}}
+</template>
+{{- "" -}}

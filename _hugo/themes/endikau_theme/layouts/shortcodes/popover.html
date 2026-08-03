@@ -1,15 +1,22 @@
+{{- /*
+  Info-Popover im Fließtext. Auslöser ist allein das Icon, der Inhalt steht im
+  Geschwister-<template> und wird von popover.js beim Öffnen geklont.
+
+  Die Whitespace-Trimmer ({{- … -}}) sind hier nicht kosmetisch: Ohne sie
+  entsteht zwischen Auslöser und Folgetext ein Leerzeichen, das etwa vor einer
+  schließenden Klammer oder einem Satzzeichen sichtbar wird.
+*/ -}}
 {{- $id := printf "tip-%d" .Ordinal -}}
 {{- $title := .Get "title" | default "Mehr Informationen" -}}
-
+{{- "" -}}
 <a tabindex="0"
    role="button"
    aria-label="{{ $title }}"
    data-bs-toggle="popover"
    data-bs-template-id="{{ $id }}"
-   data-bs-title="{{ $title }}">
-  <i class="fa-solid fa-circle-info"></i>
-</a>
-
+   data-bs-title="{{ $title }}"><i class="fa-solid fa-circle-info"></i></a>
+{{- "" -}}
 <template id="{{ $id }}">
   {{ .Inner | markdownify }}
 </template>
+{{- "" -}}

@@ -14,7 +14,15 @@ source(here::here("scripts/nd_inline_svg.R"))
 
 ## Was ist Sentimentanalyse?
 
-Die Sentimentanalyse, auch bekannt als Stimmungsanalyse oder Opinion Mining, ist eine Methode zur automatisierten Erkennung und Bewertung der Emotionen und Meinungen, die in Textdaten zum Ausdruck kommen. Dabei ist das Ziel die Wahrnehmung eines Textes zu quantifizieren – also zu beurteilen, ob ein Text, wie beispielsweise eine Produktbewertung, ein Kundenfeedback oder ein Social-Media-Beitrag, positiv, negativ oder neutral ist. Dies wird üblicherweise auf einer Skala von -1 bis 1, also von sehr negativ bis sehr positiv.
+Die Sentimentanalyse, auch bekannt als Stimmungsanalyse oder Opinion Mining, ist eine Methode zur automatisierten Erkennung und Bewertung der Emotionen und Meinungen, die in Textdaten zum Ausdruck kommen. Dabei ist das Ziel die Wahrnehmung eines Textes zu quantifizieren – also zu beurteilen, ob ein Text, wie beispielsweise eine Produktbewertung, ein Kundenfeedback oder ein Social-Media-Beitrag, positiv, negativ oder neutral ist. Dies wird üblicherweise auf einer Skala von -1 bis 1 ausgedrückt, also von sehr negativ bis sehr positiv.{{{< popover title="Was die Skala bedeutet" >}}}
+  Die Skala ist eine Konvention, kein Messwert mit fester Einheit. Die 0 in der Mitte steht für eine ausgeglichene Stimmung – nicht für „keine Meinung“.
+
+  Die drei Verfahren auf dieser Seite füllen die Skala unterschiedlich: Das lexikonbasierte Verfahren liefert einen fein abgestuften Wert, das BERT-Modell eine von drei Klassen samt Wahrscheinlichkeit, das Sprachmodell nur eine der drei Klassen.
+
+  {{{< p class="mb-0" >}}}
+  Werte verschiedener Verfahren lassen sich deshalb nicht unmittelbar miteinander vergleichen.
+  {{{< /p >}}}
+{{{< /popover >}}}
 
 ## Anwendungen 
 
@@ -36,9 +44,23 @@ Die lexikonbasierte Sentimentanalyse ist die traditionelle Form des Verfahrens, 
 
 #### Funktionsweise
 
-Diese Lexika enthalten Wörter, die mit positiven oder negativen Gefühlen assoziiert sind, oft mit einem entsprechenden Gewicht, das die Stärke des Ausdrucks angibt.
+Diese Lexika enthalten Wörter, die mit positiven oder negativen Gefühlen assoziiert sind, oft mit einem entsprechenden Gewicht, das die Stärke des Ausdrucks angibt.{{{< popover title="Wie aus Gewichten ein Gesamtwert wird" >}}}
+  Jedes Wort des Textes wird im Lexikon nachgeschlagen. Treffer bringen ihr Gewicht mit, alle übrigen Wörter zählen als 0. Die Summe dieser Gewichte wird anschließend an der Textlänge normiert, damit ein langer Text nicht allein durch seine Länge extremer ausfällt.
 
-Zur Bewertung werden die Wörter des Textes mit den Einträgen des Lexikons (bspw. SentiWS oder German Polarity Clues) abgeglichen. Die aggregierten Gewichte der Wörter aus dem Lexikon geben schließlich die Gesamtstimmung des Textes wieder.
+  {{{< p class="mb-0" >}}}
+  Weil dabei einzelne Wörter aufsummiert werden, ist Verneinung ein grundsätzliches Problem: „nicht“ trägt selbst kein Gewicht und kann die Polarität des folgenden Wortes nicht umkehren.
+  {{{< /p >}}}
+{{{< /popover >}}}
+
+Zur Bewertung werden die Wörter des Textes mit den Einträgen des Lexikons (bspw. SentiWS oder German Polarity Clues{{{< popover title="Die beiden Lexika" >}}}
+  **SentiWS** (SentimentWortschatz, Universität Leipzig) gewichtet jedes Wort mit einem Polaritätswert zwischen -1 und +1. Einzelne Wörter tragen dadurch unterschiedlich stark zum Ergebnis bei. In der Demo unten sind 34.808 Wortformen hinterlegt.
+
+  **German Polarity Clues** (Ulli Waltinger, Universität Bielefeld) entstand halbautomatisch durch Übersetzung englischer Ressourcen mit anschließender manueller Prüfung. Es kennt nur die drei Klassen positiv, negativ und neutral – ohne Abstufung. In der Demo unten sind 39.229 Einträge hinterlegt.
+
+  {{{< p class="mb-0" >}}}
+  Mehr dazu: <a href="https://wortschatz.uni-leipzig.de/de/download" target="_blank" rel="noopener">SentiWS</a> (<a href="https://aclanthology.org/L10-1339/" target="_blank" rel="noopener">Paper</a>) · <a href="https://www.ulliwaltinger.de/sentiment/" target="_blank" rel="noopener">German Polarity Clues</a> (<a href="https://aclanthology.org/L10-1053/" target="_blank" rel="noopener">Paper</a>)
+  {{{< /p >}}}
+{{{< /popover >}}}) abgeglichen. Die aggregierten Gewichte der Wörter aus dem Lexikon geben schließlich die Gesamtstimmung des Textes wieder.
 
 {{{< div class="grid" >}}} {{{< div class="g-col-12" >}}} 
 
@@ -71,11 +93,11 @@ nd.util:::nd_iframe_app(
 
 ### Machine-Learning-Basierte Sentimentanalyse
 
-Im Gegensatz zu lexikonbasierten Ansätzen bieten vortrainierte Modelle, die auf allgemeinen Sprachmodellen wie BERT (Bidirectional Encoder Representations from Transformers) basieren, eine fortschrittliche Möglichkeit zur Sentimentanalyse.
+Im Gegensatz zu lexikonbasierten Ansätzen bieten vortrainierte Modelle, die auf allgemeinen Sprachmodellen wie {{{< popover_load key="bert" >}}} (Bidirectional Encoder Representations from Transformers) basieren, eine fortschrittliche Möglichkeit zur Sentimentanalyse.
 
 #### Funktionsweise
 
-Diese Modelle lernen aus einer Vielzahl von Beispielen und liefern auch in unbekannten Domänen oder bei komplexen sprachlichen Strukturen, wie Sarkasmus, verlässlichere Ergebnisse. Sie sind nicht auf spezifische Lexika angewiesen und können durch Fine-Tuning flexibel an unterschiedliche Anwendungsfälle angepasst werden, was sie besonders leistungsstark und vielseitig macht.
+Diese Modelle lernen aus einer Vielzahl von Beispielen und liefern auch in unbekannten Domänen oder bei komplexen sprachlichen Strukturen, wie Sarkasmus, verlässlichere Ergebnisse. Sie sind nicht auf spezifische Lexika angewiesen und können durch {{{< popover_load key="fine-tuning" label="Fine-Tuning" >}}} flexibel an unterschiedliche Anwendungsfälle angepasst werden, was sie besonders leistungsstark und vielseitig macht.
 
 
 {{{< div class="grid" >}}} {{{< div class="g-col-12" >}}} 
@@ -114,7 +136,13 @@ Große Sprachmodelle (LLMs) können Stimmung nicht nur auf Wortebene, sondern im
 
 #### Funktionsweise
 
-LLMs folgen klar formulierten Prompts und lassen sich mit kurzen Beispielen (Few-Shot) oder spezifischen Instruktionen schnell an neue Domänen anpassen. So können sie neben einer Sentiment-Bewertung auch Begründungen liefern oder Ausgabeformate einhalten (z. B. Label, Score und kurzer Kommentar in einem Schritt).
+LLMs folgen klar formulierten Prompts und lassen sich mit kurzen Beispielen (Few-Shot){{{< popover title="Few-Shot-Prompting" >}}}
+  Statt das Modell nachzutrainieren, stellt man ihm einige bereits gelöste Beispiele direkt in die Anfrage voran – etwa drei Sätze samt der gewünschten Einstufung.
+
+  {{{< p class="mb-0" >}}}
+  Das Modell leitet daraus ab, worauf es achten soll, und braucht dafür weder Trainingsdaten noch Rechenzeit. Der Preis: Die Beispiele belegen bei jeder einzelnen Anfrage erneut Platz im Kontextfenster.
+  {{{< /p >}}}
+{{{< /popover >}}} oder spezifischen Instruktionen schnell an neue Domänen anpassen. So können sie neben einer Sentiment-Bewertung auch Begründungen liefern oder Ausgabeformate einhalten (z. B. Label, Score und kurzer Kommentar in einem Schritt).
 
 #### Vor- und Nachteile
 

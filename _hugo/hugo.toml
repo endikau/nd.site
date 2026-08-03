@@ -102,6 +102,17 @@ publishDir = "../_public"
     [[module.mounts]]
     source = "../node_modules/@endikau/nd_assets/dist/"
     target = "static/assets"
+    # Glossar für die Info-Tooltips (tooltip_glossary.yml). Liegt in nd.assets,
+    # damit nd.site und die Shiny-Apps dieselbe Quelle nutzen. Zugriff im
+    # Template über hugo.Data.tooltip_glossary, siehe shortcodes/term.html.
+    [[module.mounts]]
+    source = "../node_modules/@endikau/nd_assets/dist/data"
+    target = "data"
+    # Hugos Standard-Mount für `data` entfällt, sobald ein eigener gesetzt ist —
+    # deshalb `_hugo/data/` hier explizit wieder aufnehmen.
+    [[module.mounts]]
+    source = "data"
+    target = "data"
 
 [markup]
     [markup.goldmark]
