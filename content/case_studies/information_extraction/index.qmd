@@ -51,7 +51,7 @@ ggplot2::theme_set(`+`(
 data_dir <- here::here(
   "content",
   "case_studies",
-  "informationextraction",
+  "information_extraction",
   "data"
 )
 ```
@@ -73,7 +73,11 @@ Die für diese Fallstudie verwendeten Supporttickets bestehen ausschließlich au
 Da die Software auf einer Vielzahl unterschiedlicher Systeme betrieben wird, enthalten viele Supporttickets zusätzlich Angaben zur eingesetzten Hardware, beispielsweise zum Prozessor, Arbeitsspeicher, der Grafikkarte oder zum verwendeten Betriebssystem. Diese Informationen werden von den Kunden häufig in unterschiedlicher Detailtiefe und Formulierung angegeben. Neben der Extraktion relevanter Informationen aus den Freitexten bietet dieser Datensatz daher die Möglichkeit, Zusammenhänge zwischen bestimmten Hardwarekonfigurationen und auftretenden Softwareproblemen zu identifizieren. Dies bildet die Grundlage für die anschließende Informationsextraktion sowie die Analyse wiederkehrender Muster innerhalb der Supporttickets.
 ```{r}
 support_tickets <-
-  read_csv(fs::path(data_dir, "Supporttickets.csv"))
+  read_csv(fs::path(data_dir, "Supporttickets.csv")) |>
+  mutate(
+    Kundennummer = as.character(Kundennummer),
+    Datum = as.character(Datum)
+  )
 ```
 ```{r}
 library(htmltools)
@@ -81,21 +85,20 @@ library(htmltools)
 tags <- htmltools::tags
 
 support_tickets |>
-  mutate(
-    Kundennummer = as.character(Kundennummer),
-    Datum = as.character(Datum)
-  ) |>
   as.list() |>
   list_transpose() |>
   purrr::map(\(.row_list) {
     tags$div(
       class = "card",
       style = "width: 100%;",
+
       tags$ul(
         class = "list-group list-group-flush",
-        !!!purrr::imap(.row_list, \(.value, .key) {
+
+        !!!unname(purrr::imap(.row_list, \(.value, .key) {
           tags$li(
             class = "list-group-item",
+
             tags$div(
               style = paste(
                 "overflow: hidden;",
@@ -104,11 +107,12 @@ support_tickets |>
                 "-webkit-line-clamp: 8;",
                 "-webkit-box-orient: vertical;"
               ),
+
               tags$code(paste0(.key, ": ")),
               .value
             )
           )
-        })
+        }))
       )
     )
   }) |>
@@ -147,7 +151,7 @@ support_extracted |>
       tags$ul(
         class = "list-group list-group-flush",
 
-        !!!purrr::imap(.row_list, \(.value, .key) {
+        !!!unname(purrr::imap(.row_list, \(.value, .key) {
           tags$li(
             class = "list-group-item",
 
@@ -164,14 +168,14 @@ support_extracted |>
               .value
             )
           )
-        })
+        }))
       )
     )
   }) |>
   nd.util::nd_carousel(
     .title = "Durch LLM extrahierte Informationen aus den Supporttickets"
   )
-```
+``` 
 
 
 ### Verwendung von LLMs zur Mustererkennung in Supportdaten
