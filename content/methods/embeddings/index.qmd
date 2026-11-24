@@ -1,0 +1,286 @@
+---
+title: "Textrepräsentationen"
+subtitle: "Von Worthäufigkeiten bis zu modernen Embeddings"
+figtitle: "🧩"
+date: "2024-11-25T14:25:49+01:00"
+toc_show: true
+draft: false
+html-table-processing: none
+---
+
+```{r}
+#| label: setup
+#| include: false
+
+data_dir <- here::here("content", "methods", "embeddings")
+```
+
+## Warum Text in Zahlen?
+
+Auch ein bereits {{{< crossref path="/methods/preprocessing" label="vorverarbeiteter" >}}} Text besteht weiterhin aus Buchstaben und Wörtern – Computer können damit nicht direkt rechnen. Um Texte zu vergleichen, zu gruppieren oder zu klassifizieren, muss Sprache zunächst in eine **numerische Form** überführt werden. Diese Umwandlung wird als **Textrepräsentation** bezeichnet und ist die Grundlage für praktisch jede weiterführende Analysemethode.
+
+Dabei gibt es nicht die eine richtige Repräsentation: Verschiedene Verfahren wandeln Text auf unterschiedliche Weise in Zahlen um – von einfachen Worthäufigkeiten bis hin zu Vektoren, die Bedeutung und Kontext abbilden.
+
+{{{< div class="grid mt-0 mb-4" >}}} {{{< div class="g-col-12 g-col-md-8 g-start-md-3" >}}}
+
+```{r}
+#| out-width: "100%"
+#| fig-alt: "Embeddings Illustration"
+knitr::include_graphics(fs::path(
+  data_dir,
+  "img",
+  "embeddings_illustration.png"
+))
+```
+
+{{{< /div >}}} {{{< /div >}}}
+
+## Ein Überblick über die Verfahren
+
+Die vorgestellten Verfahren lassen sich grob in zwei Gruppen einteilen: **traditionelle Verfahren**, die Wörter zählen, und **moderne Verfahren**, die Bedeutung erfassen. Wie unterschiedlich die Verfahren arbeiten, zeigt ein einfaches Beispiel. Diese beiden Sätze bedeuten praktisch dasselbe:
+
+> „Die Lieferung kam zu spät.“ — „Der Versand hat sich verzögert.“
+
+Sie haben aber kein einziges inhaltliches Wort gemeinsam. Genau daran scheiden sich die beiden Gruppen von Verfahren:
+
+
+```{=html}
+<style>
+.nd-repr-groups { display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem; margin: 1.5rem 0; }
+.nd-repr-groups .group { flex: 1 1 16rem; max-width: 20rem; border: 1.5px solid #2e2933; border-radius: 12px; padding: 1.1rem 1.25rem; }
+.nd-repr-groups .group-title { font-weight: 700; font-size: 1.05rem; margin-bottom: 0.15rem; }
+.nd-repr-groups .group-desc { font-size: 0.82rem; color: #52514e; margin-bottom: 0.9rem; }
+.nd-repr-groups .item { background: #837591; color: #ffffff; border-radius: 8px; padding: 0.55rem 0.9rem; font-weight: 600; text-align: center; margin-bottom: 0.5rem; }
+.nd-repr-groups .item:last-child { margin-bottom: 0; }
+</style>
+<div class="nd-repr-groups">
+<div class="group">
+<div class="group-title">Traditionelle Verfahren</div>
+<div class="group-desc">zählen, welche Wörter vorkommen. „Lieferung“ und „Versand“ sind für sie zwei völlig verschiedene Dinge – die Sätze wirken unähnlich.</div>
+<div class="item">Bag-of-Words</div>
+<div class="item">TF-IDF</div>
+</div>
+<div class="group">
+<div class="group-title">Moderne Verfahren</div>
+<div class="group-desc">erfassen, was Wörter bedeuten. „Lieferung“ und „Versand“ liegen für sie nah beieinander – die Sätze werden als ähnlich erkannt.</div>
+<div class="item">Word Embeddings</div>
+<div class="item">Contextual Embeddings</div>
+</div>
+</div>
+```
+
+Das heißt nicht, dass traditionelle Verfahren überholt sind: Sie sind schnell, transparent und für viele Aufgaben völlig ausreichend. Moderne Verfahren spielen ihre Stärke dort aus, wo es auf Bedeutung und Formulierungsvielfalt ankommt.
+
+Innerhalb jeder Gruppe ist das zweite Verfahren eine Weiterentwicklung des ersten: TF-IDF gewichtet die gezählten Wörter danach, wie aussagekräftig sie sind. Contextual Embeddings berücksichtigen zusätzlich den Zusammenhang, in dem ein Wort steht: Dasselbe Wort erhält je nach umgebenden Wörtern eine andere Repräsentation, etwa „Bank“ in „Ich sitze auf der Bank“ und in „Die Bank erhöht die Zinsen“. Der eigentliche Sprung liegt aber zwischen den Gruppen: vom Zählen zum Bedeutungsverständnis.
+
+## Klassische Textrepräsentationen
+
+### Bag-of-Words
+
+Das **Bag-of-Words-Modell (BoW)** ist die einfachste Methode, um Texte in eine numerische Form zu überführen. Dabei wird für jeden Text gezählt, wie oft bestimmte Wörter vorkommen, unabhängig von ihrer Reihenfolge oder ihrem Kontext. Jede Zeile der zuvor vorgestellten {{{< crossref path="/methods/preprocessing#vom-text-zur-tabelle" label="Dokument-Term-Matrix" >}}} kann dabei als numerische Darstellung eines einzelnen Textes verstanden werden: Jede Zahl gibt an, wie häufig ein bestimmter Begriff im Dokument vorkommt.
+
+```{r}
+library(tidyverse)
+
+texts <- tibble(
+  doc_id = paste0(1:3),
+  text = c(
+    "Das Essen war gut.",
+    "Der Service war gut.",
+    "Das Restaurant war sauber."
+  )
+)
+
+bow <- texts |>
+  tidytext::unnest_tokens(word, text) |>
+  count(doc_id, word) |>
+  pivot_wider(
+    names_from = word,
+    values_from = n,
+    values_fill = 0
+  )
+
+bow |>
+  left_join(texts, by = "doc_id") |>
+  relocate(text, .after = doc_id) |>
+  select(-doc_id) |>
+  gt::gt() |>
+  gt::fmt_number(columns = 2:8, decimals = 0) |>
+  gt::cols_label(text = "") |>
+  gt::tab_style(
+    style = gt::cell_text(whitespace = "nowrap"),
+    locations = gt::cells_column_labels()
+  ) |>
+  nd.util::nd_gt_tab_options() |>
+  nd.util::nd_gt_to_html()
+```
+
+Das Verfahren ist einfach umzusetzen und eignet sich gut für erste Analysen von Worthäufigkeiten. Die Bedeutung von Sprache geht dabei allerdings verloren, da weder Satzstruktur noch Wortbedeutung berücksichtigt werden.
+
+Wie wenig Bag-of-Words von der Satzstruktur mitbekommt, zeigt ein Extrembeispiel: Die Aussage „Der Service war gut.“ und die Frage „War der Service gut?“ ergeben in der Dokument-Term-Matrix exakt dieselbe Zeile – die Wortstellung bleibt für das Modell unsichtbar.
+
+### TF-IDF
+
+**TF-IDF** baut auf Bag-of-Words auf, gewichtet Begriffe aber zusätzlich nach ihrer Aussagekraft. Es zählt nicht nur, wie **oft ein Wort in einem Text vorkommt** (TF = Term Frequency), sondern auch, wie **selten es im gesamten Textkorpus ist** (IDF = Inverse Document Frequency). Die Grundidee besteht darin, häufige, wenig aussagekräftige Wörter abzuwerten und seltene, inhaltlich wichtige Begriffe hervorzuheben.
+
+Wörter, die in vielen Dokumenten vorkommen, erhalten dadurch eine niedrige Gewichtung. Begriffe, die nur in wenigen Dokumenten auftauchen, werden dagegen stärker gewichtet. So erkennt TF-IDF, welche Begriffe für einen Text besonders charakteristisch sind – angewendet auf denselben Beispielkorpus wie oben, werden „war“ und „gut“ (die in mehreren Dokumenten vorkommen) niedriger gewichtet als distinktive Begriffe wie „sauber“ oder „Restaurant“, die nur in einem einzigen Dokument auftauchen:
+
+```{r}
+texts |>
+  tidytext::unnest_tokens(word, text) |>
+  count(doc_id, word) |>
+  tidytext::bind_tf_idf(word, doc_id, n) |>
+  select(doc_id, word, tf_idf) |>
+  pivot_wider(
+    names_from = word,
+    values_from = tf_idf,
+    values_fill = 0
+  ) |>
+  left_join(texts, by = "doc_id") |>
+  relocate(text, .after = doc_id) |>
+  select(-doc_id) |>
+  gt::gt() |>
+  gt::fmt_number(columns = where(is.numeric), decimals = 2) |>
+  gt::cols_label(text = "") |>
+  gt::tab_style(
+    style = gt::cell_text(whitespace = "nowrap"),
+    locations = list(
+      gt::cells_column_labels(),
+      gt::cells_body(columns = where(is.numeric))
+    )
+  ) |>
+  nd.util::nd_gt_tab_options() |>
+  nd.util::nd_gt_to_html()
+```
+
+Im Vergleich zur Bag-of-Words-Tabelle oben fällt auf: „war“ erhält in jeder Zeile den Wert 0, obwohl es in jedem der drei Texte vorkommt – anders als in der Bag-of-Words-Tabelle bedeutet die 0 hier also nicht, dass ein Wort fehlt, sondern nur, dass es in **allen** Dokumenten vorkommt und damit keinerlei Unterscheidungskraft besitzt. „Sauber“ und „Restaurant“ erhalten dagegen die höchsten Werte in ihrer jeweiligen Zeile, da sie nur dort auftauchen.
+
+## Moderne Textrepräsentationen
+
+Bag-of-Words und TF-IDF zählen Wörter, verstehen aber nicht, was sie bedeuten: Für beide Verfahren sind „Auto“ und „Fahrzeug“ genauso unähnlich wie „Auto“ und „Apfel“. Moderne Methoden der Textrepräsentation, wie etwa **Embeddings** (Worteinbettungen), setzen genau hier an.
+
+Der Unterschied zeigt sich schon an der Form der Vektoren: Bag-of-Words- und TF-IDF-Vektoren sind so lang wie das gesamte Vokabular und bestehen dabei überwiegend aus Nullen – man spricht von **dünnbesetzten Vektoren**. Embeddings sind dagegen kurz und **dicht besetzt**: Fast jede Zahl trägt zur Bedeutung bei. Auch bei der Vorbereitung unterscheiden sich die beiden Welten: Klassische Verfahren profitieren stark von einer gründlichen {{{< crossref path="/methods/preprocessing" label="Vorverarbeitung" >}}} wie Stoppwortentfernung oder Stemming, während moderne Modelle Kontext meist selbst erschließen und darauf kaum noch angewiesen sind.
+
+### Was sind Embeddings?
+
+Die Grundidee lässt sich in drei Punkten zusammenfassen:
+
+- Jedes Wort wird auf einen **Vektor** abgebildet – eine Liste von Zahlen.
+- Wörter mit **ähnlicher Bedeutung** erhalten **ähnliche, nah beieinanderliegende Vektoren** – wie nah, lässt sich mit der **Kosinus-Ähnlichkeit** messen, einem Ähnlichkeitswert zwischen −1 und 1.
+- Dadurch lassen sich Bedeutungsähnlichkeiten zwischen Wörtern direkt numerisch erfassen: „Auto“ und „Fahrzeug“ liegen im Vektorraum näher beieinander als „Auto“ und „Apfel“.
+
+Dahinter steckt die sogenannte **Distributionshypothese**: Wörter, die in ähnlichen sprachlichen Umgebungen auftreten, bedeuten in der Regel auch Ähnliches. Ein Embedding-Modell lernt diese Umgebungen nicht aus festen Regeln, sondern aus großen Textmengen.
+
+Ein Vektor besteht aus vielen Zahlen, die gemeinsam die Bedeutung eines Wortes beschreiben. Einzelne Zahlen haben dabei keine direkte Interpretation – erst alle Werte zusammen bilden die semantische Repräsentation. Je nach Modell umfasst ein Vektor typischerweise 100 bis 300 Zahlen, bei BERT sind es 768.
+
+### Word2Vec (klassisches Beispiel)
+
+Ein bekanntes Beispiel für klassische Embeddings ist **Word2Vec**. Anhand großer Textmengen lernt ein neuronales Netzwerk, welche Wörter in ähnlichen Kontexten auftreten, und ordnet ihnen entsprechend ähnliche Vektoren zu.
+
+{{{< p class="pb-0" >}}}
+Bekannt wurde Word2Vec vor allem dafür, dass sich Bedeutungsbeziehungen sogar rechnerisch abbilden lassen: Die Beziehung zwischen „König“ und „Königin“ entspricht im Vektorraum der Beziehung zwischen „Mann“ und „Frau“ – vereinfacht ausgedrückt gilt *König – Mann + Frau ≈ Königin*.
+{{{< /p >}}}
+
+{{{< div class="grid my-4" >}}} {{{< div class="g-col-12 g-col-md-6 g-start-md-4" >}}}
+
+```{r}
+knitr::include_graphics(here::here("content/assets/img/embeddings.svg"))
+```
+
+{{{< /div >}}} {{{< /div >}}}
+
+Eine wichtige Einschränkung bleibt jedoch: Jedes Wort erhält bei Word2Vec genau **einen** Vektor – unabhängig davon, in welchem Satz es steht.
+
+### BERT (kontextuelle Embeddings)
+
+```{=html}
+<style>
+.nd-bert-limitation { display: flex; flex-direction: column; align-items: center; gap: 0.4rem; margin: 1.5rem 0; }
+.nd-bert-limitation .box { border-radius: 10px; padding: 0.7rem 1.5rem; text-align: center; }
+.nd-bert-limitation .box .title { font-weight: 700; }
+.nd-bert-limitation .box .desc { font-size: 0.85rem; }
+.nd-bert-limitation .box.limit { background: #eee; border: 1.5px solid #898781; color: #333; }
+.nd-bert-limitation .box.solution { background: #837591; border: 1.5px solid #2e2933; color: #fff; }
+.nd-bert-limitation .arrow { font-size: 1.4rem; }
+</style>
+<div class="nd-bert-limitation">
+<div class="box limit"><div class="title">Word2Vec</div><div class="desc">1 Vektor pro Wort</div></div>
+<div class="arrow">&darr;</div>
+<div class="box solution"><div class="title">BERT</div><div class="desc">1 Vektor pro Wortvorkommen</div></div>
+</div>
+```
+
+Während Word2Vec ein Wort unabhängig von seinem Satz betrachtet, verarbeitet **BERT** den gesamten Satz gleichzeitig. Dadurch kann das Modell die Bedeutung jedes Wortes anhand seiner Nachbarwörter bestimmen. Wörter beeinflussen sich somit gegenseitig: Die Repräsentation eines Wortes hängt immer davon ab, in welchem Zusammenhang es verwendet wird. Statt jedem Wort also einen festen Vektor zuzuweisen, berechnet BERT für jedes Vorkommen eines Wortes einen **eigenen, kontextabhängigen Vektor**.
+
+**Beispiel:** Das Wort „Bank“ bekommt in „Ich sitze auf der Bank“ eine andere Repräsentation als in „Die Bank erhöht die Zinsen“. Im ersten Satz sorgen die Wörter „sitze“ und „auf“ dafür, dass „Bank“ als Sitzgelegenheit interpretiert wird. Im zweiten Satz weisen Wörter wie „erhöht“ und „Zinsen“ auf ein Geldinstitut hin. Obwohl beide Sätze dasselbe Wort enthalten, erzeugt BERT unterschiedliche Repräsentationen.
+
+Moderne Sprachmodelle (LLMs) bauen intern auf demselben Prinzip auf: Auch sie verarbeiten Text, indem sie jedem Wortvorkommen eine kontextabhängige Repräsentation zuweisen.
+
+## Von Wörtern zu ganzen Texten
+
+Bisher ging es ausschließlich um Vektoren für einzelne Wörter. Viele praktische Anwendungen – etwa der Vergleich zweier Kundenbewertungen oder die Suche nach ähnlichen Dokumenten – benötigen jedoch eine Repräsentation des **gesamten Satzes oder Dokuments**.
+
+Ein einfacher Ansatz besteht darin, die Embeddings aller Wörter eines Satzes zu mitteln. Bei statischen Embeddings wie Word2Vec, bei denen jedes Wort unabhängig vom Satz immer denselben Vektor hat, geht dabei jede Information über die Wortreihenfolge verloren: Die Vorgaben „Zahlung nach Lieferung“ und „Lieferung nach Zahlung“ bestehen aus denselben Wörtern und erhalten deshalb trotz ihrer gegensätzlichen Bedeutung nahezu dieselbe gemittelte Repräsentation. Gemittelte BERT-Vektoren sind dagegen bereits kontextabhängig und unterscheiden solche Sätze durchaus – das grundlegendere Problem bleibt aber: Ein einfacher Mittelwert wurde nie darauf trainiert, Ähnlichkeit zwischen Sätzen abzubilden.
+
+```{=html}
+<style>
+.nd-sentence-limitation { display: flex; flex-direction: column; align-items: center; gap: 0.4rem; margin: 1.5rem 0; }
+.nd-sentence-limitation .box { border-radius: 10px; padding: 0.7rem 1.5rem; text-align: center; }
+.nd-sentence-limitation .box .title { font-weight: 700; }
+.nd-sentence-limitation .box .desc { font-size: 0.85rem; }
+.nd-sentence-limitation .box.limit { background: #eee; border: 1.5px solid #898781; color: #333; }
+.nd-sentence-limitation .box.solution { background: #837591; border: 1.5px solid #2e2933; color: #fff; }
+.nd-sentence-limitation .arrow { font-size: 1.4rem; }
+</style>
+<div class="nd-sentence-limitation">
+<div class="box limit"><div class="title">Wortvektoren mitteln</div><div class="desc">nicht auf Ähnlichkeit trainiert</div></div>
+<div class="arrow">&darr;</div>
+<div class="box solution"><div class="title">Sentence-BERT</div><div class="desc">1 trainierter Vektor pro Satz</div></div>
+</div>
+```
+
+Sentence-BERT setzt genau hier an: Es trainiert das Modell gezielt darauf, ganze Sätze auf **aussagekräftige Vektoren** abzubilden, die sich direkt für Ähnlichkeitsvergleiche eignen. Dazu lernt das Modell anhand von Satzpaaren, die als ähnlich oder unähnlich markiert sind, ähnlichen Sätzen auch ähnliche Vektoren zuzuweisen – unabhängig von ihrer genauen Formulierung. Damit lassen sich komplette Texte hinsichtlich ihrer Bedeutung vergleichen. Das ist die Grundlage für Anwendungen wie semantische Suche, Clustering oder RAG-Systeme, bei denen ein Sprachmodell passende Dokumente aus einem Bestand als Kontext erhält.
+
+In der Praxis werden Embeddings so gut wie nie selbst trainiert. Stattdessen kommen fertige, vortrainierte Modelle zum Einsatz – häufig Open Source oder über eine API nutzbar, mittlerweile auch für deutsche und mehrsprachige Texte. Unabhängig davon, ob intern ein Word2Vec-, BERT- oder Sentence-BERT-ähnlicher Ansatz steckt, spricht man heute meist allgemein von **Embedding-Modellen**. Längere Dokumente werden dafür zunächst in kleinere Abschnitte zerlegt (**Chunking**), da die meisten Modelle nur eine begrenzte Textlänge auf einmal verarbeiten können.
+
+## Verfahren im Vergleich
+
+Die folgende Tabelle fasst alle in diesem Überblick vorgestellten Verfahren zusammen und zeigt, welche Eigenschaften sie jeweils mitbringen:
+
+```{=html}
+<style>
+.nd-repr-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.nd-repr-table th, .nd-repr-table td { padding: 0.6rem 0.9rem; border-bottom: 1px solid #e1e0d9; text-align: center; }
+.nd-repr-table th { font-weight: 700; }
+.nd-repr-table td:first-child, .nd-repr-table th:first-child { text-align: left; font-weight: 600; }
+.nd-repr-table .yes { color: #1d4a45; font-weight: 700; }
+.nd-repr-table .no { color: #898781; }
+</style>
+<div style="overflow-x: auto;">
+<table class="nd-repr-table">
+<thead>
+<tr><th>Verfahren</th><th>Wortgewichtung</th><th>Wortreihenfolge</th><th>Erkennt Synonyme</th><th>Kontextabhängig</th><th>Auf Satzähnlichkeit trainiert</th></tr>
+</thead>
+<tbody>
+<tr><td>Bag-of-Words</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
+<tr><td>TF-IDF</td><td class="yes">✓</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
+<tr><td>Word2Vec</td><td class="no">✗</td><td class="no">✗</td><td class="yes">✓</td><td class="no">✗</td><td class="no">✗</td></tr>
+<tr><td>BERT</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="no">✗</td></tr>
+<tr><td>Sentence-BERT</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+</tbody>
+</table>
+</div>
+```
+
+Die Verfahren unterscheiden sich darin, welche Informationen sie über Texte erfassen können. Moderne Verfahren liefern meist aussagekräftigere Repräsentationen, sind dafür aber auch komplexer: Sie sind rechenintensiver, und ihre Ergebnisse lassen sich schwerer nachvollziehen als bei klassischen Verfahren.
+
+
+## Fazit
+
+Als Faustregel gilt:
+
+- **Bag-of-Words / TF-IDF** eignen sich für Häufigkeitsanalysen und einfache Klassifikationen – schnell, transparent und ohne besondere Infrastruktur auch lokal lauffähig.
+- **Embeddings** lohnen sich, sobald es um Bedeutung geht: semantische Suche, Clustering oder RAG.
+- Im Zweifel gilt: erst das klassische Verfahren ausprobieren und nur bei Bedarf zu Embeddings wechseln.
+
+Alle in diesem Überblick vorgestellten Verfahren verfolgen dasselbe Ziel: Text in eine Form zu bringen, mit der Algorithmen rechnen können. Welche Textrepräsentation zum Einsatz kommt, bestimmt maßgeblich, was die im Anschluss vorgestellten Methoden leisten können – ob {{{< crossref path="/methods/sentiment" label="Sentimentanalyse" >}}}, {{{< crossref path="/methods/topic" label="Themenmodellierung" >}}} oder ein {{{< crossref path="/methods/rag_system" label="RAG-System" >}}}: Jede dieser Methoden baut auf einer der hier vorgestellten Textrepräsentationen auf.

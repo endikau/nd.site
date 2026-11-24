@@ -41,7 +41,7 @@ Der Ausgangspunkt jeder Textanalyse ist eine **Sammlung von Dokumenten bzw. Text
 
 Preprocessing ist dabei kein festes Rezept, das sich unverändert auf jeden Text und jede Methode anwenden lässt, sondern eine Reihe von Entscheidungen mit jeweils eigenen Trade-offs. Jeder einzelne Schritt vereinfacht den Text und entfernt dabei zwangsläufig auch Information. Ob sich das lohnt, hängt davon ab, was die anschließende Analyse mit dem Text vorhat – ein Bag-of-Words-Modell profitiert von einem reduzierten Vokabular, ein Sprachmodell verliert dadurch womöglich genau die Nuancen, auf die es angewiesen ist. Diesen Unterschied greifen wir im Abschnitt {{{< crossref path="#und-bei-llms" label="Und bei LLMs?" >}}} wieder auf.
 
-Ein typischer erster Schritt ist, die vorliegenden Texte in ihre einzelnen Elemente zu unterteilen, zum Beispiel in Sätze oder einzelne Wörter. Diese kleinsten Einheiten werden in der NLP-Sprache auch als **Tokens** (deutsch: Zeichen oder Symbol) bezeichnet. Entsprechend wird dieser Vorgang auch als **Tokenisierung** bezeichnet.
+Ein typischer erster Schritt ist, die vorliegenden Texte in ihre einzelnen Elemente zu unterteilen, zum Beispiel in Sätze oder einzelne Wörter. Diese kleinsten Einheiten werden in der NLP-Sprache auch als **Tokens** (deutsch etwa: Texteinheiten) bezeichnet. Entsprechend wird dieser Vorgang auch als **Tokenisierung** bezeichnet.
 
 {{{< div class="grid" >}}} {{{< div class="g-col-12 text-center" >}}}
 
@@ -70,77 +70,13 @@ Damit liegt der Text zunächst als Folge einzelner Tokens vor. Wie diese im näc
 
 Klassische Verfahren des Text Minings wie beispielsweise *Bag-of-Words*, *TF-IDF* oder *Themenmodellierung*, betrachten Texte hauptsächlich als Sammlung einzelner Wörter und deren Häufigkeiten. Damit diese Verfahren möglichst aussagekräftige Ergebnisse liefern, wird der Wortschatz (Vokabular) vor der eigentlichen Analyse gezielt vereinfacht. Das Ziel besteht darin, verschiedene Schreibweisen und unwichtige Wörter zu reduzieren, ohne die eigentliche Bedeutung des Textes zu verändern. Dadurch sinkt die Anzahl unterschiedlicher Begriffe und Muster in den Daten lassen sich leichter erkennen.
 
-```{r}
-#| label: preprocessing-helpers
-#| include: false
-
-tokenize_de <- function(text) {
-  stringr::str_extract_all(text, "[\\p{L}]+|[[:punct:]]")[[1]]
-}
-
-stopwords_de <- c(
-  "die",
-  "der",
-  "den",
-  "dem",
-  "das",
-  "und",
-  "mit",
-  "hat",
-  "war",
-  "waren",
-  "sehr",
-  "ist",
-  "sind"
-)
-
-lemma_map_de <- c(
-  "kundinnen" = "Kunde",
-  "kunden" = "Kunde",
-  "kunde" = "Kunde",
-  "freundlichen" = "freundlich",
-  "schnelle" = "schnell",
-  "viele" = "viel",
-  "geholfen" = "helfen",
-  "loben" = "loben",
-  "service" = "Service",
-  "support" = "Support"
-)
-
-apply_step_de <- function(
-  tokens,
-  symbole = FALSE,
-  lemma = FALSE,
-  klein = FALSE,
-  stopwords = FALSE
-) {
-  toks <- tokens
-  if (symbole) {
-    toks <- toks[stringr::str_detect(toks, "^[\\p{L}]+$")]
-  }
-  if (lemma) {
-    toks <- purrr::map_chr(toks, \(t) {
-      key <- tolower(t)
-      if (key %in% names(lemma_map_de)) lemma_map_de[[key]] else t
-    })
-  }
-  if (klein) {
-    toks <- tolower(toks)
-  }
-  if (stopwords) {
-    toks <- toks[!(tolower(toks) %in% stopwords_de)]
-  }
-  toks
-}
-```
-
 ### Spracherkennung
 
 Viele Unternehmen sammeln Textdaten aus mehrsprachigen Quellen, etwa internationale Kundenbewertungen oder Support-Anfragen in unterschiedlichen Sprachen. Bevor die folgenden Schritte überhaupt angewendet werden können, muss deshalb häufig zunächst die Sprache jedes einzelnen Dokuments erkannt werden. Erst auf dieser Basis lässt sich entscheiden, welcher Tokenizer, welche Stopword-Liste und welcher Lemmatisierer zum Einsatz kommen – ein deutsches Stopword-Lexikon nützt bei einem englischen oder französischen Text schließlich wenig.
 
 ### Kleinschreibung
 
-Alle Wörter werden in Kleinbuchstaben umgewandelt. Dadurch werden beispielsweise „Heute" und „heute" als dasselbe Wort erkannt und nicht fälschlicherweise als zwei unterschiedliche Begriffe gezählt.
+Alle Wörter werden in Kleinbuchstaben umgewandelt. Dadurch werden beispielsweise „Heute“ und „heute“ als dasselbe Wort erkannt und nicht fälschlicherweise als zwei unterschiedliche Begriffe gezählt.
 
 ### Symbole und Satzzeichen entfernen
 
@@ -152,7 +88,7 @@ Viele Wörter kommen in nahezu jedem deutschen Text vor, tragen jedoch nur wenig
 
 ### Stemming vs. Lemmatisierung
 
-Um verschiedene Formen von Wörtern auf den jeweiligen Stamm, die sie miteinander teilen, zu reduzieren, können zwei Methoden verwendet werden: **Stemming** und/oder **Lemmatisierung**. Die Methoden können einzeln oder kombiniert werden, mit dem Ziel, Wortstämme zu identifizieren und damit die Anzahl einzelner Begriffe in den Texten weiter zu reduzieren. **Stemming** identifiziert die **gemeinsame Basis verschiedener Wörter**, um sie darauf zu reduzieren. Hierfür werden entsprechend Präfixe, Suffixe usw. entfernt oder abgeschnitten, sodass nur der Wortstamm übrigbleibt. **Lemmatisierung** hingegen zielt darauf ab, Lemmas, also die **Grundform des Wortes**, die in einem Wörterbuch vorzufinden ist, zu identifizieren und Wörter darauf zu reduzieren. Anders als beim Stemming resultiert entsprechend immer ein lexikographisch korrektes Wort bei der Lemmatisierung, da Wörter identifiziert werden und nicht Prä- bzw. Suffixe einfach entfernt werden.
+Um verschiedene Formen von Wörtern auf den jeweiligen Stamm, die sie miteinander teilen, zu reduzieren, können zwei Methoden verwendet werden: **Stemming** oder **Lemmatisierung**. In der Regel wird eine der beiden Methoden gewählt, mit dem Ziel, verwandte Wortformen zusammenzuführen und damit die Anzahl einzelner Begriffe in den Texten weiter zu reduzieren. **Stemming** identifiziert die **gemeinsame Basis verschiedener Wörter**, um sie darauf zu reduzieren. Hierfür werden entsprechend Präfixe, Suffixe usw. entfernt oder abgeschnitten, sodass nur der Wortstamm übrigbleibt. **Lemmatisierung** hingegen zielt darauf ab, Lemmata, also die **Grundform des Wortes**, die in einem Wörterbuch vorzufinden ist, zu identifizieren und Wörter darauf zu reduzieren. Anders als beim Stemming resultiert entsprechend in der Regel ein lexikographisch korrektes Wort bei der Lemmatisierung, da Wörter identifiziert werden und nicht Prä- bzw. Suffixe einfach entfernt werden.
 
 {{{< div class="grid" >}}} {{{< div class="g-col-12 g-col-md-10 g-start-md-2" >}}}
 
@@ -230,7 +166,7 @@ Um verschiedene Formen von Wörtern auf den jeweiligen Stamm, die sie miteinande
 
 ### Normalisierung: Zahlen, Datumsangaben, URLs, Emojis
 
-Reale Textdaten – etwa Support-Tickets oder E-Mails – enthalten viele Elemente, die für die meisten Analysen wenig zur Bedeutung beitragen, aber die Menge einzigartiger Tokens unnötig aufblähen: Zahlen, Datumsangaben, URLs, E-Mail-Adressen oder Emojis. Je nach Anwendungsfall werden diese entweder entfernt oder durch einheitliche Platzhalter ersetzt. Aus "Sie erreichen mich über max@firma.de bis 14.03.2024“ wird durch Normalisierung beispielsweise „Sie erreichen mich über \<EMAIL\> bis \<DATUM\>“. So bleibt erkennbar, dass an dieser Stelle eine E-Mail-Adresse bzw. ein Datum stand, ohne dass jede konkrete Ausprägung als eigenes Token gezählt wird.
+Reale Textdaten – etwa Support-Tickets oder E-Mails – enthalten viele Elemente, die für die meisten Analysen wenig zur Bedeutung beitragen, aber die Menge einzigartiger Tokens unnötig aufblähen: Zahlen, Datumsangaben, URLs, E-Mail-Adressen oder Emojis. Je nach Anwendungsfall werden diese entweder entfernt oder durch einheitliche Platzhalter ersetzt. Aus „Sie erreichen mich über max@firma.de bis 14.03.2024“ wird durch Normalisierung beispielsweise „Sie erreichen mich über \<EMAIL\> bis \<DATUM\>“. So bleibt erkennbar, dass an dieser Stelle eine E-Mail-Adresse bzw. ein Datum stand, ohne dass jede konkrete Ausprägung als eigenes Token gezählt wird.
 
 ### OCR- und Kodierungsfehler
 
@@ -240,168 +176,7 @@ Nicht jeder Text liegt von Anfang an sauber vor. Werden Dokumente etwa per OCR (
 
 Bei der Zerlegung in einzelne Tokens geht Kontext verloren, der sich erst aus der Kombination mehrerer Wörter ergibt. Der Begriff „künstliche Intelligenz“ hat als Ganzes eine andere Bedeutung als die Einzelwörter „künstliche“ und „Intelligenz“. Über sogenannte **n-Gramme** lassen sich solche Wortfolgen als zusammenhängende Einheit behandeln: Ein Bigramm fasst zwei aufeinanderfolgende Wörter zu einem Token zusammen, ein Trigramm entsprechend drei. So bleiben feste Begriffe und Fachausdrücke auch nach der Vorverarbeitung als eine Einheit erhalten.
 
-Diese Schritte werden nicht beliebig, sondern typischerweise in einer festen Reihenfolge angewendet, etwa: Tokenisierung → Kleinschreibung → Entfernen von Symbolen → Entfernen von Stopwords → Stemming oder Lemmatisierung. Diese Reihenfolge ist kein Zufall, sondern folgt aus Abhängigkeiten zwischen den Schritten: Stopwords lassen sich beispielsweise erst entfernen, nachdem der Text in einzelne Tokens zerlegt wurde. Welche Schritte darüber hinaus in welcher Kombination sinnvoll sind, hängt von der nachgelagerten Analysemethode ab. Wie eingangs erwähnt gibt es kein universelles Rezept, sondern eine Reihe von Entscheidungen mit jeweils eigenen Trade-offs.
-
-Wie stark diese Schritte gemeinsam das Vokabular verkleinern, lässt sich direkt ausprobieren: Die folgende Demo verarbeitet drei kurze Kundenfeedback-Sätze und zeigt, wie sich die Anzahl eindeutiger Tokens verändert, je nachdem welche Schritte aktiviert sind.
-
-```{r}
-#| label: vocab-demo
-
-vocab_sentences <- c(
-  "Die Kundinnen und Kunden waren mit dem Service sehr zufrieden.",
-  "Der Kunde hat die Lieferung schnell erhalten und war zufrieden.",
-  "Viele Kundinnen loben den freundlichen Support."
-)
-vocab_raw_tokens <- unlist(lapply(vocab_sentences, tokenize_de))
-
-vocab_combos <- expand.grid(
-  symbole = c(FALSE, TRUE),
-  lemma = c(FALSE, TRUE),
-  klein = c(FALSE, TRUE),
-  stopwords = c(FALSE, TRUE)
-)
-
-vocab_results <- purrr::pmap(
-  vocab_combos,
-  function(symbole, lemma, klein, stopwords) {
-    toks <- apply_step_de(
-      vocab_raw_tokens,
-      symbole = symbole,
-      lemma = lemma,
-      klein = klein,
-      stopwords = stopwords
-    )
-    list(tokens = unname(toks), vocabSize = length(unique(toks)))
-  }
-)
-
-names(vocab_results) <- purrr::pmap_chr(
-  vocab_combos,
-  function(symbole, lemma, klein, stopwords) {
-    sprintf(
-      "s%d_l%d_k%d_w%d",
-      as.integer(symbole),
-      as.integer(lemma),
-      as.integer(klein),
-      as.integer(stopwords)
-    )
-  }
-)
-
-vocab_json <- jsonlite::toJSON(
-  list(sentences = vocab_sentences, results = vocab_results),
-  auto_unbox = TRUE
-) |>
-  stringi::stri_replace_all_fixed("</", "<\\/")
-
-htmltools::tagList(
-  htmltools::tags$style(htmltools::HTML(
-    "#nd-vocab-demo { margin: 1.5rem 0; }
-    #nd-vocab-demo .vocab-sentences { font-size: 0.9rem; color: #52514e; margin-bottom: 1rem; text-align: center; }
-    #nd-vocab-demo .vocab-sentences ul { display: inline-block; margin: 0; padding-left: 1.25rem; text-align: left; }
-    #nd-vocab-demo .vocab-sentences li { margin-bottom: 0.25rem; }
-    #nd-vocab-demo .vocab-sentences li:last-child { margin-bottom: 0; }
-    #nd-vocab-demo .vocab-arrow { text-align: center; font-size: 1.5rem; line-height: 1; color: #000; margin-bottom: 1rem; }
-    #nd-vocab-demo .vocab-tokens { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.35rem; margin-bottom: 1.25rem; }
-    #nd-vocab-demo .vocab-tokens .token-chip { background: #837591; border: 1.5px solid #2e2933; border-radius: 10px; padding: 0.3rem 0.7rem; font-family: monospace; font-size: 0.85rem; font-weight: 600; color: #ffffff; }
-    #nd-vocab-demo .vocab-count { text-align: center; margin-bottom: 0.5rem; }
-    #nd-vocab-demo .vocab-count .number { font-size: 2.5rem; font-weight: 700; color: #2e2933; line-height: 1; }
-    #nd-vocab-demo .vocab-count .label { font-size: 0.9rem; color: #2e2933; }
-    #nd-vocab-demo .vocab-hint { text-align: center; font-size: 0.8rem; color: #898781; margin-bottom: 1.5rem; font-style: italic; }
-    #nd-vocab-demo .vocab-toggles { display: flex; flex-wrap: wrap; gap: 0.75rem 1.5rem; justify-content: center; }
-    #nd-vocab-demo .vocab-toggle { display: flex; align-items: center; gap: 0.4rem; font-weight: 600; cursor: pointer; }
-    #nd-vocab-demo .vocab-toggle input { width: 1.1rem; height: 1.1rem; accent-color: #837591; cursor: pointer; }"
-  )),
-  htmltools::tags$div(
-    id = "nd-vocab-demo",
-    htmltools::tags$script(
-      type = "application/json",
-      id = "nd-vocab-demo-data",
-      htmltools::HTML(vocab_json)
-    ),
-    htmltools::tags$div(
-      class = "vocab-sentences",
-      htmltools::tags$ul(
-        htmltools::tagList(lapply(vocab_sentences, function(s) {
-          htmltools::tags$li(htmltools::tags$em(s))
-        }))
-      )
-    ),
-    htmltools::tags$div(class = "vocab-arrow", "↓"),
-    htmltools::tags$div(class = "vocab-tokens", id = "nd-vocab-demo-tokens"),
-    htmltools::tags$div(
-      class = "vocab-count",
-      htmltools::tags$div(class = "number", id = "nd-vocab-demo-number"),
-      htmltools::tags$div(class = "label", "eindeutige Tokens im Vokabular")
-    ),
-    htmltools::tags$div(
-      class = "vocab-hint",
-      "Jedes Wort erscheint hier nur einmal, auch wenn es in mehreren Sätzen vorkommt – genau das macht die Vokabulargröße aus."
-    ),
-    htmltools::tags$div(
-      class = "vocab-toggles",
-      htmltools::tags$label(
-        class = "vocab-toggle",
-        htmltools::tags$input(
-          type = "checkbox",
-          id = "nd-vocab-toggle-symbole"
-        ),
-        "Symbole entfernen"
-      ),
-      htmltools::tags$label(
-        class = "vocab-toggle",
-        htmltools::tags$input(type = "checkbox", id = "nd-vocab-toggle-klein"),
-        "Kleinschreibung"
-      ),
-      htmltools::tags$label(
-        class = "vocab-toggle",
-        htmltools::tags$input(
-          type = "checkbox",
-          id = "nd-vocab-toggle-stopwords"
-        ),
-        "Stopwords entfernen"
-      ),
-      htmltools::tags$label(
-        class = "vocab-toggle",
-        htmltools::tags$input(type = "checkbox", id = "nd-vocab-toggle-lemma"),
-        "Lemmatisierung"
-      )
-    )
-  ),
-  htmltools::tags$script(htmltools::HTML(stringi::stri_c(
-    "(function () {\n",
-    "  var data = JSON.parse(document.getElementById('nd-vocab-demo-data').textContent);\n",
-    "  var numberEl = document.getElementById('nd-vocab-demo-number');\n",
-    "  var tokensEl = document.getElementById('nd-vocab-demo-tokens');\n",
-    "  var boxSymbole = document.getElementById('nd-vocab-toggle-symbole');\n",
-    "  var boxKlein = document.getElementById('nd-vocab-toggle-klein');\n",
-    "  var boxStopwords = document.getElementById('nd-vocab-toggle-stopwords');\n",
-    "  var boxLemma = document.getElementById('nd-vocab-toggle-lemma');\n",
-    "  function currentKey() {\n",
-    "    return 's' + (boxSymbole.checked ? 1 : 0) + '_l' + (boxLemma.checked ? 1 : 0) + '_k' + (boxKlein.checked ? 1 : 0) + '_w' + (boxStopwords.checked ? 1 : 0);\n",
-    "  }\n",
-    "  function render() {\n",
-    "    var result = data.results[currentKey()];\n",
-    "    numberEl.textContent = result.vocabSize;\n",
-    "    tokensEl.innerHTML = '';\n",
-    "    var seen = {};\n",
-    "    result.tokens.forEach(function (tok) {\n",
-    "      if (seen[tok]) { return; }\n",
-    "      seen[tok] = true;\n",
-    "      var chip = document.createElement('span');\n",
-    "      chip.className = 'token-chip';\n",
-    "      chip.textContent = tok;\n",
-    "      tokensEl.appendChild(chip);\n",
-    "    });\n",
-    "  }\n",
-    "  [boxSymbole, boxKlein, boxStopwords, boxLemma].forEach(function (box) {\n",
-    "    box.addEventListener('change', render);\n",
-    "  });\n",
-    "  render();\n",
-    "})();\n"
-  )))
-)
-```
+Diese Schritte werden nicht beliebig, sondern typischerweise in einer festen Reihenfolge angewendet, etwa: Tokenisierung → Entfernen von Symbolen → Entfernen von Stopwords → Stemming oder Lemmatisierung → Kleinschreibung. Diese Reihenfolge ist kein Zufall, sondern folgt aus Abhängigkeiten zwischen den Schritten: Stopwords lassen sich beispielsweise erst entfernen, nachdem der Text in einzelne Tokens zerlegt wurde. Und gerade bei deutschen Texten kommt die Kleinschreibung erst nach der Lemmatisierung, da Lemmatisierer die Großschreibung nutzen, um Substantive zu erkennen. Welche Schritte darüber hinaus in welcher Kombination sinnvoll sind, hängt von der nachgelagerten Analysemethode ab. Wie eingangs erwähnt gibt es kein universelles Rezept, sondern eine Reihe von Entscheidungen mit jeweils eigenen Trade-offs.
 
 ## Deutsch als Herausforderung
 
@@ -445,7 +220,7 @@ bow |>
   relocate(text, .after = doc_id) |>
   select(-doc_id) |>
   gt::gt() |>
-  gt::fmt_number(columns = 2:8, decimals = 0) |>
+  gt::fmt_number(columns = where(is.numeric), decimals = 0) |>
   gt::cols_label(text = "") |>
   gt::tab_style(
     style = gt::cell_text(whitespace = "nowrap"),
@@ -455,7 +230,7 @@ bow |>
   nd.util::nd_gt_to_html()
 ```
 
-Damit ist der Text endlich in eine numerische, computerlesbare Form gebracht. Wie aus dieser Matrix weiterführende Metriken wie {{{< crossref path="/basics#tf-idf" label="TF-IDF" >}}} oder kontextuelle Worteinbettungen wie {{{< crossref path="/basics#bert" label="BERT" >}}} entstehen, wird an anderer Stelle vertieft. Für das Preprocessing bleibt an dieser Stelle die wichtigste Erkenntnis: Ohne die vorherige Vorverarbeitung wäre das Vokabular um ein Vielfaches größer und die Matrix entsprechend unhandlicher.
+Damit ist der Text endlich in eine numerische, computerlesbare Form gebracht. Wie sich daraus weiterführende Gewichtungen wie {{{< crossref path="/methods/embeddings#tf-idf" label="TF-IDF" >}}} berechnen lassen und welche Alternativen es mit Embeddings wie {{{< crossref path="/methods/embeddings#bert-kontextuelle-embeddings" label="BERT" >}}} gibt, zeigt die Seite {{{< crossref path="/methods/embeddings" label="Textrepräsentationen" >}}}. Für das Preprocessing bleibt an dieser Stelle die wichtigste Erkenntnis: Ohne die vorherige Vorverarbeitung wäre das Vokabular um ein Vielfaches größer und die Matrix entsprechend unhandlicher.
 
 ## Und bei LLMs?
 
@@ -528,15 +303,15 @@ LLMs verwenden keine Wort-, sondern eine **Subword-Tokenisierung**, meist auf Ba
 
 Die einzelnen Bausteine kommen in vielen unterschiedlichen Wörtern vor. Das Modell muss daher nicht jedes zusammengesetzte Wort separat lernen, sondern kann bekannte Bausteine immer wieder neu kombinieren.
 
-Damit erledigt sich das im Abschnitt {{{< crossref path="#deutsch-als-herausforderung" label="Deutsch als Herausforderung" >}}} beschriebene Kompositum- und Flexionsproblem praktisch von selbst: Ein Sprachmodell benötigt weder Kompositazerlegung noch Stemming oder Lemmatisierung, weil der Tokenizer wiederkehrende Wortbestandteile ohnehin erkennt.
+Damit erledigt sich das im Abschnitt {{{< crossref path="#deutsch-als-herausforderung" label="Deutsch als Herausforderung" >}}} beschriebene Kompositum- und Flexionsproblem weitgehend: Ein Sprachmodell benötigt in der Regel weder Kompositazerlegung noch Stemming oder Lemmatisierung, weil der Tokenizer Wörter in wiederkehrende Bausteine zerlegt und das Modell beim Training lernt, wie verwandte Wortformen zusammenhängen.
 
 ### Groß-/Kleinschreibung, Satzzeichen und Stopwords tragen Signal
 
-Anders als bei klassischen Verfahren enthalten Großschreibung, Satzzeichen und vermeintliche Füllwörter für ein Sprachmodell echte Information: Großschreibung markiert etwa Eigennamen oder Satzanfänge, Satzzeichen strukturieren Aussagen, und auch scheinbar unbedeutende Wörter wie „nicht", „aber" oder „nur" verändern die Bedeutung eines Satzes erheblich. Werden sie entfernt, geht dieses Signal verloren, statt Rauschen zu reduzieren.
+Anders als bei klassischen Verfahren enthalten Großschreibung, Satzzeichen und vermeintliche Füllwörter für ein Sprachmodell echte Information: Großschreibung markiert etwa Eigennamen oder Satzanfänge, Satzzeichen strukturieren Aussagen, und auch scheinbar unbedeutende Wörter wie „nicht“, „aber“ oder „nur“ verändern die Bedeutung eines Satzes erheblich. Werden sie entfernt, geht dieses Signal verloren, statt Rauschen zu reduzieren.
 
 ### Kontextuelle Embeddings statt Vokabular-Reduktion
 
-Statt Texte auf einzelne Wortformen zu reduzieren, erzeugen LLMs für jedes Token eine kontextabhängige Repräsentation (Embedding). Das gleiche Wort kann deshalb je nach Satz unterschiedliche Bedeutungen annehmen. Eine künstliche Verkleinerung des Vokabulars ist hierfür entsprechend nicht erforderlich.
+Statt Texte auf einzelne Wortformen zu reduzieren, erzeugen LLMs für jedes Token eine kontextabhängige Repräsentation (Embedding). Dasselbe Wort erhält deshalb je nach Zusammenhang eine unterschiedliche Repräsentation. Eine künstliche Verkleinerung des Vokabulars ist hierfür entsprechend nicht erforderlich.
 
 ### Was stattdessen zählt
 
@@ -553,7 +328,7 @@ Klassisches Preprocessing normalisiert Wortformen, um das Vokabular zu verkleine
 
 ## Interaktive Demo
 
-Die interaktive Demo zeigt, wie sich **gängige, klassische Vorverarbeitungsschritte** auf Textdaten auswirken. Sie können einen Text auswählen und anschließend die einzelnen Schritte nach Belieben anwenden, um den Effekt direkt zu sehen.
+Die interaktive Demo zeigt, wie sich **gängige, klassische Vorverarbeitungsschritte** auf Textdaten auswirken. Wählen Sie die einzelnen Schritte nach Belieben aus: Die Demo zeigt den Originaltext und darunter das Ergebnis der Vorverarbeitung, sodass sich der Effekt direkt vergleichen lässt. Über „Neues Beispiel“ erhalten Sie einen anderen Beispieltext.
 
 ```{r}
 nd.util:::nd_iframe_app(

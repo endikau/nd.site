@@ -18,15 +18,6 @@ toc_show: false
       {{{< /p >}}}
       {{{< p class="pb-4 pb-md-0" >}}}
         Hier setzt das **EnDiKaU-Projekt** der Justus-Liebig-Universität Gießen im Rahmen des **Förderprogramms Distr@l Digitalisierung** an. Ziel des Projekts ist es, **kleinen und mittelständischen Unternehmen (KMU)** Methoden der **computergestützten Textanalyse** zugänglich zu machen und **praxisnahe Anwendungsmöglichkeiten** aufzuzeigen, um eine fundierte Grundlage für den Einsatz dieser Methoden im eigenen Unternehmen zu schaffen.
-        {{{< popover title="Mehr Informationen" >}}}
-          {{{< p class="mb-2" >}}}
-            Langer Text. Du kannst auch <a href="/methods/sentiment">Links</a> verwenden.
-          {{{< /p >}}}
-          {{{< fa-ul >}}}
-            {{{< fa-solid-li icon="thumbs-up" color="#39b185" >}}} Große Sprachmodelle sind besser darin, die Stimmung eines Textes im Gesamtkontext zu erfassen, anstatt sich nur auf einzelne Begriffe zu stützen. Dadurch liefern sie häufig genauere Ergebnisse. {{{< /fa-solid-li >}}}
-            {{{< fa-solid-li icon="thumbs-down" color="#cf597e" >}}} Die Anwendung dieser Methode erfordert jedoch deutlich mehr Rechenkapazität, was besonders bei großen Datenmengen zu Herausforderungen führen kann. {{{< /fa-solid-li >}}}            {{{< fa-solid-li icon="thumbs-down" color="#cf597e" >}}} Die Anwendung dieser Methode erfordert jedoch deutlich mehr Rechenkapazität, was besonders bei großen Datenmengen zu Herausforderungen führen kann. {{{< /fa-solid-li >}}}            {{{< fa-solid-li icon="thumbs-down" color="#cf597e" >}}} Die Anwendung dieser Methode erfordert jedoch deutlich mehr Rechenkapazität, was besonders bei großen Datenmengen zu Herausforderungen führen kann. {{{< /fa-solid-li >}}}            {{{< fa-solid-li icon="thumbs-down" color="#cf597e" >}}} Die Anwendung dieser Methode erfordert jedoch deutlich mehr Rechenkapazität, was besonders bei großen Datenmengen zu Herausforderungen führen kann. {{{< /fa-solid-li >}}}            {{{< fa-solid-li icon="thumbs-down" color="#cf597e" >}}} Die Anwendung dieser Methode erfordert jedoch deutlich mehr Rechenkapazität, was besonders bei großen Datenmengen zu Herausforderungen führen kann. {{{< /fa-solid-li >}}}            {{{< fa-solid-li icon="thumbs-down" color="#cf597e" >}}} Die Anwendung dieser Methode erfordert jedoch deutlich mehr Rechenkapazität, was besonders bei großen Datenmengen zu Herausforderungen führen kann. {{{< /fa-solid-li >}}}            {{{< fa-solid-li icon="thumbs-down" color="#cf597e" >}}} Die Anwendung dieser Methode erfordert jedoch deutlich mehr Rechenkapazität, was besonders bei großen Datenmengen zu Herausforderungen führen kann. {{{< /fa-solid-li >}}}            {{{< fa-solid-li icon="thumbs-down" color="#cf597e" >}}} Die Anwendung dieser Methode erfordert jedoch deutlich mehr Rechenkapazität, was besonders bei großen Datenmengen zu Herausforderungen führen kann. {{{< /fa-solid-li >}}}
-          {{{< /fa-ul >}}}
-        {{{< /popover >}}}
       {{{< /p >}}}
       <!-- {{{< div class="text-white text-bg-primary rounded p-3" >}}} -->
       <!--   {{{< p class="p-0" >}}} Unsere Website bietet Ihnen eine Übersicht der vielfältigen Werkzeuge, mit denen Kommunikationsdaten analysiert und genutzt werden können. Von den Grundlagen dieser Daten über Methoden, diese zu strukturieren und auszuwerten, bis hin zu praktischen Anwendungen – entdecken Sie, wie diese Methoden dazu beitragen können, wertvolle Erkenntnisse aus Kommunikationsdaten zu gewinnen. {{{< /p >}}} -->
@@ -72,9 +63,15 @@ readr::read_rds(here::here("content", "data", "wordcloud_data.rds")) |>
         {{{< div class="nd-card-item pe-md-4" >}}}
           {{{< span class="h2" >}}} Methoden {{{< /span >}}}
           {{{< p class="nd-article pt-2 pb-0" >}}}
-            Von Stimmungsanalysen bis hin zu Themenerkennung – moderne Analysemethoden ermöglichen es, versteckte Botschaften in großen Textmengen aufzudecken. Wählen Sie eine Methode, um zu erfahren, wie sie funktioniert und welche Erkenntnisse sie liefern kann.
+            Von der Aufbereitung der Rohdaten bis zur Auswertung: Die ersten beiden Methoden zeigen, wie Texte bereinigt und in Zahlen übersetzt werden. Darauf bauen Analyseverfahren wie Sentimentanalyse oder Themenmodellierung auf. Wählen Sie eine Methode, um zu erfahren, wie sie funktioniert und welche Erkenntnisse sie liefern kann.
           {{{< /p >}}}
         {{{< /div >}}}
+      {{{< /div >}}}
+      {{{< div class="m-col-12 m-col-md-6 m-col-xl-4 pe-md-4 pb-md-2" >}}}
+        {{{< bs_card_emoji emoji_code="2699" emoji_bg="#9c9c9c" card_title="Textvorverarbeitung" card_text="Die Textvorverarbeitung überführt unstrukturierte Texte in eine analysierbare Form, etwa durch Tokenisierung, Stoppwortentfernung oder Lemmatisierung. Sie bildet die Grundlage vieler klassischer Verfahren des Text Minings." card_href="/methods/preprocessing" >}}}
+      {{{< /div >}}}
+      {{{< div class="m-col-12 m-col-md-6 m-col-xl-4 pe-md-4 pb-md-2" >}}}
+        {{{< bs_card_emoji emoji_code="1f9e9" emoji_bg="#9c9c9c" card_title="Textrepräsentationen" card_text="Textrepräsentationen wandeln Sprache in Zahlen um, von einfachen Worthäufigkeiten wie Bag-of-Words und TF-IDF bis hin zu modernen Embeddings, die Bedeutung und Kontext abbilden." card_href="/methods/embeddings" >}}}
       {{{< /div >}}}
       {{{< div class="m-col-12 m-col-md-6 m-col-xl-4 pe-md-4 pb-md-2" >}}}
         {{{< bs_card card_img_src="/assets/img/sentiment_cover.svg" card_img_bg="#9c9c9c" card_title="Sentimentanalyse" card_text="Sentimentanalyse ist ein Verfahren der Data Science, das darauf abzielt, Meinungen, Emotionen und Einstellungen in Textdaten automatisch zu identifizieren und zu klassifizieren." card_href="/methods/sentiment" >}}}
@@ -84,6 +81,9 @@ readr::read_rds(here::here("content", "data", "wordcloud_data.rds")) |>
       {{{< /div >}}}
       {{{< div class="m-col-12 m-col-md-6 m-col-xl-4 pe-md-4 pb-md-2" >}}}
         {{{< bs_card card_img_src="/assets/img/ner_cover.svg" card_img_bg="#9c9c9c" card_title="Entitätsanalyse" card_text="Die Entitätsanalyse erkennt und klassifiziert wichtige Begriffe wie Personen, Organisationen oder Orte in unstrukturierten Texten, um zentrale Akteure und Zusammenhänge gezielt aus großen Textmengen zu extrahieren." card_href="/methods/ner" >}}}
+      {{{< /div >}}}
+      {{{< div class="m-col-12 m-col-md-6 m-col-xl-4 pe-md-4 pb-md-2" >}}}
+        {{{< bs_card_emoji emoji_code="1f916" emoji_bg="#9c9c9c" card_title="RAG-System" card_text="Retrieval-Augmented Generation verbindet große Sprachmodelle mit eigenen Dokumenten: Fragen werden auf Basis gefundener Textstellen und mit nachvollziehbaren Quellen beantwortet." card_href="/methods/rag_system" >}}}
       {{{< /div >}}}
     {{{< /div >}}}
   {{{< /div >}}}
@@ -98,7 +98,7 @@ readr::read_rds(here::here("content", "data", "wordcloud_data.rds")) |>
         {{{< p class="nd-article pt-2 pb-0" >}}} Unsere Fallstudien veranschaulichen, wie Technologien der Textanalyse auf reale Daten angewendet werden. Entdecken Sie konkrete Beispiele für den Einsatz von Sentimentanalyse, Themenmodellierung und weiteren Methoden. {{{< /p >}}}
       {{{< /div >}}}
       {{{< div class="m-col-12 m-col-md-6 m-col-xl-4" >}}}
-        {{{< bs_card card_img_src="/assets/img/customer_reviews_cover.svg" card_img_bg="#9c9c9c" card_title="Kundenrezensionen" card_text="In dieser Case Study zeigen wir, wie unstrukturierte Kundenrezensionen mithilfe von Textanalyse systematisch ausgewertet werden können, um differenzierte Einblicke in die Nutzung technischer Produkte zu gewinnen und gezielt Verbesserungspotenziale zu identifizieren." card_href="/case_studies/customer_reviews" >}}}
+        {{{< bs_card card_img_src="/assets/img/customer_reviews_cover.svg" card_img_bg="#9c9c9c" card_title="Kundenrezensionen" card_text="In dieser Fallstudie zeigen wir, wie unstrukturierte Kundenrezensionen mithilfe von Textanalyse systematisch ausgewertet werden können, um differenzierte Einblicke in die Nutzung technischer Produkte zu gewinnen und gezielt Verbesserungspotenziale zu identifizieren." card_href="/case_studies/customer_reviews" >}}}
       {{{< /div >}}}
       {{{< div class="m-col-12 m-col-md-6 m-col-xl-4" >}}}
         {{{< bs_card card_img_src="/assets/img/support_tickets_cover.svg" card_img_bg="#9c9c9c" card_title="Support-Tickets" card_text="Dieses Fallbeispiel zeigt, wie sich Support-Anfragen allein anhand der Texte automatisiert nach Dringlichkeit klassifizieren lassen. Durch den gezielten Einsatz von Textanalyse und Machine Learning werden besonders kritische Anliegen frühzeitig erkannt, um den Kundenservice effizienter zu gestalten." card_href="/case_studies/support_tickets" >}}}
@@ -107,10 +107,19 @@ readr::read_rds(here::here("content", "data", "wordcloud_data.rds")) |>
         {{{< bs_card card_img_src="/assets/img/network_analysis_cover.svg" card_img_bg="#9c9c9c" card_title="Netzwerkanalyse" card_text="Diese Fallstudie zeigt am Beispiel der Justus-Liebig-Universität, wie sich aus Nachrichtenartikeln per Named Entity Recognition ein Netzwerk aus Personen, Organisationen und Orten aufbauen lässt, um zentrale Akteure im eigenen medialen Umfeld sichtbar zu machen." card_href="/case_studies/network_analysis" >}}}
       {{{< /div >}}}
       {{{< div class="m-col-12 m-col-md-6 m-col-xl-4 pb-md-2" >}}}
-        {{{< bs_card_emoji emoji_code="1f916" emoji_bg="#9c9c9c" card_title="RAG-System" card_text="Diese Fallstudie zeigt Schritt für Schritt, wie aus unternehmensspezifischen Dokumenten – Produktdatenblättern und Website-Inhalten – ein RAG-Wissensassistent entsteht, der Fragen ausschließlich auf Basis belegbarer Quellen beantwortet." card_href="/case_studies/rag_system" >}}}
+        {{{< bs_card_emoji emoji_code="1f916" emoji_bg="#9c9c9c" card_title="RAG-System" card_text="Diese Fallstudie zeigt Schritt für Schritt, wie aus unternehmensspezifischen Dokumenten wie Produktdatenblättern und Website-Inhalten ein RAG-Wissensassistent entsteht, der Fragen ausschließlich auf Basis belegbarer Quellen beantwortet." card_href="/case_studies/rag_system" >}}}
       {{{< /div >}}}
       {{{< div class="m-col-12 m-col-md-6 m-col-xl-4 pb-md-2" >}}}
-        {{{< bs_card_emoji emoji_code="2753" emoji_bg="#9c9c9c" card_title="FAQ-Automatisierung" card_text="Diese Fallstudie zeigt, wie sich mithilfe großer Sprachmodelle wiederkehrende Kundenanfragen automatisch erkennen, thematisch bündeln und in strukturierte FAQ-Einträge überführen lassen – inklusive Frühindikator für neu entstehende Probleme." >}}}
+        {{{< bs_card_emoji emoji_code="2753" emoji_bg="#9c9c9c" card_title="FAQ-Automatisierung" card_text="Diese Fallstudie zeigt, wie sich mithilfe großer Sprachmodelle wiederkehrende Kundenanfragen automatisch erkennen, thematisch bündeln und in strukturierte FAQ-Einträge überführen lassen, inklusive Frühindikator für neu entstehende Probleme." card_href="/case_studies/faq_automation" >}}}
+      {{{< /div >}}}
+      {{{< div class="m-col-12 m-col-md-6 m-col-xl-4 pb-md-2" >}}}
+        {{{< bs_card_emoji emoji_code="1f4e7" emoji_bg="#9c9c9c" card_title="E-Mail-Automatisierung" card_text="Am Beispiel eines fiktiven Industrieunternehmens zeigt diese Fallstudie, wie eingehende E-Mail-Anfragen automatisch nach Anliegen klassifiziert und vorbereitet werden, um Bearbeitungszeiten im Kundenservice zu verkürzen." card_href="/case_studies/email_automation" >}}}
+      {{{< /div >}}}
+      {{{< div class="m-col-12 m-col-md-6 m-col-xl-4 pb-md-2" >}}}
+        {{{< bs_card_emoji emoji_code="1f50d" emoji_bg="#9c9c9c" card_title="Informationsextraktion" card_text="Diese Fallstudie zeigt, wie große Sprachmodelle aus unstrukturierten Support-Tickets automatisiert Angaben wie Fehlerursachen, betroffene Module oder Prioritäten extrahieren und so Muster in großen Datenmengen sichtbar machen." card_href="/case_studies/information_extraction" >}}}
+      {{{< /div >}}}
+      {{{< div class="m-col-12 m-col-md-6 m-col-xl-4 pb-md-2" >}}}
+        {{{< bs_card_emoji emoji_code="1f4cb" emoji_bg="#9c9c9c" card_title="Meeting-Zusammenfassungen" card_text="Diese Fallstudie begleitet ein Besprechungsprotokoll von der unübersichtlichen PDF-Datei bis zur strukturierten Zusammenfassung mit Aufgaben und Entscheidungen, erstellt durch ein lokal betriebenes Sprachmodell." card_href="/case_studies/meeting_summaries" >}}}
       {{{< /div >}}}
     {{{< /div >}}}
   {{{< /div >}}}
